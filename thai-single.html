@@ -3,30 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ห้องหวยไทย - ปักหลักเดี่ยว</title>
+<title>ห้องหวยไทย - ปักหลักเดี่ยว | สูตรเลือกอัตโนมัติ</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Segoe UI,Tahoma,sans-serif;background:#f2f6fb;color:#17202d}
-.wrap{max-width:1120px;margin:auto;padding:24px}
+.wrap{max-width:1180px;margin:auto;padding:24px}
 h1{margin:0;font-size:34px}
 .sub,.note{color:#667085}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
 .card{background:#fff;border:1px solid #dce3ec;border-radius:16px;padding:18px;box-shadow:0 8px 24px #3451a010}
 .wide{grid-column:1/-1}
-textarea{width:100%;height:280px;border:1px solid #b8c4d4;border-radius:10px;padding:12px;font:15px Consolas,monospace}
+textarea{width:100%;height:300px;border:1px solid #b8c4d4;border-radius:10px;padding:12px;font:15px Consolas,monospace}
 .controls{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:10px}
+label{font-size:14px;color:#344054}
 label.small{font-size:14px;color:#344054}
 select,input{width:120px;padding:8px;border:1px solid #b8c4d4;border-radius:8px;background:#fff}
 input[type=checkbox]{width:auto}
 button{padding:10px 14px;border:0;border-radius:9px;font-weight:700;cursor:pointer}
 .main{background:#2864dc;color:#fff}
 .call{background:#eef6ff;border-radius:12px;padding:14px;margin-bottom:12px}
-.big{font-size:30px;font-weight:800}
+.call.skip{background:#fff8e8}
+.big{font-size:34px;font-weight:900}
 .digits{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
 .d{width:42px;height:42px;display:grid;place-items:center;background:#e4efff;color:#174ea6;border-radius:10px;font-size:20px;font-weight:800}
 .cut{background:#ffe5dc;color:#b42318;text-decoration:line-through}
 .stats{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
-.pill{background:#f2f4f7;border-radius:10px;padding:10px 12px;min-width:118px}
+.pill{background:#f2f4f7;border-radius:10px;padding:10px 12px;min-width:120px}
 .pill b{display:block;font-size:20px;margin-top:3px}
 .profit{color:#087a55!important;font-weight:800}
 .loss{color:#c4320a!important;font-weight:800}
@@ -38,13 +40,18 @@ th:first-child,td:first-child{text-align:left}
 .warn{margin-top:12px;padding:10px;background:#fff8e8;border-radius:10px;color:#72520d}
 .note,.warn{font-size:13px}
 .hidden{display:none}
-@media(max-width:760px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}h1{font-size:28px}}
+.badge{display:inline-block;border-radius:999px;padding:3px 8px;font-size:12px;font-weight:800}
+.good{background:#e7f8ef;color:#087a55}
+.bad{background:#ffe5dc;color:#b42318}
+.mid{background:#eef2f6;color:#475467}
+.skipb{background:#fff8e8;color:#72520d}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}h1{font-size:28px}textarea{height:260px}}
 </style>
 </head>
 <body>
 <main class="wrap">
   <h1>ห้องหวยไทย - ปักหลักเดี่ยว</h1>
-  <div class="sub">เว้น 3 ตัว · แทง 7 ตัว · 1 ตา = 1 ไม้ · ลงทุนไม้ละ 140 บาท · ถ้าถูกกำไร 58 บาท</div>
+  <div class="sub">เว้น 3 ตัว · แทง 7 ตัว · 1 ตา = 1 ไม้ · ระบบเทียบสูตรอัตโนมัติ · ไม่คุ้มให้ข้ามไม้</div>
 
   <div class="grid">
     <section class="card">
@@ -60,21 +67,19 @@ th:first-child,td:first-child{text-align:left}
             <option value="2" selected>หลักหน่วย</option>
           </select>
         </label>
-        <label>ขยับชุดเว้นทุก <input id="shiftEvery" type="number" min="1" value="5"> ไม้</label>
-      </div>
-
-      <div class="controls">
-        <label class="small"><input id="autoStick" type="checkbox" checked> คำนวณไม้ปัจจุบันอัตโนมัติจากจำนวนผลย้อนหลัง</label>
-      </div>
-
-      <div class="controls">
-        <label>ไม้ปัจจุบัน <input id="stickNo" type="number" min="1" value="1"></label>
         <label>ทุน/ไม้ <input id="costPerStick" type="number" min="0" value="140"></label>
         <label>กำไรเมื่อถูก/ไม้ <input id="profitPerWin" type="number" value="58"></label>
       </div>
 
       <div class="controls">
         <label>รอบทดสอบขั้นต่ำ <input id="minTrain" type="number" min="5" value="20"></label>
+        <label>หน้าต่างสถิติ <input id="windowSize" type="number" min="5" value="20"></label>
+        <label>ขยับชุดทุก <input id="shiftEvery" type="number" min="1" value="5"> ไม้</label>
+      </div>
+
+      <div class="controls">
+        <label class="small"><input id="autoSkip" type="checkbox" checked> ถ้าไม่ถึงจุดคุ้มทุนหรือกำไรติดลบ ให้ขึ้น “ข้ามไม้”</label>
+        <label class="small"><input id="skipAfterLoss2" type="checkbox" checked> ถ้าสูตรแพ้ติดกัน 2 ไม้ ให้ข้ามไม้</label>
       </div>
 
       <div class="controls">
@@ -86,52 +91,63 @@ th:first-child,td:first-child{text-align:left}
     </section>
 
     <section class="card">
-      <h2>2. แนวทางรอบนี้</h2>
-      <div class="call">
-        <div class="note">เลขเว้น 3 ตัว</div>
-        <div id="omitNow" class="big">—</div>
-        <div id="why" class="note"></div>
+      <h2>2. แนวทางรอบถัดไป</h2>
+      <div id="callBox" class="call">
+        <div class="note">ผลแนะนำ</div>
+        <div id="decision" class="big">—</div>
+        <div id="reason" class="note"></div>
       </div>
 
-      <div class="note">เลขแทง 7 ตัว</div>
+      <div class="note">เลขแทง 7 ตัว / เลขขีดฆ่าคือเลขเว้น</div>
       <div id="digits" class="digits"></div>
 
       <div class="stats">
-        <div class="pill">รอบถัดไป<b id="nextRound">—</b></div>
-        <div class="pill">ไม้ที่ระบบคำนวณ<b id="autoStickShow">—</b></div>
-        <div class="pill">อยู่ชุดนี้อีก<b id="leftInSet">—</b></div>
-        <div class="pill">ทุน/ไม้<b id="costShow">—</b></div>
-        <div class="pill">ถ้าถูก กำไร/ไม้<b id="profitShow">—</b></div>
-        <div class="pill">ถ้าไม่ถูก ขาดทุน/ไม้<b id="lossShow">—</b></div>
+        <div class="pill">ไม้ถัดไป<b id="nextStick">—</b></div>
+        <div class="pill">สูตรที่เลือก<b id="bestName">—</b></div>
         <div class="pill">อัตราถูกย้อนหลัง<b id="hitRate">—</b></div>
-        <div class="pill">กำไร/ขาดทุนย้อนหลัง<b id="totalPnlShow">—</b></div>
+        <div class="pill">จุดคุ้มทุน<b id="breakEven">—</b></div>
+        <div class="pill">กำไร/ขาดทุนสูตร<b id="bestPnl">—</b></div>
+        <div class="pill">แพ้ติดกันสูงสุด<b id="maxLose">—</b></div>
       </div>
 
-      <div class="warn">โปรแกรมนี้เป็นเพียงการทดสอบและวิเคราะห์สถิติย้อนหลัง ผลสุ่มไม่สามารถรับประกันได้</div>
+      <div class="warn">โปรแกรมนี้ช่วยเทียบสูตรย้อนหลังเท่านั้น ไม่สามารถทำนายผลสุ่มได้แน่นอน ถ้าขึ้น “ข้ามไม้” แปลว่าสถิติยังไม่คุ้มกับทุน/กำไรที่ตั้งไว้</div>
     </section>
 
     <section class="card wide">
-      <h2>3. ตารางเดินไม้ 10 ไม้ถัดไป</h2>
+      <h2>3. ตารางเทียบสูตรเลขเว้นย้อนหลัง</h2>
+      <div class="note" id="testNote"></div>
       <table>
         <thead>
           <tr>
-            <th>ไม้</th><th>เลขเว้น</th><th>เลขแทง</th><th>ทุน/ไม้</th><th>ถ้าถูก กำไร/ไม้</th><th>ถ้าไม่ถูก ขาดทุน/ไม้</th>
+            <th>สูตร</th>
+            <th>เลขเว้นรอบถัดไป</th>
+            <th>รอบทดสอบ</th>
+            <th>ถูก</th>
+            <th>เสีย</th>
+            <th>อัตราถูก</th>
+            <th>แพ้ติดกันสูงสุด</th>
+            <th>กำไร/ขาดทุน</th>
+            <th>สถานะ</th>
           </tr>
         </thead>
-        <tbody id="schedule"></tbody>
+        <tbody id="strategyTable"></tbody>
       </table>
     </section>
 
     <section class="card wide">
-      <h2>4. ทดสอบย้อนหลังแบบไม่ดูอนาคต</h2>
-      <div id="walkNote" class="note"></div>
+      <h2>4. ตารางเดินไม้ 10 ไม้ถัดไป ตามสูตรที่เลือก</h2>
       <table>
         <thead>
           <tr>
-            <th>หลักที่ปัก</th><th>รอบทดสอบ</th><th>ถูก</th><th>ไม่ถูก</th><th>อัตราถูก</th><th>ทุนรวม</th><th>กำไรรวมจากไม้ถูก</th><th>ขาดทุนรวมจากไม้ไม่ถูก</th><th>กำไร/ขาดทุนสุทธิ</th>
+            <th>ไม้</th>
+            <th>เลขเว้น</th>
+            <th>เลขแทง</th>
+            <th>ทุน/ไม้</th>
+            <th>ถ้าถูก กำไร/ไม้</th>
+            <th>ถ้าเสีย ขาดทุน/ไม้</th>
           </tr>
         </thead>
-        <tbody id="walk"></tbody>
+        <tbody id="schedule"></tbody>
       </table>
     </section>
   </div>
@@ -140,31 +156,31 @@ th:first-child,td:first-child{text-align:left}
 <script>
 const sample='123\n804\n579\n216\n930\n447\n682\n105\n390\n764\n812\n246\n901\n538\n672\n149\n384\n720\n568\n213\n906\n471\n835\n260\n714\n392\n658\n107\n843\n529\n016\n734\n285\n691\n430\n872\n159\n604\n318\n957';
 const labels=['หลักร้อย','หลักสิบ','หลักหน่วย'];
-let rows=[];
 
 const dataEl=document.getElementById('data');
 const positionEl=document.getElementById('position');
-const shiftEveryEl=document.getElementById('shiftEvery');
-const autoStickEl=document.getElementById('autoStick');
-const stickNoEl=document.getElementById('stickNo');
-const costPerStickEl=document.getElementById('costPerStick');
-const profitPerWinEl=document.getElementById('profitPerWin');
+const costEl=document.getElementById('costPerStick');
+const profitEl=document.getElementById('profitPerWin');
 const minTrainEl=document.getElementById('minTrain');
+const windowEl=document.getElementById('windowSize');
+const shiftEl=document.getElementById('shiftEvery');
+const autoSkipEl=document.getElementById('autoSkip');
+const skipAfterLoss2El=document.getElementById('skipAfterLoss2');
 const errorEl=document.getElementById('error');
-const omitNowEl=document.getElementById('omitNow');
-const whyEl=document.getElementById('why');
+
+const callBoxEl=document.getElementById('callBox');
+const decisionEl=document.getElementById('decision');
+const reasonEl=document.getElementById('reason');
 const digitsEl=document.getElementById('digits');
-const nextRoundEl=document.getElementById('nextRound');
-const autoStickShowEl=document.getElementById('autoStickShow');
-const leftInSetEl=document.getElementById('leftInSet');
-const costShowEl=document.getElementById('costShow');
-const profitShowEl=document.getElementById('profitShow');
-const lossShowEl=document.getElementById('lossShow');
+const nextStickEl=document.getElementById('nextStick');
+const bestNameEl=document.getElementById('bestName');
 const hitRateEl=document.getElementById('hitRate');
-const totalPnlShowEl=document.getElementById('totalPnlShow');
+const breakEvenEl=document.getElementById('breakEven');
+const bestPnlEl=document.getElementById('bestPnl');
+const maxLoseEl=document.getElementById('maxLose');
+const strategyTableEl=document.getElementById('strategyTable');
 const scheduleEl=document.getElementById('schedule');
-const walkEl=document.getElementById('walk');
-const walkNoteEl=document.getElementById('walkNote');
+const testNoteEl=document.getElementById('testNote');
 
 function parse(){
   const out=[];
@@ -176,50 +192,17 @@ function parse(){
       out.push(three[0].split('').map(Number));
       return;
     }
-
     if(/^\d$/.test(line)){
       const d=Number(line);
       out.push([d,d,d]);
       return;
     }
-
     throw Error('บรรทัด '+(i+1)+' ต้องเป็นเลข 1 หลัก เช่น 7 หรือเลข 3 หลัก เช่น 123');
   });
 
-  if(out.length<6)throw Error('กรุณาใส่อย่างน้อย 6 รอบ');
+  if(out.length<8)throw Error('กรุณาใส่อย่างน้อย 8 รอบ');
   return out;
 }
-
-function calcAutoStick(totalRows){
-  return totalRows+1;
-}
-
-function absenceOrder(a,pos){
-  return Array.from({length:10},(_,d)=>{
-    let gap=a.length+1,last=-1,count=0;
-    for(let i=a.length-1;i>=0;i--){
-      if(a[i][pos]===d){
-        gap=a.length-1-i;
-        last=i;
-        break;
-      }
-    }
-    a.forEach(r=>{if(r[pos]===d)count++});
-    return{d,gap,last,count};
-  }).sort((x,y)=>y.gap-x.gap||x.count-y.count||x.d-y.d);
-}
-
-function plan(a,pos,stick,shiftEvery){
-  const order=absenceOrder(a,pos);
-  const offset=Math.floor((stick-1)/shiftEvery)%order.length;
-  const omit=[];
-  for(let i=0;i<3;i++)omit.push(order[(offset+i)%order.length].d);
-  const cut=new Set(omit);
-  const play=Array.from({length:10},(_,i)=>i).filter(x=>!cut.has(x));
-  return{order,omit,play};
-}
-
-function hit(row,pos,p){return p.play.includes(row[pos])}
 
 function money(n){
   const sign=n<0?'-':'';
@@ -228,92 +211,217 @@ function money(n){
 
 function pnlClass(n){return n>0?'profit':n<0?'loss':'neutral'}
 
-function renderDigits(p){
-  digitsEl.innerHTML=Array.from({length:10},(_,i)=>'<span class="d '+(p.omit.includes(i)?'cut':'')+'">'+i+'</span>').join('');
+function onlyDigits(rows,pos){
+  return rows.map(r=>r[pos]);
 }
 
-function renderSchedule(a,pos,stick,shift,costPerStick,profitPerWin){
-  let html='';
-  for(let s=stick;s<stick+10;s++){
-    const p=plan(a,pos,s,shift);
-    const loseNet=-costPerStick;
-    html+='<tr><td>'+s+'</td><td>'+p.omit.join(', ')+'</td><td>'+p.play.join(', ')+'</td><td>'+money(costPerStick)+'</td><td class="'+pnlClass(profitPerWin)+'">'+money(profitPerWin)+'</td><td class="loss">'+money(loseNet)+'</td></tr>';
+function freqMap(arr){
+  const m=Array(10).fill(0);
+  arr.forEach(d=>m[d]++);
+  return m;
+}
+
+function gapMap(arr){
+  return Array.from({length:10},(_,d)=>{
+    let gap=arr.length+1;
+    for(let i=arr.length-1;i>=0;i--){
+      if(arr[i]===d){
+        gap=arr.length-1-i;
+        break;
+      }
+    }
+    return gap;
+  });
+}
+
+function uniq3(list){
+  const out=[];
+  list.forEach(d=>{
+    if(Number.isInteger(d) && d>=0 && d<=9 && !out.includes(d))out.push(d);
+  });
+  for(let d=0;d<=9 && out.length<3;d++){
+    if(!out.includes(d))out.push(d);
   }
-  scheduleEl.innerHTML=html;
+  return out.slice(0,3);
 }
 
-function forward(a,pos,shift,costPerStick,profitPerWin,minTrain){
-  let count=0,wins=0,losses=0,totalCost=0,totalWinProfit=0,totalLoss=0;
+function playFromOmit(omit){
+  const cut=new Set(omit);
+  return Array.from({length:10},(_,i)=>i).filter(d=>!cut.has(d));
+}
 
-  for(let i=minTrain;i<a.length;i++){
-    const stick=count+1;
-    const p=plan(a.slice(0,i),pos,stick,shift);
-    const ok=hit(a[i],pos,p);
+function byScore(scores, direction='asc'){
+  return Array.from({length:10},(_,d)=>({d,score:scores[d]}))
+    .sort((a,b)=>direction==='asc'?a.score-b.score||a.d-b.d:b.score-a.score||a.d-b.d)
+    .map(x=>x.d);
+}
 
-    count++;
-    totalCost+=costPerStick;
+function omitLongAbsent(rows,pos,opt){
+  const arr=onlyDigits(rows,pos), gaps=gapMap(arr), freq=freqMap(arr);
+  return uniq3(Array.from({length:10},(_,d)=>d).sort((a,b)=>gaps[b]-gaps[a]||freq[a]-freq[b]||a-b));
+}
 
+function omitRecentlyHot(rows,pos,opt){
+  const arr=onlyDigits(rows,pos).slice(-opt.windowSize), freq=freqMap(arr), gaps=gapMap(arr);
+  return uniq3(Array.from({length:10},(_,d)=>d).sort((a,b)=>freq[b]-freq[a]||gaps[a]-gaps[b]||a-b));
+}
+
+function omitRecentlyCold(rows,pos,opt){
+  const arr=onlyDigits(rows,pos).slice(-opt.windowSize), freq=freqMap(arr), gaps=gapMap(arr);
+  return uniq3(Array.from({length:10},(_,d)=>d).sort((a,b)=>freq[a]-freq[b]||gaps[b]-gaps[a]||a-b));
+}
+
+function omitWeightedLowRisk(rows,pos,opt){
+  const all=onlyDigits(rows,pos);
+  const recent=all.slice(-opt.windowSize);
+  const short=all.slice(-Math.max(5,Math.floor(opt.windowSize/2)));
+  const freqAll=freqMap(all), freqRecent=freqMap(recent), freqShort=freqMap(short), gaps=gapMap(all);
+  const scores=Array(10).fill(0).map((_,d)=>{
+    const recencyScore=1/(gaps[d]+1)*6;
+    return freqRecent[d]*3 + freqShort[d]*4 + freqAll[d]*0.5 + recencyScore;
+  });
+  return uniq3(byScore(scores,'asc'));
+}
+
+function omitWeightedHighRisk(rows,pos,opt){
+  const all=onlyDigits(rows,pos);
+  const recent=all.slice(-opt.windowSize);
+  const short=all.slice(-Math.max(5,Math.floor(opt.windowSize/2)));
+  const freqAll=freqMap(all), freqRecent=freqMap(recent), freqShort=freqMap(short), gaps=gapMap(all);
+  const scores=Array(10).fill(0).map((_,d)=>{
+    const recencyScore=1/(gaps[d]+1)*6;
+    return freqRecent[d]*3 + freqShort[d]*4 + freqAll[d]*0.5 + recencyScore;
+  });
+  return uniq3(byScore(scores,'desc'));
+}
+
+function omitLastSeen(rows,pos,opt){
+  const arr=onlyDigits(rows,pos);
+  const out=[];
+  for(let i=arr.length-1;i>=0 && out.length<3;i--){
+    if(!out.includes(arr[i]))out.push(arr[i]);
+  }
+  return uniq3(out);
+}
+
+function omitCycleShift(rows,pos,opt){
+  const base=omitLongAbsent(rows,pos,opt);
+  const all=Array.from({length:10},(_,i)=>i);
+  const idx=(Math.floor((opt.stick-1)/opt.shiftEvery)*3)%10;
+  const rotated=all.slice(idx).concat(all.slice(0,idx));
+  return uniq3(rotated.filter(d=>base.includes(d)).concat(rotated));
+}
+
+const strategies=[
+  {id:'longAbsent',name:'เว้นเลขที่ห่างนาน',fn:omitLongAbsent},
+  {id:'hot',name:'เว้นเลขที่ออกบ่อยช่วงล่าสุด',fn:omitRecentlyHot},
+  {id:'cold',name:'เว้นเลขที่ออกน้อยช่วงล่าสุด',fn:omitRecentlyCold},
+  {id:'lowRisk',name:'เว้นคะแนนเสี่ยงต่ำ',fn:omitWeightedLowRisk},
+  {id:'highRisk',name:'เว้นคะแนนเสี่ยงสูง',fn:omitWeightedHighRisk},
+  {id:'lastSeen',name:'เว้นเลขที่เพิ่งเห็นล่าสุด',fn:omitLastSeen},
+  {id:'cycleShift',name:'เว้นแบบหมุนชุดตามไม้',fn:omitCycleShift}
+];
+
+function evaluate(rows,pos,strategy,opt){
+  let tested=0,wins=0,losses=0,net=0,streakLose=0,maxLose=0;
+
+  for(let i=opt.minTrain;i<rows.length;i++){
+    const past=rows.slice(0,i);
+    const stick=i+1;
+    const omit=strategy.fn(past,pos,{...opt,stick});
+    const actual=rows[i][pos];
+    const ok=!omit.includes(actual);
+
+    tested++;
     if(ok){
       wins++;
-      totalWinProfit+=profitPerWin;
+      net+=opt.profitWin;
+      streakLose=0;
     }else{
       losses++;
-      totalLoss+=costPerStick;
+      net-=opt.cost;
+      streakLose++;
+      maxLose=Math.max(maxLose,streakLose);
     }
   }
 
   return{
-    count,
-    wins,
-    losses,
-    totalCost,
-    totalWinProfit,
-    totalLoss,
-    profit:totalWinProfit-totalLoss,
-    rate:count?wins/count:0
+    ...strategy,
+    tested,wins,losses,net,maxLose,
+    rate:tested?wins/tested:0,
+    omitNow:strategy.fn(rows,pos,{...opt,stick:rows.length+1})
   };
+}
+
+function renderDigits(omit){
+  digitsEl.innerHTML=Array.from({length:10},(_,i)=>'<span class="d '+(omit.includes(i)?'cut':'')+'">'+i+'</span>').join('');
+}
+
+function renderSchedule(rows,pos,best,opt,shouldSkip){
+  let html='';
+  for(let s=rows.length+1;s<rows.length+11;s++){
+    const omit=shouldSkip?[]:best.fn(rows,pos,{...opt,stick:s});
+    const play=shouldSkip?[]:playFromOmit(omit);
+    html+='<tr><td>'+s+'</td><td>'+(shouldSkip?'ข้ามไม้':omit.join(', '))+'</td><td>'+(shouldSkip?'—':play.join(', '))+'</td><td>'+money(opt.cost)+'</td><td class="profit">'+money(opt.profitWin)+'</td><td class="loss">'+money(-opt.cost)+'</td></tr>';
+  }
+  scheduleEl.innerHTML=html;
+}
+
+function statusBadge(r,breakEven){
+  if(r.net>0 && r.rate>=breakEven)return '<span class="badge good">ผ่าน</span>';
+  if(r.net<=0)return '<span class="badge bad">ติดลบ</span>';
+  return '<span class="badge mid">ยังไม่คุ้มทุน</span>';
 }
 
 function run(){
   try{
-    rows=parse();
+    const rows=parse();
     errorEl.classList.add('hidden');
 
     const pos=+positionEl.value;
-    const shift=Math.max(1,+shiftEveryEl.value||5);
-    const autoStick=calcAutoStick(rows.length);
-    const stick=autoStickEl.checked?autoStick:Math.max(1,+stickNoEl.value||1);
-    const costPerStick=Math.max(0,+costPerStickEl.value||140);
-    const profitPerWin=+profitPerWinEl.value||58;
+    const cost=Math.max(0,+costEl.value||140);
+    const profitWin=+profitEl.value||58;
     const minTrain=Math.max(5,Math.min(+minTrainEl.value||20,rows.length-1));
+    const windowSize=Math.max(5,+windowEl.value||20);
+    const shiftEvery=Math.max(1,+shiftEl.value||5);
+    const breakEven=cost/(cost+profitWin);
+    const opt={cost,profitWin,minTrain,windowSize,shiftEvery};
 
-    if(autoStickEl.checked)stickNoEl.value=stick;
+    const results=strategies.map(s=>evaluate(rows,pos,s,opt))
+      .sort((a,b)=>b.net-a.net || b.rate-a.rate || a.maxLose-b.maxLose);
 
-    const p=plan(rows,pos,stick,shift);
-    const f=forward(rows,pos,shift,costPerStick,profitPerWin,minTrain);
+    const best=results[0];
+    const shouldSkipByMoney=autoSkipEl.checked && (best.net<=0 || best.rate<breakEven);
+    const shouldSkipByStreak=skipAfterLoss2El.checked && best.maxLose>=2 && best.losses>0;
+    const shouldSkip=shouldSkipByMoney || shouldSkipByStreak;
 
-    omitNowEl.textContent=p.omit.join(', ');
-    whyEl.textContent='1 ตา = 1 ไม้ ระบบเลือกเว้นจากเลขที่ห่างนานที่สุดใน '+labels[pos]+' และขยับชุดเว้นทุก '+shift+' ไม้';
+    const omit=best.omitNow;
+    const play=playFromOmit(omit);
 
-    renderDigits(p);
+    callBoxEl.className='call '+(shouldSkip?'skip':'');
+    decisionEl.textContent=shouldSkip?'ข้ามไม้':omit.join(', ');
+    decisionEl.className='big '+(shouldSkip?'loss':'');
+    reasonEl.textContent=shouldSkip
+      ? 'ยังไม่แนะนำให้เล่น เพราะ '+(shouldSkipByMoney?'สูตรที่ดีที่สุดยังไม่ถึงจุดคุ้มทุนหรือกำไรติดลบ':'สูตรมีแพ้ติดกันสูง เสี่ยงไล่เสีย')+' | สูตรที่ดีที่สุดตอนนี้คือ '+best.name
+      : 'เลือกสูตรที่ย้อนหลังดีที่สุด: '+best.name+' | เลขแทงคือ '+play.join(', ');
 
-    nextRoundEl.textContent=(rows.length+1).toLocaleString('th-TH');
-    autoStickShowEl.textContent=stick.toLocaleString('th-TH');
-    leftInSetEl.textContent=(shift-((stick-1)%shift))+' ไม้';
-    costShowEl.textContent=money(costPerStick);
-    profitShowEl.textContent=money(profitPerWin);
-    profitShowEl.className=pnlClass(profitPerWin);
-    lossShowEl.textContent=money(-costPerStick);
-    lossShowEl.className='loss';
-    hitRateEl.textContent=(f.rate*100).toFixed(1)+'% ('+f.wins+'/'+f.count+')';
-    totalPnlShowEl.textContent=money(f.profit);
-    totalPnlShowEl.className=pnlClass(f.profit);
+    renderDigits(shouldSkip?[]:omit);
 
-    renderSchedule(rows,pos,stick,shift,costPerStick,profitPerWin);
+    nextStickEl.textContent=(rows.length+1).toLocaleString('th-TH');
+    bestNameEl.textContent=best.name;
+    hitRateEl.textContent=(best.rate*100).toFixed(1)+'% ('+best.wins+'/'+best.tested+')';
+    breakEvenEl.textContent=(breakEven*100).toFixed(1)+'%';
+    bestPnlEl.textContent=money(best.net);
+    bestPnlEl.className=pnlClass(best.net);
+    maxLoseEl.textContent=best.maxLose+' ไม้';
 
-    walkEl.innerHTML='<tr><td>'+labels[pos]+'</td><td>'+f.count+'</td><td>'+f.wins+'</td><td>'+f.losses+'</td><td>'+(f.rate*100).toFixed(1)+'%</td><td>'+money(f.totalCost)+'</td><td class="profit">'+money(f.totalWinProfit)+'</td><td class="loss">'+money(f.totalLoss)+'</td><td class="'+pnlClass(f.profit)+'">'+money(f.profit)+'</td></tr>';
+    strategyTableEl.innerHTML=results.map(r=>{
+      return '<tr><td>'+r.name+'</td><td>'+r.omitNow.join(', ')+'</td><td>'+r.tested+'</td><td>'+r.wins+'</td><td>'+r.losses+'</td><td>'+(r.rate*100).toFixed(1)+'%</td><td>'+r.maxLose+'</td><td class="'+pnlClass(r.net)+'">'+money(r.net)+'</td><td>'+statusBadge(r,breakEven)+'</td></tr>';
+    }).join('');
 
-    walkNoteEl.textContent=f.count?'แต่ละรอบใช้เฉพาะผลก่อนหน้าในการเลือกเลขเว้น แล้วตรวจผลรอบถัดไป โดยคิด 1 ตา = 1 ไม้':'ต้องมีข้อมูลมากกว่ารอบทดสอบขั้นต่ำ';
+    testNoteEl.textContent='ทดสอบแบบ walk-forward: แต่ละไม้ใช้เฉพาะผลก่อนหน้าในการเลือกเลขเว้น ห้ามดูผลอนาคต | ถูก = +'+profitWin+' บาท, เสีย = -'+cost+' บาท';
+
+    renderSchedule(rows,pos,best,opt,shouldSkip);
   }catch(e){
     errorEl.textContent=e.message;
     errorEl.classList.remove('hidden');
@@ -324,7 +432,7 @@ document.getElementById('go').onclick=run;
 document.getElementById('restore').onclick=()=>{dataEl.value=sample;run()};
 document.getElementById('clear').onclick=()=>{dataEl.value='';dataEl.focus()};
 
-[dataEl,positionEl,shiftEveryEl,autoStickEl,stickNoEl,costPerStickEl,profitPerWinEl,minTrainEl].forEach(el=>{
+[dataEl,positionEl,costEl,profitEl,minTrainEl,windowEl,shiftEl,autoSkipEl,skipAfterLoss2El].forEach(el=>{
   el.addEventListener('input',()=>{try{run()}catch(e){}});
   el.addEventListener('change',()=>{try{run()}catch(e){}});
 });
