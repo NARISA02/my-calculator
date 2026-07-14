@@ -5,34 +5,55 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>หวยไทย - ปักหลักเดี่ยว</title>
   <style>
-    *{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Tahoma,sans-serif;background:#f2f6fb;color:#17202d}.wrap{max-width:1120px;margin:auto;padding:24px}.back{display:inline-block;margin-bottom:14px;color:#2864dc;font-weight:700;text-decoration:none}h1{margin:0}.sub,.note{color:#667085}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}.card{background:#fff;border:1px solid #dce3ec;border-radius:14px;padding:18px;box-shadow:0 8px 24px #3451a010}.wide{grid-column:1/-1}textarea{width:100%;height:280px;border:1px solid #b8c4d4;border-radius:10px;padding:12px;font:15px Consolas,monospace}.controls{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:10px}select,input{width:122px;padding:8px;border:1px solid #b8c4d4;border-radius:8px;background:#fff}button{padding:10px 14px;border:0;border-radius:9px;font-weight:700;cursor:pointer}.main{background:#2864dc;color:#fff}.call{background:#eef6ff;border-radius:12px;padding:14px;margin-bottom:12px}.big{font-size:30px;font-weight:800}.digits{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.d{width:42px;height:42px;display:grid;place-items:center;background:#e4efff;color:#174ea6;border-radius:10px;font-size:20px;font-weight:800}.cut{background:#ffe5dc;color:#b42318;text-decoration:line-through}.stats{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.pill{background:#f2f4f7;border-radius:10px;padding:10px 12px}.pill b{display:block;font-size:20px}table{width:100%;border-collapse:collapse}th,td{padding:9px 6px;border-bottom:1px solid #e1e6ee;text-align:right}th:first-child,td:first-child{text-align:left}.pos{color:#087a55;font-weight:700}.neg,#error{color:#c4320a;font-weight:700}.warn{margin-top:12px;padding:10px;background:#fff8e8;border-radius:10px;color:#72520d}.note,.warn{font-size:13px}.hidden{display:none}@media(max-width:780px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}}
+    *{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Tahoma,sans-serif;background:#f2f6fb;color:#17202d}.wrap{max-width:1140px;margin:auto;padding:24px}.back{display:inline-block;margin-bottom:14px;color:#2864dc;font-weight:700;text-decoration:none}h1{margin:0}.sub,.note{color:#667085}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}.card{background:#fff;border:1px solid #dce3ec;border-radius:14px;padding:18px;box-shadow:0 8px 24px #3451a010}.wide{grid-column:1/-1}textarea{width:100%;height:280px;border:1px solid #b8c4d4;border-radius:10px;padding:12px;font:15px Consolas,monospace}.comboBox{height:140px;background:#fbfdff}.controls{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:10px}select,input{width:122px;padding:8px;border:1px solid #b8c4d4;border-radius:8px;background:#fff}button{padding:10px 14px;border:0;border-radius:9px;font-weight:700;cursor:pointer}.main{background:#2864dc;color:#fff}.call{background:#eef6ff;border-radius:12px;padding:14px;margin-bottom:12px}.big{font-size:30px;font-weight:800}.digits{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.d{width:42px;height:42px;display:grid;place-items:center;background:#e4efff;color:#174ea6;border-radius:10px;font-size:20px;font-weight:800}.cut{background:#ffe5dc;color:#b42318;text-decoration:line-through}.stats{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.pill{background:#f2f4f7;border-radius:10px;padding:10px 12px}.pill b{display:block;font-size:20px}.posLine{display:grid;grid-template-columns:90px 1fr 1fr;gap:8px;align-items:center;border-bottom:1px solid #eef2f6;padding:8px 0}.tag{display:inline-block;border-radius:8px;padding:5px 8px;margin:2px;background:#e4efff;color:#174ea6;font-weight:800}.tag.cut{background:#ffe5dc;color:#b42318;text-decoration:none}table{width:100%;border-collapse:collapse}th,td{padding:9px 6px;border-bottom:1px solid #e1e6ee;text-align:right}th:first-child,td:first-child{text-align:left}.pos{color:#087a55;font-weight:700}.neg,#error{color:#c4320a;font-weight:700}.warn{margin-top:12px;padding:10px;background:#fff8e8;border-radius:10px;color:#72520d}.note,.warn{font-size:13px}.hidden{display:none}@media(max-width:780px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.posLine{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
 <main class="wrap">
   <a class="back" href="index.html">← กลับห้องหลัก</a>
   <h1>หวยไทย - ปักหลักเดี่ยว</h1>
-  <div class="sub">รองรับ 3 หลักและ 4 หลัก · เว้น 3 ตัว แทง 7 ตัว · เพิ่มสถิติ 3 ตัวโต๊ด และ 4 ตัวโต๊ด</div>
+  <div class="sub">รองรับ 3 หลักและ 4 หลัก · ปักอันดับเว้น 3 กด 7 · โต๊ด 3/4 ตัวเว้น 2 กด 8 แยกสูตรกัน</div>
   <div class="grid">
     <section class="card">
       <h2>1. ผลย้อนหลัง</h2>
       <textarea id="data"></textarea>
       <div class="note">ใส่ผลหวยไทย 3 หรือ 4 หลัก เช่น 123, 804, 1234 หนึ่งบรรทัดต่อรอบ ถ้าใส่ 3 หลัก ระบบจะเติมหลักพันเป็น 0 ให้อัตโนมัติ</div>
       <div class="controls">ปักหลัก <select id="position"><option value="0">หลักพัน</option><option value="1">หลักร้อย</option><option value="2">หลักสิบ</option><option value="3" selected>หลักหน่วย</option></select> ตาต่อไม้ <input id="eyesPerStick" type="number" min="1" value="5"> ขยับทุก <input id="shiftEvery" type="number" min="1" value="5"> ไม้</div>
-      <div class="controls">ไม้ปัจจุบัน <input id="stickNo" type="number" min="1" value="1"> เงิน/ตัว <input id="stake" type="number" min="0" value="5"> รอบทดสอบขั้นต่ำ <input id="minTrain" type="number" min="5" value="20"></div>
+      <div class="controls">ไม้ปัจจุบัน <input id="stickNo" type="number" min="1" value="1"> เงิน/ตัว <input id="stake" type="number" min="0" value="5"> จ่ายเลขเดี่ยว <input id="singlePayout" type="number" min="0" step=".1" value="9.9"></div>
+      <div class="controls">รอบฝึกขั้นต่ำ <input id="minTrain" type="number" min="5" value="20"> นับกำไร/ขาดทุน <input id="statRounds" type="number" min="1" value="20"> รอบล่าสุด</div>
       <div class="controls"><button class="main" id="go">คำนวณ</button><button id="restore">ข้อมูลตัวอย่าง</button><button id="clear">ล้าง</button></div>
       <div id="error" class="hidden"></div>
     </section>
     <section class="card">
       <h2>2. แนวทางรอบนี้</h2>
-      <div class="call"><div class="note">เลขเว้น 3 ตัว</div><div id="omitNow" class="big">-</div><div id="why" class="note"></div></div>
+      <div class="call"><div class="note">เลขเว้น 3 ตัว ตามหลักที่ปัก</div><div id="omitNow" class="big">-</div><div id="why" class="note"></div></div>
       <div class="note">เลขแทง 7 ตัว</div><div id="digits" class="digits"></div>
-      <div class="stats"><div class="pill">ทุนต่อ 1 ตา<b id="cost">-</b></div><div class="pill">อยู่ชุดนี้อีก<b id="leftInSet">-</b></div><div class="pill">อัตราถูกย้อนหลัง<b id="hitRate">-</b></div></div>
+      <div class="stats"><div class="pill">ทุนต่อ 1 ตา<b id="cost">-</b></div><div class="pill">อยู่ชุดนี้อีก<b id="leftInSet">-</b></div><div class="pill">กำไร/ขาดทุนย้อนหลัง<b id="recentNet">-</b></div></div>
       <div class="warn">สูตรนี้ไม่ตัดเลขที่ค้างนานผิดปกติออกจากชุดแทง แต่ผลสุ่มยังไม่สามารถรับประกันได้</div>
     </section>
-    <section class="card wide"><h2>3. สถิติโต๊ดจากเลขแทง 7 ตัว</h2><table><thead><tr><th>วิธีตรวจ</th><th>รอบล่าสุด</th><th>ถูก</th><th>อัตราถูก</th><th>หมายเหตุ</th></tr></thead><tbody id="tod"></tbody></table></section>
-    <section class="card wide"><h2>4. ตารางเดินไม้</h2><table><thead><tr><th>ไม้</th><th>ตาที่เล่น</th><th>เลขเว้น</th><th>เลขแทง</th><th>ทุน/ไม้</th></tr></thead><tbody id="schedule"></tbody></table></section>
-    <section class="card wide"><h2>5. ทดสอบย้อนหลังแบบไม่ดูอนาคต</h2><div id="walkNote" class="note"></div><table><thead><tr><th>หลักที่ปัก</th><th>รอบทดสอบ</th><th>ถูก</th><th>อัตราถูก</th><th>ทุนรวม</th></tr></thead><tbody id="walk"></tbody></table></section>
+    <section class="card wide">
+      <h2>3. รายการปักอันดับทุกหลัก</h2>
+      <div class="note">รายการนี้เป็นสูตรปักอันดับ เว้น 3 ตัว กด 7 ตัว</div>
+      <div id="positionPlans"></div>
+    </section>
+    <section class="card wide">
+      <h2>4. เลขโต๊ดที่ควรเว้น</h2>
+      <div class="note">โหมดโต๊ดแยกจากปักอันดับ: แต่ละหลักจะเว้น 2 ตัว และกด 8 ตัว</div>
+      <div id="todPositionPlans"></div>
+      <div class="grid" style="margin-top:0">
+        <div>
+          <div class="note">3 ตัวโต๊ดที่ต้องเว้น <b id="omit3Count">-</b></div>
+          <textarea id="omit3List" class="comboBox" readonly></textarea>
+        </div>
+        <div>
+          <div class="note">4 ตัวโต๊ดที่ต้องเว้น <b id="omit4Count">-</b></div>
+          <textarea id="omit4List" class="comboBox" readonly></textarea>
+        </div>
+      </div>
+    </section>
+    <section class="card wide"><h2>5. สถิติโต๊ดจากเลขแทงรายหลัก</h2><table><thead><tr><th>วิธีตรวจ</th><th>รอบล่าสุด</th><th>ถูก</th><th>อัตราถูก</th><th>ทุน/รอบ</th></tr></thead><tbody id="tod"></tbody></table></section>
+    <section class="card wide"><h2>6. ตารางเดินไม้</h2><table><thead><tr><th>ไม้</th><th>ตาที่เล่น</th><th>เลขเว้น</th><th>เลขแทง</th><th>ทุน/ไม้</th></tr></thead><tbody id="schedule"></tbody></table></section>
+    <section class="card wide"><h2>7. ทดสอบย้อนหลังแบบไม่ดูอนาคต</h2><div id="walkNote" class="note"></div><table><thead><tr><th>หลักที่ปัก</th><th>รอบทดสอบ</th><th>ถูก</th><th>อัตราถูก</th><th>กำไร-ขาดทุน</th></tr></thead><tbody id="walk"></tbody></table></section>
   </div>
 </main>
 <script>
@@ -40,16 +61,26 @@ const sample='123\n0804\n579\n216\n1930\n447\n682\n105\n0390\n764\n812\n246\n090
 const labels=['หลักพัน','หลักร้อย','หลักสิบ','หลักหน่วย'],RECENT_WINDOW=5,OVERDUE_GAP=4;let rows=[];
 function parse(){let out=[];data.value.trim().split(/\n+/).filter(Boolean).forEach((line,i)=>{let m=line.match(/\d{3,4}/);if(!m)throw Error('บรรทัด '+(i+1)+' ไม่พบเลข 3 หรือ 4 หลัก');out.push(m[0].padStart(4,'0').slice(-4).split('').map(Number))});if(out.length<6)throw Error('กรุณาใส่อย่างน้อย 6 รอบ');return out}
 function digitRank(a,pos){return Array.from({length:10},(_,d)=>{let gap=a.length+1,count=0,recent=0,weighted=0;a.forEach((r,i)=>{if(r[pos]===d){count++;let age=a.length-1-i;if(gap===a.length+1)gap=age;if(age<RECENT_WINDOW)recent++;weighted+=Math.pow(.88,age)}});let overdue=Math.max(0,gap-OVERDUE_GAP),risk=overdue*3+weighted*2+recent*.8;return{d,gap,count,recent,weighted,risk}}).sort((x,y)=>x.risk-y.risk||x.recent-y.recent||x.gap-y.gap||x.d-y.d)}
-function plan(a,pos,stick,shiftEvery){let order=digitRank(a,pos),offset=Math.floor((stick-1)/shiftEvery)%order.length,omit=[];for(let i=0;i<3;i++)omit.push(order[(offset+i)%order.length].d);let cut=new Set(omit),play=Array.from({length:10},(_,i)=>i).filter(x=>!cut.has(x));return{order,omit,play}}
+function makePlan(a,pos,stick,shiftEvery,omitCount){let order=digitRank(a,pos),offset=Math.floor((stick-1)/shiftEvery)%order.length,omit=[];for(let i=0;i<omitCount;i++)omit.push(order[(offset+i)%order.length].d);let cut=new Set(omit),play=Array.from({length:10},(_,i)=>i).filter(x=>!cut.has(x));return{order,omit,play}}
+function plan(a,pos,stick,shiftEvery){return makePlan(a,pos,stick,shiftEvery,3)}
+function todPlan(a,pos,stick,shiftEvery){return makePlan(a,pos,stick,shiftEvery,2)}
+function allPlans(a,stick,shift){return [0,1,2,3].map(pos=>plan(a,pos,stick,shift))}
+function allTodPlans(a,stick,shift){return [0,1,2,3].map(pos=>todPlan(a,pos,stick,shift))}
+function money(n){return(n<0?'-':'')+Math.abs(n).toLocaleString('th-TH')+' บาท'}
 function hit(row,pos,p){return p.play.includes(row[pos])}
-function money(n){return n.toLocaleString('th-TH')+' บาท'}
 function renderDigits(p){digits.innerHTML=Array.from({length:10},(_,i)=>'<span class="d '+(p.omit.includes(i)?'cut':'')+'">'+i+'</span>').join('')}
+function renderPositionPlansHtml(plans){return plans.map((p,i)=>'<div class="posLine"><b>'+labels[i]+'</b><div>เว้น '+p.omit.map(x=>'<span class="tag cut">'+x+'</span>').join('')+'</div><div>แทง '+p.play.map(x=>'<span class="tag">'+x+'</span>').join('')+'</div></div>').join('')}
+function renderPositionPlans(plans){positionPlans.innerHTML=renderPositionPlansHtml(plans)}
+function comboText(list,total){let shown=list.slice(0,160).join(' ');return shown+(total>list.length?'\n\nแสดงตัวอย่าง '+list.length+' ชุดแรก จากทั้งหมด '+total+' ชุด':'')}
+function todOmitCombos(plans){let omit3=[],omit4=[];for(let a=0;a<10;a++)for(let b=0;b<10;b++)for(let c=0;c<10;c++){if(plans[1].omit.includes(a)||plans[2].omit.includes(b)||plans[3].omit.includes(c))omit3.push(''+a+b+c)}for(let a=0;a<10;a++)for(let b=0;b<10;b++)for(let c=0;c<10;c++)for(let d=0;d<10;d++){if(plans[0].omit.includes(a)||plans[1].omit.includes(b)||plans[2].omit.includes(c)||plans[3].omit.includes(d))omit4.push(''+a+b+c+d)}return{omit3,omit4}}
+function renderTodOmit(plans){let c=todOmitCombos(plans);omit3Count.textContent=c.omit3.length.toLocaleString('th-TH')+' ชุด';omit4Count.textContent=c.omit4.length.toLocaleString('th-TH')+' ชุด';omit3List.value=comboText(c.omit3,c.omit3.length);omit4List.value=comboText(c.omit4,c.omit4.length)}
 function renderSchedule(a,pos,stick,eyes,shift,stake){let html='';for(let s=stick;s<stick+10;s++){let p=plan(a,pos,s,shift),start=(s-1)*eyes+1,end=s*eyes;html+='<tr><td>'+s+'</td><td>'+start+'-'+end+'</td><td>'+p.omit.join(', ')+'</td><td>'+p.play.join(', ')+'</td><td>'+money(p.play.length*stake*eyes)+'</td></tr>'}schedule.innerHTML=html}
-function todStats(a,p,n){let set=new Set(p.play),recent=a.slice(-n),w3=0,w4=0;recent.forEach(r=>{if(r.slice(1).every(d=>set.has(d)))w3++;if(r.every(d=>set.has(d)))w4++});return{recent,w3,w4}}
-function renderTod(a,p,n){let t=todStats(a,p,n);tod.innerHTML='<tr><td>3 ตัวโต๊ด</td><td>'+t.recent.length+'</td><td>'+t.w3+'/'+t.recent.length+'</td><td>'+((t.w3/t.recent.length)*100).toFixed(1)+'%</td><td>ตรวจ 3 หลักท้ายว่าทุกหลักอยู่ในเลขแทง 7 ตัว</td></tr><tr><td>4 ตัวโต๊ด</td><td>'+t.recent.length+'</td><td>'+t.w4+'/'+t.recent.length+'</td><td>'+((t.w4/t.recent.length)*100).toFixed(1)+'%</td><td>ตรวจครบหลักพัน-ร้อย-สิบ-หน่วย</td></tr>'}
-function forward(a,pos,eyes,shift,stake,minTrain){let count=0,wins=0,total=0;for(let i=minTrain;i<a.length;i++){let played=count+1,stick=Math.floor((played-1)/eyes)+1,p=plan(a.slice(0,i),pos,stick,shift),ok=hit(a[i],pos,p);count++;wins+=ok;total+=p.play.length*stake}return{count,wins,total,rate:count?wins/count:0}}
+function todStats(a,plans,n,stake){let recent=a.slice(-n),w3=0,w4=0;recent.forEach(r=>{if(plans[1].play.includes(r[1])&&plans[2].play.includes(r[2])&&plans[3].play.includes(r[3]))w3++;if(plans.every((p,i)=>p.play.includes(r[i])))w4++});return{recent,w3,w4,cost3:Math.pow(8,3)*stake,cost4:Math.pow(8,4)*stake}}
+function renderTod(a,plans,n,stake){let t=todStats(a,plans,n,stake),l=t.recent.length||1;tod.innerHTML='<tr><td>3 ตัวโต๊ด</td><td>'+t.recent.length+'</td><td>'+t.w3+'/'+t.recent.length+'</td><td>'+((t.w3/l)*100).toFixed(1)+'%</td><td>'+money(t.cost3)+'</td></tr><tr><td>4 ตัวโต๊ด</td><td>'+t.recent.length+'</td><td>'+t.w4+'/'+t.recent.length+'</td><td>'+((t.w4/l)*100).toFixed(1)+'%</td><td>'+money(t.cost4)+'</td></tr>'}
+function forward(a,pos,eyes,shift,stake,payout,minTrain,statCount){let count=0,wins=0,total=0,net=0,start=Math.max(minTrain,a.length-statCount);for(let i=start;i<a.length;i++){let played=count+1,stick=Math.floor((played-1)/eyes)+1,p=plan(a.slice(0,i),pos,stick,shift),ok=hit(a[i],pos,p),cost=p.play.length*stake;count++;wins+=ok;total+=cost;net+=ok?stake*payout-cost:-cost}return{count,wins,total,net,rate:count?wins/count:0}}
+function recentSingleNet(a,pos,p,stake,payout,n){let recent=a.slice(-n),wins=recent.filter(r=>hit(r,pos,p)).length,cost=recent.length*p.play.length*stake,net=wins*stake*payout-cost;return{wins,count:recent.length,net,rate:recent.length?wins/recent.length:0}}
 function saveState(){try{localStorage.setItem('thai-single:data',data.value)}catch(e){}}
-function run(){try{rows=parse();saveState();error.classList.add('hidden');let pos=+position.value,eyes=Math.max(1,+eyesPerStick.value||5),shift=Math.max(1,+shiftEvery.value||5),stick=Math.max(1,+stickNo.value||1),stake=Math.max(0,+stake.value||0),minTrain=Math.max(5,Math.min(+minTrain.value||20,rows.length-1)),p=plan(rows,pos,stick,shift),f=forward(rows,pos,eyes,shift,stake,minTrain),watch=p.order.slice(-3).map(x=>x.d).join(', ');omitNow.textContent=p.omit.join(', ');why.textContent='เลขที่ค้างนานจะถูกเฝ้าไว้ในเลขแทงมากขึ้น: '+watch+' · ขยับชุดเว้นทุก '+shift+' ไม้';renderDigits(p);cost.textContent=money(p.play.length*stake);leftInSet.textContent=(shift-((stick-1)%shift))+' ไม้';hitRate.textContent=(f.rate*100).toFixed(1)+'% ('+f.wins+'/'+f.count+')';renderTod(rows,p,Math.min(+minTrain.value||20,rows.length));renderSchedule(rows,pos,stick,eyes,shift,stake);walk.innerHTML='<tr><td>'+labels[pos]+'</td><td>'+f.count+'</td><td>'+f.wins+'/'+f.count+'</td><td>'+(f.rate*100).toFixed(1)+'%</td><td>'+money(f.total)+'</td></tr>';walkNote.textContent=f.count?'แต่ละรอบใช้เฉพาะผลก่อนหน้าในการเลือกเลขเว้น แล้วตรวจรอบถัดไป':'ต้องมีข้อมูลมากกว่ารอบทดสอบขั้นต่ำ'}catch(e){error.textContent=e.message;error.classList.remove('hidden')}}
+function run(){try{rows=parse();saveState();error.classList.add('hidden');let pos=+position.value,eyes=Math.max(1,+eyesPerStick.value||5),shift=Math.max(1,+shiftEvery.value||5),stick=Math.max(1,+stickNo.value||1),stakeAmt=Math.max(0,+document.getElementById('stake').value||0),payout=Math.max(0,+singlePayout.value||0),minTrainVal=Math.max(5,Math.min(+minTrain.value||20,rows.length-1)),statCount=Math.max(1,Math.min(+statRounds.value||20,rows.length)),p=plan(rows,pos,stick,shift),plans=allPlans(rows,stick,shift),todPlans=allTodPlans(rows,stick,shift),f=forward(rows,pos,eyes,shift,stakeAmt,payout,minTrainVal,statCount),recent=recentSingleNet(rows,pos,p,stakeAmt,payout,statCount),watch=p.order.slice(-3).map(x=>x.d).join(', ');omitNow.textContent=p.omit.join(', ');why.textContent='เลขที่ค้างนานจะถูกเฝ้าไว้ในเลขแทงมากขึ้น: '+watch+' · ขยับชุดเว้นทุก '+shift+' ไม้';renderDigits(p);renderPositionPlans(plans);todPositionPlans.innerHTML=renderPositionPlansHtml(todPlans);renderTodOmit(todPlans);cost.textContent=money(p.play.length*stakeAmt);leftInSet.textContent=(shift-((stick-1)%shift))+' ไม้';recentNet.textContent=money(recent.net)+' ('+recent.wins+'/'+recent.count+')';renderTod(rows,todPlans,statCount,stakeAmt);renderSchedule(rows,pos,stick,eyes,shift,stakeAmt);walk.innerHTML='<tr><td>'+labels[pos]+'</td><td>'+f.count+'</td><td>'+f.wins+'/'+f.count+'</td><td>'+(f.rate*100).toFixed(1)+'%</td><td class='+(f.net>=0?'pos':'neg')+'>'+money(f.net)+'</td></tr>';walkNote.textContent=f.count?'คำนวณกำไร-ขาดทุนจาก '+statCount+' รอบล่าสุด โดยแต่ละรอบใช้เฉพาะผลก่อนหน้าในการเลือกเลขเว้น':'ต้องมีข้อมูลมากกว่ารอบฝึกขั้นต่ำ'}catch(e){error.textContent=e.message;error.classList.remove('hidden')}}
 function autoRunOnEnter(e){if(e.key==='Enter')setTimeout(run,0)}
 go.onclick=run;data.addEventListener('input',saveState);data.addEventListener('keyup',autoRunOnEnter);restore.onclick=()=>{data.value=sample;run()};clear.onclick=()=>{data.value='';saveState();data.focus()};data.value=localStorage.getItem('thai-single:data')||sample;run();
 </script>
