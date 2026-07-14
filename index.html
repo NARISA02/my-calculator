@@ -5,180 +5,24 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#2864dc">
   <title>โปรแกรมคำนวณของฉัน</title>
-
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: linear-gradient(135deg, #eef5ff, #fff7ef);
-      color: #111827;
-      min-height: 100vh;
-    }
-
-    .wrap {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 48px 20px;
-    }
-
-    h1 {
-      font-size: 42px;
-      margin: 0 0 8px;
-      font-weight: 800;
-      text-align: center;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #4b5563;
-      margin-bottom: 28px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 18px;
-    }
-
-    .card {
-      background: #ffffff;
-      border: 1px solid #dbe3ef;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 245px;
-    }
-
-    .icon {
-      font-size: 34px;
-      margin-bottom: 12px;
-    }
-
-    .card h2 {
-      font-size: 21px;
-      margin: 0 0 10px;
-    }
-
-    .card p {
-      color: #4b5563;
-      line-height: 1.6;
-      margin: 0 0 18px;
-      font-size: 15px;
-    }
-
-    .btn {
-      display: inline-block;
-      width: fit-content;
-      background: #2563eb;
-      color: white;
-      text-decoration: none;
-      padding: 11px 18px;
-      border-radius: 9px;
-      font-weight: 700;
-    }
-
-    .btn:hover {
-      background: #1d4ed8;
-    }
-
-    .note {
-      margin-top: 24px;
-      background: #fff8db;
-      color: #7a4b00;
-      padding: 14px 18px;
-      border-radius: 12px;
-      font-size: 14px;
-    }
-
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 560px) {
-      h1 {
-        font-size: 32px;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(135deg,#eef5ff,#fff7ef);color:#111827;min-height:100vh}.wrap{max-width:1080px;margin:0 auto;padding:44px 20px}h1{font-size:42px;margin:0 0 8px;font-weight:800;text-align:center}.subtitle{text-align:center;color:#4b5563;margin-bottom:28px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}.card{background:#fff;border:1px solid #dbe3ef;border-radius:12px;padding:22px;box-shadow:0 10px 25px rgba(15,23,42,.08);display:flex;flex-direction:column;justify-content:space-between;min-height:230px}.icon{font-size:34px;margin-bottom:12px}.card h2{font-size:21px;margin:0 0 10px}.card p{color:#4b5563;line-height:1.6;margin:0 0 18px;font-size:15px}.btn{display:inline-block;width:fit-content;background:#2563eb;color:#fff;text-decoration:none;padding:11px 18px;border-radius:9px;font-weight:700}.btn:hover{background:#1d4ed8}.note{margin-top:24px;background:#fff8db;color:#7a4b00;padding:14px 18px;border-radius:12px;font-size:14px}@media(max-width:560px){h1{font-size:32px}.grid{grid-template-columns:1fr}}
   </style>
 </head>
-
 <body>
   <main class="wrap">
     <h1>โปรแกรมคำนวณของฉัน</h1>
     <p class="subtitle">เลือกห้องที่ต้องการใช้งาน</p>
-
     <section class="grid">
-      <div class="card">
-        <div>
-          <div class="icon">🎱</div>
-          <h2>หวยปกติ 2 ตัวล่าง</h2>
-          <p>ตัด 2 ตัว เลือกไว้ 8 ตัว และตรวจผลย้อนหลัง</p>
-        </div>
-        <a class="btn" href="lottery.html">เปิดโปรแกรม</a>
-      </div>
-
-      <div class="card">
-        <div>
-          <div class="icon">🎯</div>
-          <h2>หวยไทย ปักหลักเดี่ยว</h2>
-          <p>เว้น 3 ตัว แทง 7 ตัว เล่นไม้ละ 5 ตา และขยับชุดเว้นทุก 5 ไม้</p>
-        </div>
-        <a class="btn" href="thai-single.html">เปิดโปรแกรม</a>
-      </div>
-
-      <div class="card">
-        <div>
-          <div class="icon">⏱️</div>
-          <h2>หวยไทย 1 นาที</h2>
-          <p>ใส่ผล 2 หลัก แทง 7 ตัว เว้น 3 ตัว พร้อมคู่/คี่ และเล็ก/ใหญ่</p>
-        </div>
-        <a class="btn" href="thai-minute.html">เปิดโปรแกรม</a>
-      </div>
-
-      <div class="card">
-        <div>
-          <div class="icon">🏇</div>
-          <h2>PK10 ป๊อกที่ไพ่</h2>
-          <p>เลือกไพ่เอง แล้วกรอกเฉพาะอันดับของไพ่ใบนั้น</p>
-        </div>
-        <a class="btn" href="pk10-card.html">เปิดโปรแกรม</a>
-      </div>
-
-      <div class="card">
-        <div>
-          <div class="icon">🏁</div>
-          <h2>PK10 ป๊อกที่อันดับ</h2>
-          <p>เลือกอันดับเอง แล้วกรอกเฉพาะเลขไพ่ที่ออก</p>
-        </div>
-        <a class="btn" href="pk10-rank.html">เปิดโปรแกรม</a>
-      </div>
-
-      <div class="card">
-        <div>
-          <div class="icon">🥇</div>
-          <h2>โปรแกรม 1 : PK10 3 อันดับแรก</h2>
-          <p>คำนวณแยกสำหรับสูตร PK10 3 อันดับแรก</p>
-        </div>
-        <a class="btn" href="pk10-TOP3-v0.2.html">เปิดโปรแกรม</a>
-      </div>
+      <div class="card"><div><div class="icon">🎱</div><h2>หวยปกติ 2 ตัวล่าง</h2><p>สูตรเว้นเลขใหม่ เลี่ยงเลขที่เพิ่งออกและเลขที่ค้างนานผิดปกติ</p></div><a class="btn" href="lottery.html">เปิดโปรแกรม</a></div>
+      <div class="card"><div><div class="icon">🎯</div><h2>หวยไทย ปักหลักเดี่ยว</h2><p>รองรับหลักพัน/ร้อย/สิบ/หน่วย พร้อมสถิติ 3 ตัวโต๊ด และ 4 ตัวโต๊ด</p></div><a class="btn" href="thai-single.html">เปิดโปรแกรม</a></div>
+      <div class="card"><div><div class="icon">⏱️</div><h2>หวยไทย 1 นาที</h2><p>ใส่ผล 2 หลัก เว้น 3 ตัว แทง 7 ตัว พร้อมคู่/คี่ และเล็ก/ใหญ่</p></div><a class="btn" href="thai-minute.html">เปิดโปรแกรม</a></div>
+      <div class="card"><div><div class="icon">🏇</div><h2>PK10 ป๊อกที่ไพ่</h2><p>เลือกไพ่เอง แล้วกรอกเฉพาะอันดับของไพ่ใบนั้น</p></div><a class="btn" href="pk10-card.html">เปิดโปรแกรม</a></div>
+      <div class="card"><div><div class="icon">🏁</div><h2>PK10 ป๊อกที่อันดับ</h2><p>เลือกอันดับเอง แล้วกรอกเฉพาะเลขไพ่ที่ออก</p></div><a class="btn" href="pk10-rank.html">เปิดโปรแกรม</a></div>
+      <div class="card"><div><div class="icon">🥇</div><h2>PK10 3 อันดับแรก</h2><p>รับผลแบบไม่ต้องเว้นวรรค ใช้ 0 แทนไพ่ 10 และปรับสูตรเว้นใหม่</p></div><a class="btn" href="pk10-TOP3-v0.2.html">เปิดโปรแกรม</a></div>
+      <div class="card"><div><div class="icon">🎴</div><h2>บาคาร่า แดง/น้ำเงิน/เสมอ</h2><p>วิเคราะห์แนวโน้มรอบถัดไปจากสถิติย้อนหลัง เพื่อใช้ประกอบการตัดสินใจ</p></div><a class="btn" href="baccarat.html">เปิดโปรแกรม</a></div>
     </section>
-
-    <div class="note">
-      โปรแกรมเป็นเพียงการวิเคราะห์สถิติ ผลสุ่มไม่สามารถทำนายได้แน่นอน และไม่รับประกันกำไร
-    </div>
+    <div class="note">โปรแกรมเป็นเพียงการวิเคราะห์สถิติ ผลสุ่มไม่สามารถทำนายได้แน่นอน และไม่รับประกันกำไร</div>
   </main>
 </body>
 </html>
