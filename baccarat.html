@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>บาคาร่า แดง น้ำเงิน เสมอ</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Tahoma,sans-serif;background:linear-gradient(135deg,#f4f8ff,#fff6f3);color:#17202d}.wrap{max-width:1040px;margin:auto;padding:24px}.back{display:inline-block;margin-bottom:14px;color:#2864dc;font-weight:700;text-decoration:none}h1{margin:0}.sub,.note{color:#667085}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}.card{background:#fff;border:1px solid #dce3ec;border-radius:14px;padding:18px;box-shadow:0 8px 24px #3451a010}.wide{grid-column:1/-1}textarea{width:100%;height:300px;border:1px solid #b8c4d4;border-radius:10px;padding:12px;font:15px Consolas,monospace}.controls{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:10px}input{width:120px;padding:8px;border:1px solid #b8c4d4;border-radius:8px}button{padding:10px 14px;border:0;border-radius:9px;font-weight:700;cursor:pointer}.main{background:#2864dc;color:#fff}.signal{border-radius:14px;padding:18px;margin-bottom:12px;border:2px solid #dce3ec}.signal strong{display:block;font-size:34px}.red{background:#fff1f0;border-color:#ff8a80;color:#a61b12}.blue{background:#eef6ff;border-color:#84b8ff;color:#174ea6}.tie{background:#ecfdf3;border-color:#32d583;color:#05603a}.stats{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}.pill{background:#f2f4f7;border-radius:10px;padding:10px 12px}.pill b{display:block;font-size:20px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.chip{min-width:48px;text-align:center;padding:9px 10px;border-radius:10px;font-weight:800;background:#eef2f6}.chip.r{background:#ffe4e0;color:#b42318}.chip.b{background:#dbeafe;color:#174ea6}.chip.t{background:#d1fadf;color:#067647}table{width:100%;border-collapse:collapse}th,td{padding:9px 6px;border-bottom:1px solid #e1e6ee;text-align:right}th:first-child,td:first-child{text-align:left}.pos{color:#087a55;font-weight:700}.neg,#error{color:#c4320a;font-weight:700}.warn{margin-top:12px;padding:10px;background:#fff8e8;border-radius:10px;color:#72520d}.note,.warn{font-size:13px}.hidden{display:none}@media(max-width:760px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <a class="back" href="index.html">← กลับห้องหลัก</a>
+  <h1>บาคาร่า แดง / น้ำเงิน / เสมอ</h1>
+  <div class="sub">วิเคราะห์แนวโน้มจากผลย้อนหลัง เพื่อประกอบการตัดสินใจ ไม่ใช่ผลทำนายแน่นอน</div>
+  <div class="grid">
+    <section class="card">
+      <h2>1. ผลย้อนหลัง</h2>
+      <textarea id="data"></textarea>
+      <div class="note">ใส่ทีละรอบ เช่น แดง น้ำเงิน เสมอ หรือ R B T ก็ได้ จะเว้นวรรคหรือขึ้นบรรทัดใหม่ก็ได้ เรียงเก่าไปใหม่</div>
+      <div class="controls">รอบล่าสุด <input id="win" type="number" min="6" value="30"> น้ำหนัก <input id="decay" type="number" min=".5" max="1" step=".01" value=".94"></div>
+      <div class="controls"><button class="main" id="go">คำนวณ</button><button id="restore">ข้อมูลตัวอย่าง</button><button id="clear">ล้าง</button></div>
+      <div id="error" class="hidden"></div>
+    </section>
+    <section class="card">
+      <h2>2. แนวโน้มรอบถัดไป</h2>
+      <div id="signal" class="signal"><strong id="pick">-</strong><span id="why">กำลังประเมินข้อมูล</span></div>
+      <div class="stats"><div class="pill">ความมั่นใจเชิงสถิติ<b id="confidence">-</b></div><div class="pill">สถิติย้อนหลัง<b id="recentRate">-</b></div><div class="pill">รอบที่ใช้คำนวณ<b id="usedRows">-</b></div></div>
+      <div class="note">ลำดับล่าสุด</div><div id="chips" class="chips"></div>
+      <div class="warn">ถ้าคะแนนใกล้กันมาก ระบบจะแนะนำให้ “รอดู” เพราะความต่างของสถิติยังไม่ชัดพอ</div>
+    </section>
+    <section class="card wide"><h2>3. คะแนนแต่ละฝั่ง</h2><table><thead><tr><th>ฝั่ง</th><th>จำนวนในรอบล่าสุด</th><th>คะแนนถ่วงน้ำหนัก</th><th>ช่องว่างตั้งแต่ออกล่าสุด</th><th>แนวโน้ม</th></tr></thead><tbody id="scores"></tbody></table></section>
+    <section class="card wide"><h2>4. ทดสอบย้อนหลังแบบไม่ดูอนาคต</h2><div id="walkNote" class="note"></div><table><thead><tr><th>รอบทดสอบ</th><th>ถูก</th><th>อัตราถูก</th><th>หมายเหตุ</th></tr></thead><tbody id="walk"></tbody></table></section>
+  </div>
+</main>
+<script>
+const sample='R B B R T B R R B B R T B B R B R R B T R B B R R B B T R B R B B R B R T B B R R B';
+const names={R:'แดง',B:'น้ำเงิน',T:'เสมอ'},classes={R:'red',B:'blue',T:'tie'},keys=['R','B','T'];
+function normalizeToken(t){t=t.trim().toLowerCase();if(!t)return null;if(['r','red','แดง','ด'].includes(t))return'R';if(['b','blue','น้ำเงิน','น้ําเงิน','น้ำ','น'].includes(t))return'B';if(['t','tie','เสมอ','ส'].includes(t))return'T';return null}
+function parse(){let raw=data.value.replace(/แดง|น้ำเงิน|น้ําเงิน|เสมอ|red|blue|tie|[RBTรนดส]/gi,m=>' '+m+' ').split(/[\s,|/]+/).filter(Boolean),out=[];raw.forEach((t,i)=>{let v=normalizeToken(t);if(!v)throw Error('พบคำที่อ่านไม่ได้: '+t+' ตำแหน่ง '+(i+1));out.push(v)});if(out.length<6)throw Error('กรุณาใส่อย่างน้อย 6 รอบ');return out}
+function analyze(a,z){let score={R:0,B:0,T:0},count={R:0,B:0,T:0},gap={R:a.length+1,B:a.length+1,T:a.length+1};a.forEach((x,i)=>{let age=a.length-1-i,w=Math.pow(z,age);score[x]+=w;count[x]++;if(gap[x]===a.length+1)gap[x]=age});keys.forEach(k=>{score[k]+=Math.min(gap[k],8)*.08});let ranked=keys.map(k=>({k,score:score[k],count:count[k],gap:gap[k]})).sort((a,b)=>b.score-a.score||b.count-a.count);return{ranked,score,count,gap}}
+function choose(a,z){let res=analyze(a,z),top=res.ranked[0],second=res.ranked[1],diff=top.score-second.score;if(diff<.18)return{...res,pick:null,diff};return{...res,pick:top.k,diff}}
+function forward(a,n,z){let count=0,wins=0,skip=0;for(let i=Math.max(6,n);i<a.length;i++){let c=choose(a.slice(Math.max(0,i-n),i),z);if(!c.pick){skip++;continue}count++;if(c.pick===a[i])wins++}return{count,wins,skip,rate:count?wins/count:0}}
+function saveState(){try{localStorage.setItem('baccarat:data',data.value)}catch(e){}}
+function run(){try{let rows=parse();saveState();error.classList.add('hidden');let n=Math.max(6,Math.min(+win.value||30,rows.length)),z=Math.max(.5,Math.min(1,+decay.value||.94)),recent=rows.slice(-n),c=choose(recent,z),ranked=c.ranked;signal.className='signal '+(c.pick?classes[c.pick]:'');pick.textContent=c.pick?names[c.pick]:'รอดู';why.textContent=c.pick?'คะแนนนำอันดับสอง '+c.diff.toFixed(2)+' จุด จากรอบล่าสุด '+n+' รอบ':'คะแนนสองฝั่งใกล้กันเกินไป ยังไม่ควรฝืนเลือก';confidence.textContent=c.pick?Math.min(99,Math.max(1,c.diff*25+50)).toFixed(0)+'%':'ต่ำ';recentRate.textContent=ranked.map(x=>names[x.k]+' '+x.count).join(' / ');usedRows.textContent=n+' รอบ';chips.innerHTML=rows.slice(-20).map(x=>'<span class="chip '+x.toLowerCase()+'">'+names[x]+'</span>').join('');scores.innerHTML=ranked.map(x=>'<tr><td>'+names[x.k]+'</td><td>'+x.count+'</td><td>'+x.score.toFixed(2)+'</td><td>'+x.gap+'</td><td>'+(x.k===c.pick?'เด่นสุด':(c.pick?'รอง':'รอดู'))+'</td></tr>').join('');let f=forward(rows,n,z);walk.innerHTML='<tr><td>'+f.count+'</td><td>'+f.wins+'/'+f.count+'</td><td>'+(f.rate*100).toFixed(1)+'%</td><td>ข้ามรอดู '+f.skip+' รอบ</td></tr>';walkNote.textContent=f.count?'ใช้เฉพาะผลก่อนหน้าในการประเมิน แล้วตรวจรอบถัดไป':'ยังมีข้อมูลไม่พอสำหรับทดสอบเดินหน้า'}catch(e){error.textContent=e.message;error.classList.remove('hidden')}}
+function autoRunOnEnter(e){if(e.key==='Enter')setTimeout(run,0)}
+go.onclick=run;data.addEventListener('input',saveState);data.addEventListener('keyup',autoRunOnEnter);restore.onclick=()=>{data.value=sample;run()};clear.onclick=()=>{data.value='';saveState();data.focus()};data.value=localStorage.getItem('baccarat:data')||sample;run();
+</script>
+</body>
+</html>
