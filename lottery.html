@@ -49,8 +49,8 @@ function select(c){big.textContent=c.p;why.textContent='เลี่ยงเว
 function forward(a,n,z){let s=modes.map(m=>({name:m[0],stake:m[1],wins:0,net:0,rate:0})),count=0;for(let i=Math.max(3,n);i<a.length;i++){let c=choices(a.slice(Math.max(0,i-n),i),z)[0],k=keep(c.c);s.forEach((q,j)=>{let ok=modes[j][3](a[i],k);q.wins+=ok;q.net+=ok?modes[j][2]:-q.stake});count++}s.forEach(q=>q.rate=count?q.wins/count:0);return{s,count}}
 function saveState(){try{localStorage.setItem('lottery:data',data.value)}catch(e){}}
 function run(){try{rows=parse();saveState();error.classList.add('hidden');let n=Math.max(3,Math.min(+win.value||20,rows.length)),z=Math.max(.5,Math.min(1,+decay.value||.94));ranked=choices(rows.slice(-n),z);rank.innerHTML=ranked.slice(0,5).map((c,i)=>'<button data-p="'+c.p+'">'+(i+1)+'. เว้น '+c.p+'</button>').join('');document.querySelectorAll('#rank button').forEach((b,i)=>b.onclick=()=>select(ranked[i]));select(ranked[0]);let f=forward(rows,n,z);table('#walk',f.s,f.count);walkNote.textContent=f.count?'ใช้เฉพาะผลก่อนหน้า '+n+' รอบเพื่อเลือกเลขเว้น แล้วตรวจรอบถัดไป':'ต้องมีข้อมูลมากกว่า '+n+' รอบ'}catch(e){error.textContent=e.message;error.classList.remove('hidden')}}
-function autoRunOnEnter(e){if(e.key==='Enter')setTimeout(run,0)}
-go.onclick=run;data.addEventListener('input',saveState);data.addEventListener('keyup',autoRunOnEnter);restore.onclick=()=>{data.value=sample;run()};clear.onclick=()=>{data.value='';saveState();data.focus()};data.value=localStorage.getItem('lottery:data')||sample;run();
+function autoRunOnEnter(e){if(e.key==='Enter')setTimeout(run,20)}
+go.onclick=run;data.addEventListener('input',saveState);data.addEventListener('keydown',autoRunOnEnter);restore.onclick=()=>{data.value=sample;run()};clear.onclick=()=>{data.value='';saveState();data.focus()};data.value=localStorage.getItem('lottery:data')||sample;run();
 </script>
 </body>
 </html>
