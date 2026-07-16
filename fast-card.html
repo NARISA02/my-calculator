@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ห้องไพ่เร็ว</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Segoe UI,Tahoma,sans-serif;background:#f3f7fb;color:#17202d}.wrap{max-width:1140px;margin:auto;padding:24px}.back{display:inline-block;margin-bottom:14px;color:#2864dc;font-weight:700;text-decoration:none}h1{margin:0}.sub,.note{color:#667085}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}.card{background:#fff;border:1px solid #dce3ec;border-radius:14px;padding:18px;box-shadow:0 8px 24px #3451a010}.wide{grid-column:1/-1}textarea{width:100%;height:280px;border:1px solid #b8c4d4;border-radius:10px;padding:12px;font:15px Consolas,monospace}.smallBox{height:76px}.controls{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:10px}select,input{width:126px;padding:8px;border:1px solid #b8c4d4;border-radius:8px;background:#fff}button{padding:10px 14px;border:0;border-radius:9px;font-weight:700;cursor:pointer}.main{background:#2563eb;color:#fff}.call{background:#eef6ff;border-radius:12px;padding:14px;margin-bottom:12px}.big{font-size:30px;font-weight:800}.digits{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.d{width:42px;height:42px;display:grid;place-items:center;background:#e4efff;color:#174ea6;border-radius:10px;font-size:20px;font-weight:800}.cut{background:#ffe5dc;color:#b42318;text-decoration:line-through}.stats{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.pill{background:#f2f4f7;border-radius:10px;padding:10px 12px}.pill b{display:block;font-size:20px}.posLine{display:grid;grid-template-columns:90px 1fr 1fr;gap:8px;align-items:center;border-bottom:1px solid #eef2f6;padding:8px 0}.tag{display:inline-block;border-radius:8px;padding:5px 8px;margin:2px;background:#e4efff;color:#174ea6;font-weight:800}.tag.cut{background:#ffe5dc;color:#b42318;text-decoration:none}table{width:100%;border-collapse:collapse}th,td{padding:9px 6px;border-bottom:1px solid #e1e6ee;text-align:right}th:first-child,td:first-child{text-align:left}.pos{color:#087a55;font-weight:700}.neg,#error{color:#c4320a;font-weight:700}.warn{margin-top:12px;padding:10px;background:#fff8e8;border-radius:10px;color:#72520d}.note,.warn{font-size:13px}.hidden{display:none}@media(max-width:780px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.posLine{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <a class="back" href="index.html">← กลับห้องหลัก</a>
+  <h1>ห้องไพ่เร็ว</h1>
+  <div class="sub">ผล 5 หลัก หมื่น/พัน/ร้อย/สิบ/หน่วย · เว้น 3 ตัว แทง 7 ตัว · สูตรเน้นเกมที่เลขซ้ำบ่อย</div>
+  <div class="grid">
+    <section class="card">
+      <h2>1. ผลย้อนหลัง</h2>
+      <textarea id="data"></textarea>
+      <div class="note">ใส่ผล 5 หลัก เช่น 23740 หรือวางทั้งบรรทัดจากตารางได้ ระบบจะจับเลข 5 หลักชุดแรกในแต่ละบรรทัด เรียงเก่าไปใหม่</div>
+      <div class="controls">ปักหลัก <select id="position"><option value="0">หลักหมื่น</option><option value="1">หลักพัน</option><option value="2">หลักร้อย</option><option value="3">หลักสิบ</option><option value="4" selected>หลักหน่วย</option></select> เงิน/ตัว <input id="stake" type="number" min="0" value="5"> จ่ายเลขเดี่ยว <input id="payout" type="number" min="0" step=".1" value="9.9"></div>
+      <div class="controls">รอบวิเคราะห์ <input id="win" type="number" min="5" value="30"> รอบทดสอบขั้นต่ำ <input id="minTrain" type="number" min="5" value="20"> นับกำไร/ขาดทุน <input id="statRounds" type="number" min="1" value="30"> รอบล่าสุด</div>
+      <div class="note" style="margin-top:10px">เงินลงจริงต่อไม้ ถ้าลงไม่เท่ากัน ใส่เช่น 5 5 10 10 หรือเว้นว่างไว้เพื่อใช้เงิน/ตัว</div>
+      <textarea id="realStakes" class="smallBox"></textarea>
+      <div class="controls"><button class="main" id="go">คำนวณ</button><button id="restore">ข้อมูลตัวอย่าง</button><button id="clear">ล้าง</button></div>
+      <div id="error" class="hidden"></div>
+    </section>
+    <section class="card">
+      <h2>2. แนวทางรอบนี้</h2>
+      <div class="call"><div class="note">เลขเว้น 3 ตัว ตามหลักที่ปัก</div><div id="omitNow" class="big">-</div><div id="why" class="note"></div></div>
+      <div class="note">เลขแทง 7 ตัว</div><div id="digits" class="digits"></div>
+      <div class="stats"><div class="pill">ทุนต่อไม้<b id="cost">-</b></div><div class="pill">ไม้ถัดไป<b id="nextStick">-</b></div><div class="pill">กำไร/ขาดทุนย้อนหลัง<b id="recentNet">-</b></div></div>
+      <div class="warn">สูตรนี้ออกแบบจากรูปแบบที่เลขมักวนซ้ำ จึงให้คะแนนเลขที่เพิ่งออก/ออกถี่ในหลักนั้นสูงกว่าเลขที่ห่างนาน</div>
+    </section>
+    <section class="card wide"><h2>3. เทียบหลักที่น่าเล่นกว่า</h2><div id="bestAdvice" class="note"></div><table><thead><tr><th>หลัก</th><th>ถูก</th><th>อัตราถูก</th><th>กำไร-ขาดทุนเงินจริง</th><th>คำแนะนำ</th></tr></thead><tbody id="bestTable"></tbody></table></section>
+    <section class="card wide"><h2>4. รายการวิเคราะห์ทุกหลัก</h2><div id="positionPlans"></div></section>
+    <section class="card wide"><h2>5. ทดสอบย้อนหลังแบบไม่ดูอนาคต</h2><div id="walkNote" class="note"></div><table><thead><tr><th>หลักที่ปัก</th><th>รอบทดสอบ</th><th>ถูก</th><th>อัตราถูก</th><th>กำไร-ขาดทุนตามเงิน/ตัว</th><th>กำไร-ขาดทุนเงินจริง</th></tr></thead><tbody id="walk"></tbody></table></section>
+  </div>
+</main>
+<script>
+const sample='23740\n25394\n46824\n21725\n21965\n45743\n44925\n79777\n46451\n80810\n82627\n69848\n75871\n63041\n96190\n57474';
+const labels=['หลักหมื่น','หลักพัน','หลักร้อย','หลักสิบ','หลักหน่วย'];let rows=[];
+function parse(){let out=[];data.value.trim().split(/\n+/).filter(Boolean).forEach((line,i)=>{let m=line.match(/\d{5}/);if(!m)throw Error('บรรทัด '+(i+1)+' ไม่พบเลข 5 หลัก เช่น 23740');out.push(m[0].split('').map(Number))});if(out.length<6)throw Error('กรุณาใส่อย่างน้อย 6 รอบ');return out}
+function positionRank(a,pos){return Array.from({length:10},(_,d)=>{let gap=a.length+1,count=0,recent=0,weighted=0,repeat=0;a.forEach((r,i)=>{if(r[pos]===d){count++;let age=a.length-1-i;if(gap===a.length+1)gap=age;if(age<8)recent++;weighted+=Math.pow(.9,age);if(i>0&&a[i-1][pos]===d)repeat++}});let hot=weighted*4+recent*1.2+repeat*2-count*.05-gap*.35;return{d,gap,count,recent,repeat,weighted,hot}}).sort((a,b)=>b.hot-a.hot||a.gap-b.gap||b.recent-a.recent||a.d-b.d)}
+function plan(a,pos){let rank=positionRank(a,pos),play=rank.slice(0,7).map(x=>x.d).sort((a,b)=>a-b),omit=Array.from({length:10},(_,i)=>i).filter(x=>!play.includes(x));return{rank,play,omit}}
+function allPlans(a){return [0,1,2,3,4].map(pos=>plan(a,pos))}
+function hit(row,pos,p){return p.play.includes(row[pos])}
+function money(n){return(n<0?'-':'')+Math.abs(n).toLocaleString('th-TH')+' บาท'}
+function parseActualStakes(){return (realStakes.value.match(/\d+(?:\.\d+)?/g)||[]).map(Number).filter(n=>Number.isFinite(n)&&n>=0)}
+function renderDigits(p){digits.innerHTML=Array.from({length:10},(_,i)=>'<span class="d '+(p.omit.includes(i)?'cut':'')+'">'+i+'</span>').join('')}
+function renderPlans(plans){positionPlans.innerHTML=plans.map((p,i)=>'<div class="posLine"><b>'+labels[i]+'</b><div>เว้น '+p.omit.map(x=>'<span class="tag cut">'+x+'</span>').join('')+'</div><div>แทง '+p.play.map(x=>'<span class="tag">'+x+'</span>').join('')+'</div></div>').join('')}
+function forward(a,pos,stake,payout,minTrain,statCount,actual){let count=0,wins=0,net=0,actualNet=0,start=Math.max(minTrain,a.length-statCount);for(let i=start;i<a.length;i++){let p=plan(a.slice(0,i),pos),ok=hit(a[i],pos,p),realStake=actual[count]??stake,cost=p.play.length*stake,realCost=p.play.length*realStake;count++;wins+=ok;net+=ok?stake*payout-cost:-cost;actualNet+=ok?realStake*payout-realCost:-realCost}return{count,wins,rate:count?wins/count:0,net,actualNet}}
+function comparePositions(a,stake,payout,minTrain,statCount,actual){return labels.map((name,pos)=>{let f=forward(a,pos,stake,payout,minTrain,statCount,actual);return{pos,name,count:f.count,wins:f.wins,rate:f.rate,actualNet:f.actualNet}}).sort((x,y)=>y.actualNet-x.actualNet||y.rate-x.rate||x.pos-y.pos)}
+function renderBestPosition(list,currentPos){let current=list.find(x=>x.pos===currentPos),best=list[0];if(!current||!best||!best.count){bestAdvice.textContent='ต้องมีข้อมูลมากกว่ารอบทดสอบขั้นต่ำ';bestTable.innerHTML='';return}let better=best.pos!==currentPos&&(best.actualNet>current.actualNet||best.rate-current.rate>=.08);bestAdvice.textContent=better?'หลักที่สถิติย้อนหลังดีกว่าตอนนี้คือ '+best.name+' ได้ '+(best.rate*100).toFixed(1)+'% และกำไร/ขาดทุน '+money(best.actualNet)+' เทียบกับหลักที่เลือก '+labels[currentPos]+' ได้ '+(current.rate*100).toFixed(1)+'%':'หลักที่เลือกอยู่ยังไม่แพ้หลักอื่นชัดเจน ดูต่อได้แต่ควรเช็กกำไร/ขาดทุนจริงประกอบ';bestTable.innerHTML=list.map((x,i)=>'<tr><td>'+x.name+(x.pos===currentPos?' (ที่เลือก)':'')+'</td><td>'+x.wins+'/'+x.count+'</td><td>'+(x.rate*100).toFixed(1)+'%</td><td class='+(x.actualNet>=0?'pos':'neg')+'>'+money(x.actualNet)+'</td><td>'+(i===0?'น่าเล่นสุดตอนนี้':(x.pos===currentPos?'ที่เลือกอยู่':'สำรอง'))+'</td></tr>').join('')}
+function recentNet(a,pos,p,stake,payout,n){let recent=a.slice(-n),wins=recent.filter(r=>hit(r,pos,p)).length,cost=recent.length*p.play.length*stake,net=wins*stake*payout-cost;return{wins,count:recent.length,net}}
+function saveState(){try{localStorage.setItem('fast-card:data',data.value)}catch(e){}}
+function run(){try{rows=parse();saveState();error.classList.add('hidden');let pos=+position.value,stakeAmt=Math.max(0,+stake.value||0),pay=Math.max(0,+payout.value||0),n=Math.max(5,Math.min(+win.value||30,rows.length)),minTrainVal=Math.max(5,Math.min(+minTrain.value||20,rows.length-1)),statCount=Math.max(1,Math.min(+statRounds.value||30,rows.length)),actual=parseActualStakes(),history=rows.slice(-n),p=plan(history,pos),plans=allPlans(history),f=forward(rows,pos,stakeAmt,pay,minTrainVal,statCount,actual),best=comparePositions(rows,stakeAmt,pay,minTrainVal,statCount,actual),r=recentNet(rows,pos,p,stakeAmt,pay,statCount),top=p.rank.slice(0,3).map(x=>x.d+'('+x.count+'ครั้ง)').join(', ');omitNow.textContent=p.omit.join(', ');why.textContent='เลขเด่นจากการออกซ้ำ/ออกถี่ใน '+n+' รอบล่าสุด: '+top;renderDigits(p);renderPlans(plans);renderBestPosition(best,pos);cost.textContent=money(p.play.length*stakeAmt);nextStick.textContent='ไม้ '+(rows.length+1);recentNet.textContent=money(r.net)+' ('+r.wins+'/'+r.count+')';walk.innerHTML='<tr><td>'+labels[pos]+'</td><td>'+f.count+'</td><td>'+f.wins+'/'+f.count+'</td><td>'+(f.rate*100).toFixed(1)+'%</td><td class='+(f.net>=0?'pos':'neg')+'>'+money(f.net)+'</td><td class='+(f.actualNet>=0?'pos':'neg')+'>'+money(f.actualNet)+'</td></tr>';walkNote.textContent=f.count?'ทดสอบจาก '+statCount+' รอบล่าสุด โดยแต่ละรอบใช้เฉพาะผลก่อนหน้า':'ต้องมีข้อมูลมากกว่ารอบทดสอบขั้นต่ำ'}catch(e){error.textContent=e.message;error.classList.remove('hidden')}}
+function autoRunOnEnter(e){if(e.key==='Enter')setTimeout(run,20)}
+function autoRunInput(){saveState();clearTimeout(window.__fastCardTimer);window.__fastCardTimer=setTimeout(run,120)}
+go.onclick=run;data.addEventListener('keydown',autoRunOnEnter);data.addEventListener('input',autoRunInput);realStakes.addEventListener('input',()=>setTimeout(run,80));restore.onclick=()=>{data.value=sample;run()};clear.onclick=()=>{data.value='';saveState();data.focus()};data.value=localStorage.getItem('fast-card:data')||sample;run();
+</script>
+</body>
+</html>
