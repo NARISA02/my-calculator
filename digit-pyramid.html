@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0f766e">
+  <title>สูตรถอดเลข 2 ตัวเด่น</title>
+  <style>
+    :root{
+      --bg:#f2fbf9;
+      --card:#fff;
+      --primary:#0f766e;
+      --primary2:#14b8a6;
+      --text:#172526;
+      --muted:#617071;
+      --line:#d9ece8;
+      --soft:#eaf8f5;
+      --warn:#fff7dd;
+      --danger:#be123c;
+      --shadow:0 12px 30px rgba(15,118,110,.10);
+      --radius:22px
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left,#dff8f3 0,transparent 32%),
+        linear-gradient(180deg,#f9fffd,var(--bg))
+    }
+    .wrap{width:min(980px,100%);margin:auto;padding:18px 14px 80px}
+    .hero{
+      color:#fff;
+      padding:24px 20px;
+      border-radius:28px;
+      background:linear-gradient(135deg,#0f766e,#14b8a6 62%,#5eead4);
+      box-shadow:var(--shadow)
+    }
+    .hero h1{margin:0 0 7px;font-size:clamp(27px,6vw,43px);line-height:1.15}
+    .hero p{margin:0;opacity:.94;line-height:1.55}
+    .back{
+      display:inline-block;margin-bottom:12px;color:#eafffb;text-decoration:none;font-weight:800
+    }
+    .card{
+      margin-top:14px;padding:18px;border:1px solid rgba(15,118,110,.10);
+      border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)
+    }
+    h2{margin:0 0 14px;font-size:21px}
+    h3{margin:0 0 9px;font-size:17px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    label{display:block;margin-bottom:7px;font-size:14px;font-weight:800}
+    input,button{font:inherit}
+    input{
+      width:100%;height:52px;padding:0 14px;border:1.5px solid var(--line);
+      border-radius:15px;background:#fff;color:var(--text);font-size:21px;outline:none
+    }
+    input:focus{border-color:var(--primary2);box-shadow:0 0 0 4px rgba(20,184,166,.12)}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+    button{
+      min-height:50px;padding:10px 14px;border:0;border-radius:15px;
+      cursor:pointer;font-weight:900;transition:.15s ease
+    }
+    button:active{transform:scale(.98)}
+    .primary{background:var(--primary);color:#fff}
+    .secondary{background:#e5f4f1;color:#285e59}
+    .copy{background:#e9f9ef;color:#116530}
+    .danger{background:#fff0f3;color:var(--danger)}
+    .error{display:none;margin-top:12px;padding:12px 14px;border-radius:14px;background:#fff1f2;color:#9f1239;font-weight:800}
+    .result{display:none}
+    .source{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+    .chip{padding:7px 11px;border:1px solid #cfe9e4;border-radius:999px;background:var(--soft);color:#0f625b;font-weight:800}
+    .pyramid{
+      display:flex;flex-direction:column;align-items:center;gap:9px;
+      padding:18px 8px;border-radius:20px;background:linear-gradient(180deg,#f5fffd,#effaf7)
+    }
+    .row{
+      display:flex;gap:7px;justify-content:center;flex-wrap:nowrap
+    }
+    .cell{
+      width:clamp(42px,11vw,64px);height:clamp(42px,11vw,64px);
+      display:grid;place-items:center;border-radius:14px;
+      font-size:clamp(23px,6vw,34px);font-weight:1000;
+      background:#fff;border:1px solid #cfe7e2;box-shadow:0 5px 12px rgba(15,118,110,.08)
+    }
+    .row.source-row .cell{background:#dcfce7;color:#166534}
+    .row.secondary-row .cell{background:#dbeafe;color:#1d4ed8}
+    .row.main-row .cell{background:#fee2e2;color:#b91c1c;border-color:#fecaca}
+    .row.single-row .cell{background:#dcfce7;color:#15803d;border-color:#bbf7d0}
+    .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+    .highlight{
+      padding:16px;border-radius:18px;border:1px solid var(--line);text-align:center;background:#fff
+    }
+    .highlight .label{color:var(--muted);font-weight:800;font-size:14px}
+    .big{font-size:clamp(38px,11vw,60px);font-weight:1000;letter-spacing:4px;color:var(--primary);margin-top:3px}
+    .big.single{color:#15803d}
+    .details{display:grid;gap:10px;margin-top:14px}
+    .detail{
+      padding:13px;border:1px solid var(--line);border-radius:16px;background:#fff
+    }
+    .detail-title{font-weight:900;color:#0f625b;margin-bottom:5px}
+    .calcs{line-height:1.75;color:#4e6061}
+    .number-line{font-size:20px;font-weight:1000;letter-spacing:1px;color:#152c2b}
+    .subcard{padding:15px;border:1px solid var(--line);border-radius:18px;background:#fbfffe;margin-top:12px}
+    .pair-list{display:flex;gap:7px;flex-wrap:wrap}
+    .pair{
+      min-width:48px;padding:8px 10px;border-radius:11px;
+      background:#edf8f6;color:#145e58;text-align:center;font-weight:900;border:1px solid #d4ece7
+    }
+    .doors{display:grid;gap:12px}
+    .door-title{font-weight:900;margin-bottom:8px;color:#145e58}
+    .note{
+      padding:12px 14px;border-radius:14px;background:var(--warn);color:#795400;
+      font-size:13px;line-height:1.65;margin-top:14px
+    }
+    .history-empty{text-align:center;color:var(--muted);padding:18px 0}
+    .history-list{display:grid;gap:9px}
+    .history-item{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:#fcfffe
+    }
+    .history-main{font-weight:900}
+    .history-sub{font-size:13px;color:var(--muted);margin-top:3px}
+    .use{min-height:38px;padding:6px 10px;background:#e5f4f1;color:#285e59;flex:0 0 auto}
+    .footer-note{text-align:center;color:var(--muted);font-size:13px;line-height:1.6;margin-top:15px}
+    @media(max-width:620px){
+      .grid,.actions,.result-grid{grid-template-columns:1fr}
+      .hero{padding:22px 18px}
+      .card{padding:15px}
+    }
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <a class="back" href="index.html">← กลับหน้าหลัก</a>
+    <h1>🧮 สูตรถอดเลข 2 ตัวเด่น</h1>
+    <p>บวกเลขที่อยู่ติดกัน เก็บเฉพาะหลักหน่วย แล้วคำนวณลงมาทีละชั้นจนเหลือเลขเด่น</p>
+  </section>
+
+  <section class="card">
+    <h2>กรอกผลรางวัล</h2>
+    <div class="grid">
+      <div>
+        <label for="top">เลขบน 3 ตัว</label>
+        <input id="top" inputmode="numeric" maxlength="3" placeholder="เช่น 489" autocomplete="off">
+      </div>
+      <div>
+        <label for="bottom">เลขล่าง 2 ตัว</label>
+        <input id="bottom" inputmode="numeric" maxlength="2" placeholder="เช่น 75" autocomplete="off">
+      </div>
+    </div>
+    <div class="actions">
+      <button id="calculate" class="primary">คำนวณสูตร</button>
+      <button id="reset" class="secondary">ล้างข้อมูล</button>
+    </div>
+    <div id="error" class="error"></div>
+  </section>
+
+  <section id="result" class="card result">
+    <h2>ผลการคำนวณ</h2>
+    <div id="source" class="source"></div>
+    <div id="pyramid" class="pyramid"></div>
+
+    <div class="result-grid">
+      <div class="highlight">
+        <div class="label">เลขเด่น 2 ตัว</div>
+        <div id="mainTwo" class="big">-</div>
+      </div>
+      <div class="highlight">
+        <div class="label">เลขเด่นตัวเดียว</div>
+        <div id="single" class="big single">-</div>
+      </div>
+    </div>
+
+    <div id="details" class="details"></div>
+
+    <div class="subcard">
+      <h3>เลขรองจับคู่ร่วมเลขเด่น</h3>
+      <div id="secondaryPairs"></div>
+    </div>
+
+    <div class="subcard">
+      <h3>ชุด 19 ประตู</h3>
+      <div id="doors" class="doors"></div>
+    </div>
+
+    <div class="actions">
+      <button id="copyAll" class="copy">คัดลอกผลทั้งหมด</button>
+      <button id="copyMain" class="secondary">คัดลอกเลขเด่น</button>
+    </div>
+
+    <div class="note">
+      จากตัวอย่างในหนังสือ 60339 → 6362 → 998 → 87 → 5:
+      เมื่อนำเลขเด่น 8, 7 จับกับเลขรอง 9, 8 จะได้ 89, 88, 79, 78
+      (ในภาพหนังสือมีเลข 79 ซ้ำท้าย ซึ่งตามหลักจับคู่ควรเป็น 78)
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>ประวัติ 10 รายการล่าสุด</h2>
+    <div id="history"></div>
+    <div class="actions">
+      <button id="clearHistory" class="danger">ล้างประวัติ</button>
+    </div>
+  </section>
+
+  <p class="footer-note">
+    โปรแกรมคำนวณตามรูปแบบในสูตรเท่านั้น ผลรางวัลเป็นการสุ่มและไม่สามารถรับรองผลหรือกำไรได้
+  </p>
+</main>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const topInput = $("top");
+  const bottomInput = $("bottom");
+  const resultBox = $("result");
+  const errorBox = $("error");
+
+  let current = null;
+
+  function cleanInput(input, max) {
+    input.value = input.value.replace(/\D/g, "").slice(0, max);
+  }
+  topInput.addEventListener("input", () => cleanInput(topInput, 3));
+  bottomInput.addEventListener("input", () => cleanInput(bottomInput, 2));
+
+  function showError(text) {
+    errorBox.textContent = text;
+    errorBox.style.display = "block";
+  }
+  function clearError() {
+    errorBox.textContent = "";
+    errorBox.style.display = "none";
+  }
+
+  function nextRow(row) {
+    const out = [];
+    const calculations = [];
+    for (let i = 0; i < row.length - 1; i++) {
+      const total = row[i] + row[i + 1];
+      const digit = total % 10;
+      out.push(digit);
+      calculations.push({
+        a: row[i],
+        b: row[i + 1],
+        total,
+        digit
+      });
+    }
+    return { out, calculations };
+  }
+
+  function makePyramid(source) {
+    const rows = [source];
+    const steps = [];
+    let row = source;
+    while (row.length > 1) {
+      const step = nextRow(row);
+      steps.push(step.calculations);
+      row = step.out;
+      rows.push(row);
+    }
+    return { rows, steps };
+  }
+
+  function uniqueDigits(row) {
+    return [...new Set(row)];
+  }
+
+  function buildPairs(mainDigits, secondaryDigits, reverse = false) {
+    const set = new Set();
+    mainDigits.forEach(m => secondaryDigits.forEach(s => {
+      set.add(reverse ? `${s}${m}` : `${m}${s}`);
+    }));
+    return [...set];
+  }
+
+  function make19Doors(digit) {
+    const d = String(digit);
+    const values = [];
+    for (let i = 0; i <= 9; i++) values.push(`${d}${i}`);
+    for (let i = 0; i <= 9; i++) {
+      if (String(i) !== d) values.push(`${i}${d}`);
+    }
+    return values;
+  }
+
+  function calculate() {
+    clearError();
+    const top = topInput.value;
+    const bottom = bottomInput.value;
+
+    if (!/^\d{3}$/.test(top)) {
+      showError("กรุณากรอกเลขบนให้ครบ 3 หลัก เช่น 489");
+      return;
+    }
+    if (!/^\d{2}$/.test(bottom)) {
+      showError("กรุณากรอกเลขล่างให้ครบ 2 หลัก เช่น 75");
+      return;
+    }
+
+    const source = (top + bottom).split("").map(Number);
+    const pyramid = makePyramid(source);
+    const rows = pyramid.rows;
+    const main = rows[rows.length - 2];
+    const single = rows[rows.length - 1][0];
+
+    current = {
+      top,
+      bottom,
+      source,
+      rows,
+      steps: pyramid.steps,
+      main,
+      single
+    };
+
+    render();
+    saveHistory();
+    renderHistory();
+  }
+
+  function rowClass(index, total) {
+    if (index === 0) return "row source-row";
+    if (index === total - 2) return "row main-row";
+    if (index === total - 1) return "row single-row";
+    return "row secondary-row";
+  }
+
+  function render() {
+    const r = current;
+    $("source").innerHTML = `
+      <span class="chip">บน ${r.top}</span>
+      <span class="chip">ล่าง ${r.bottom}</span>
+      <span class="chip">ต่อเลข ${r.source.join("")}</span>
+    `;
+
+    $("pyramid").innerHTML = r.rows.map((row, index) => `
+      <div class="${rowClass(index, r.rows.length)}" aria-label="แถว ${index + 1}">
+        ${row.map(n => `<div class="cell">${n}</div>`).join("")}
+      </div>
+    `).join("");
+
+    $("mainTwo").textContent = r.main.join("");
+    $("single").textContent = r.single;
+
+    $("details").innerHTML = r.steps.map((step, index) => {
+      const from = r.rows[index].join("");
+      const to = r.rows[index + 1].join("");
+      const calcs = step.map(x =>
+        `${x.a}+${x.b}=${x.total}${x.total >= 10 ? ` → ${x.digit}` : ""}`
+      ).join(" &nbsp; | &nbsp; ");
+      return `
+        <div class="detail">
+          <div class="detail-title">แถว ${index + 1}: ${from} → ${to}</div>
+          <div class="calcs">${calcs}</div>
+        </div>
+      `;
+    }).join("");
+
+    const secondaryRows = r.rows.slice(1, -2);
+    const mainDigits = uniqueDigits(r.main);
+
+    if (!secondaryRows.length) {
+      $("secondaryPairs").innerHTML = `<div class="calcs">ไม่มีแถวเลขรอง</div>`;
+    } else {
+      $("secondaryPairs").innerHTML = secondaryRows.map((row, i) => {
+        const secondary = uniqueDigits(row);
+        const forward = buildPairs(mainDigits, secondary, false);
+        const reverse = buildPairs(mainDigits, secondary, true);
+        return `
+          <div style="margin-top:${i ? "14px" : "0"}">
+            <div class="door-title">เลขรองแถว ${i + 1}: ${row.join("")}</div>
+            <div class="calcs">เด่นนำหน้า</div>
+            <div class="pair-list">${forward.map(x => `<span class="pair">${x}</span>`).join("")}</div>
+            <div class="calcs" style="margin-top:8px">กลับเลข</div>
+            <div class="pair-list">${reverse.map(x => `<span class="pair">${x}</span>`).join("")}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    const doorDigits = [...new Set([...r.main, r.single])];
+    $("doors").innerHTML = doorDigits.map(d => {
+      const doors = make19Doors(d);
+      return `
+        <div>
+          <div class="door-title">เลข ${d} — รวม ${doors.length} ประตู</div>
+          <div class="pair-list">${doors.map(x => `<span class="pair">${x}</span>`).join("")}</div>
+        </div>
+      `;
+    }).join("");
+
+    resultBox.style.display = "block";
+    resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function copyText() {
+    if (!current) return "";
+    const lines = [
+      `บน ${current.top} ล่าง ${current.bottom}`,
+      `ลำดับ: ${current.rows.map(r => r.join("")).join(" → ")}`,
+      `เลขเด่น 2 ตัว: ${current.main.join("")}`,
+      `เลขเด่นตัวเดียว: ${current.single}`
+    ];
+
+    const secondaryRows = current.rows.slice(1, -2);
+    const mainDigits = uniqueDigits(current.main);
+    secondaryRows.forEach((row, i) => {
+      const digits = uniqueDigits(row);
+      lines.push(
+        `เลขรองแถว ${i + 1} ${row.join("")}: ${buildPairs(mainDigits, digits, false).join(" ")}`
+      );
+    });
+
+    [...new Set([...current.main, current.single])].forEach(d => {
+      lines.push(`19 ประตู เลข ${d}: ${make19Doors(d).join(" ")}`);
+    });
+
+    return lines.join("\n");
+  }
+
+  async function copy(value, message) {
+    try {
+      await navigator.clipboard.writeText(value);
+    } catch {
+      const area = document.createElement("textarea");
+      area.value = value;
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand("copy");
+      area.remove();
+    }
+    alert(message);
+  }
+
+  $("copyAll").addEventListener("click", () => {
+    if (current) copy(copyText(), "คัดลอกผลทั้งหมดแล้ว");
+  });
+
+  $("copyMain").addEventListener("click", () => {
+    if (current) copy(`${current.main.join("")} / ${current.single}`, "คัดลอกเลขเด่นแล้ว");
+  });
+
+  $("calculate").addEventListener("click", calculate);
+  [topInput, bottomInput].forEach(input => {
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") calculate();
+    });
+  });
+
+  $("reset").addEventListener("click", () => {
+    topInput.value = "";
+    bottomInput.value = "";
+    current = null;
+    resultBox.style.display = "none";
+    clearError();
+    topInput.focus();
+  });
+
+  function historyData() {
+    try {
+      return JSON.parse(localStorage.getItem("digitPyramidHistory") || "[]");
+    } catch {
+      return [];
+    }
+  }
+
+  function saveHistory() {
+    const data = historyData();
+    const item = {
+      top: current.top,
+      bottom: current.bottom,
+      main: current.main.join(""),
+      single: String(current.single),
+      at: new Date().toLocaleString("th-TH")
+    };
+    const filtered = data.filter(x => !(x.top === item.top && x.bottom === item.bottom));
+    filtered.unshift(item);
+    localStorage.setItem("digitPyramidHistory", JSON.stringify(filtered.slice(0, 10)));
+  }
+
+  function renderHistory() {
+    const data = historyData();
+    const box = $("history");
+    if (!data.length) {
+      box.innerHTML = `<div class="history-empty">ยังไม่มีประวัติการคำนวณ</div>`;
+      return;
+    }
+    box.innerHTML = `<div class="history-list">${
+      data.map((x, i) => `
+        <div class="history-item">
+          <div>
+            <div class="history-main">บน ${x.top} | ล่าง ${x.bottom}</div>
+            <div class="history-sub">เด่น ${x.main} | ตัวเดียว ${x.single} • ${x.at}</div>
+          </div>
+          <button class="use" data-index="${i}">ใช้ซ้ำ</button>
+        </div>
+      `).join("")
+    }</div>`;
+
+    box.querySelectorAll(".use").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const x = data[Number(btn.dataset.index)];
+        topInput.value = x.top;
+        bottomInput.value = x.bottom;
+        calculate();
+      });
+    });
+  }
+
+  $("clearHistory").addEventListener("click", () => {
+    if (confirm("ต้องการล้างประวัติทั้งหมดใช่ไหม?")) {
+      localStorage.removeItem("digitPyramidHistory");
+      renderHistory();
+    }
+  });
+
+  topInput.value = "489";
+  bottomInput.value = "75";
+  renderHistory();
+})();
+</script>
+</body>
+</html>
