@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#be123c">
+  <title>สูตรบวกหาเลขเด่นและวิน 7 ตัว</title>
+  <style>
+    :root{
+      --bg:#fff5f7;--card:#fff;--primary:#be123c;--primary2:#fb7185;
+      --text:#2f1d23;--muted:#75636a;--line:#f3dbe2;--soft:#fff0f4;
+      --green:#15803d;--blue:#1d4ed8;--amber:#b45309;--danger:#be123c;
+      --shadow:0 12px 30px rgba(190,18,60,.10);--radius:22px
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left,#ffe4e9 0,transparent 34%),
+        linear-gradient(180deg,#fffafb,var(--bg))
+    }
+    .wrap{width:min(980px,100%);margin:auto;padding:18px 14px 80px}
+    .hero{
+      padding:24px 20px;border-radius:28px;color:#fff;
+      background:linear-gradient(135deg,#9f1239,#e11d48 58%,#fb7185);
+      box-shadow:var(--shadow)
+    }
+    .hero h1{margin:0 0 7px;font-size:clamp(27px,6vw,43px);line-height:1.15}
+    .hero p{margin:0;opacity:.95;line-height:1.55}
+    .back{display:inline-block;margin-bottom:12px;color:#fff1f2;text-decoration:none;font-weight:900}
+    .card{
+      margin-top:14px;padding:18px;border:1px solid rgba(190,18,60,.10);
+      border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)
+    }
+    h2{margin:0 0 14px;font-size:21px}
+    h3{margin:0 0 8px;font-size:18px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    label{display:block;margin-bottom:7px;font-size:14px;font-weight:900}
+    input,button{font:inherit}
+    input{
+      width:100%;height:52px;padding:0 14px;border:1.5px solid var(--line);
+      border-radius:15px;background:#fff;color:var(--text);font-size:21px;outline:none
+    }
+    input:focus{border-color:var(--primary2);box-shadow:0 0 0 4px rgba(251,113,133,.13)}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+    button{
+      min-height:49px;padding:10px 14px;border:0;border-radius:15px;
+      cursor:pointer;font-weight:900;transition:.15s ease
+    }
+    button:active{transform:scale(.98)}
+    .primary{background:var(--primary);color:#fff}
+    .secondary{background:#f9e6eb;color:#7f1d3f}
+    .copy{background:#e9f9ef;color:#116530}
+    .danger{background:#fff0f3;color:var(--danger)}
+    .error{display:none;margin-top:12px;padding:12px 14px;border-radius:14px;background:#fff1f2;color:#9f1239;font-weight:800}
+    .formula{
+      margin-top:12px;padding:13px 14px;border-radius:15px;background:var(--soft);
+      color:#7f1d3f;line-height:1.75;font-size:14px
+    }
+    .result{display:none}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+    .chip{padding:7px 11px;border:1px solid #f3d2dc;border-radius:999px;background:#fff0f4;color:#9f1239;font-weight:900}
+    .sum-line{
+      padding:15px;border-radius:17px;background:#2e1a21;color:#fff1f2;
+      font-size:clamp(20px,5vw,30px);font-weight:1000;line-height:1.55;overflow-wrap:anywhere
+    }
+    .result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+    .highlight{
+      padding:16px;border-radius:18px;border:1px solid var(--line);text-align:center;background:#fff
+    }
+    .highlight .label{color:var(--muted);font-weight:900;font-size:14px}
+    .big{
+      margin-top:4px;font-size:clamp(38px,10vw,58px);font-weight:1000;
+      letter-spacing:4px;color:var(--primary);overflow-wrap:anywhere
+    }
+    .big.green{color:var(--green)}
+    .big.blue{color:var(--blue)}
+    .flow-box{
+      margin-top:14px;padding:16px;border-radius:18px;background:linear-gradient(135deg,#fff2f5,#fff);
+      border:1px solid var(--line)
+    }
+    .flow-title{font-weight:900;color:#8f1238;margin-bottom:9px}
+    .flow{display:flex;gap:8px;flex-wrap:wrap}
+    .flow-num{
+      width:48px;height:48px;display:grid;place-items:center;border-radius:14px;
+      background:#fff;border:2px solid #f1ccd7;font-size:24px;font-weight:1000;color:#8f1238
+    }
+    .flow-num.hot{background:var(--primary);border-color:var(--primary);color:#fff}
+    .flow-num.base{background:#fff7db;border-color:#f6d365;color:#8a5a00}
+    .subcard{padding:15px;border:1px solid var(--line);border-radius:18px;background:#fffafb;margin-top:13px}
+    .door-title{font-weight:900;color:#8f1238;margin-bottom:8px}
+    .number-list{display:flex;flex-wrap:wrap;gap:6px}
+    .number-chip{
+      min-width:45px;padding:7px 8px;border:1px solid #efd7df;border-radius:10px;
+      background:#fff;text-align:center;font-weight:900;color:#5f2638
+    }
+    .count{margin-top:7px;color:var(--muted);font-size:13px}
+    .note{
+      margin-top:14px;padding:12px 14px;border-radius:14px;background:#fff8db;
+      color:#795400;font-size:13px;line-height:1.65
+    }
+    .history-empty{text-align:center;color:var(--muted);padding:18px 0}
+    .history-list{display:grid;gap:9px}
+    .history-item{
+      display:flex;justify-content:space-between;align-items:center;gap:10px;
+      padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:#fffafb
+    }
+    .history-main{font-weight:900}
+    .history-sub{font-size:13px;color:var(--muted);margin-top:3px}
+    .use{min-height:38px;padding:6px 10px;background:#f9e6eb;color:#7f1d3f;flex:0 0 auto}
+    .footer-note{text-align:center;color:var(--muted);font-size:13px;line-height:1.6;margin-top:15px}
+    @media(max-width:720px){
+      .grid,.actions,.result-grid{grid-template-columns:1fr}
+      .hero{padding:22px 18px}.card{padding:15px}
+    }
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <a class="back" href="index.html">← กลับหน้าหลัก</a>
+    <h1>➕ สูตรบวกหาเลขเด่น</h1>
+    <p>บวกเลขบน 3 ตัวกับเลขล่าง 2 ตัว หาเลขเด่น 2 ตัว และสร้างวิน 7 ตัวอัตโนมัติ</p>
+  </section>
+
+  <section class="card">
+    <h2>กรอกผลรางวัล</h2>
+    <div class="grid">
+      <div>
+        <label for="top">เลขบน 3 ตัว</label>
+        <input id="top" inputmode="numeric" maxlength="3" placeholder="เช่น 234" autocomplete="off">
+      </div>
+      <div>
+        <label for="bottom">เลขล่าง 2 ตัว</label>
+        <input id="bottom" inputmode="numeric" maxlength="2" placeholder="เช่น 56" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="formula">
+      <strong>สูตรในหนังสือ:</strong> บวกเลขทั้ง 5 หลัก แล้วเอาเลขหลักหน่วยเป็นเลขตั้งต้น จากนั้นนับต่ออีก 2 ตัว<br>
+      เช่น 234/56 → 2+3+4+5+6 = 20 → ตั้งต้น 0 → เลขเด่น 1, 2<br>
+      <strong>วิน 7 ตัวอัตโนมัติ:</strong> เริ่มจากเลขตั้งต้น แล้วนับต่อให้ครบ 7 ตัว
+    </div>
+
+    <div class="actions">
+      <button id="calculate" class="primary">คำนวณสูตร</button>
+      <button id="reset" class="secondary">ล้างข้อมูล</button>
+    </div>
+    <div id="error" class="error"></div>
+  </section>
+
+  <section id="result" class="card result">
+    <h2>ผลการคำนวณ</h2>
+    <div id="chips" class="chips"></div>
+    <div id="sumLine" class="sum-line"></div>
+
+    <div class="result-grid">
+      <div class="highlight">
+        <div class="label">เลขตั้งต้น (หลักหน่วยผลรวม)</div>
+        <div id="baseDigit" class="big">-</div>
+      </div>
+      <div class="highlight">
+        <div class="label">เลขเด่น 2 ตัวตามสูตร</div>
+        <div id="hotDigits" class="big green">-</div>
+      </div>
+      <div class="highlight">
+        <div class="label">วิน 7 ตัวแนะนำ</div>
+        <div id="win7" class="big blue">-</div>
+      </div>
+    </div>
+
+    <div class="flow-box">
+      <div class="flow-title">ลำดับการนับวิน 7 ตัว</div>
+      <div id="flow" class="flow"></div>
+    </div>
+
+    <div class="subcard">
+      <h3>19 ประตู เลขเด่น</h3>
+      <div id="doors"></div>
+    </div>
+
+    <div class="subcard">
+      <h3>ชุดวิน 2 ตัวจากวิน 7</h3>
+      <div id="winPairs" class="number-list"></div>
+      <div id="pairCount" class="count"></div>
+    </div>
+
+    <div class="actions">
+      <button id="copyAll" class="copy">คัดลอกผลทั้งหมด</button>
+      <button id="copyWin" class="secondary">คัดลอกวิน 7 ตัว</button>
+    </div>
+
+    <div class="note">
+      วิน 7 ตัวเป็นการต่อยอดจากกติกา “นับเพิ่ม” ในหนังสือ โดยนับต่อเนื่องจากเลขตั้งต้นให้ครบ 7 ตัว
+      ส่วนสูตรต้นฉบับระบุเลขเด่นหลัก ๆ เพียง 2 ตัว คือเลขถัดจากตัวตั้งต้น 1 และ 2 ตำแหน่ง
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>ประวัติ 10 รายการล่าสุด</h2>
+    <div id="history"></div>
+    <div class="actions">
+      <button id="clearHistory" class="danger">ล้างประวัติ</button>
+    </div>
+  </section>
+
+  <p class="footer-note">
+    โปรแกรมคำนวณตามรูปแบบสูตรเท่านั้น ผลรางวัลเป็นการสุ่มและไม่สามารถรับรองผลหรือกำไรได้
+  </p>
+</main>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const topInput = $("top");
+  const bottomInput = $("bottom");
+  const resultBox = $("result");
+  const errorBox = $("error");
+  let current = null;
+
+  function clean(input, max) {
+    input.value = input.value.replace(/\D/g, "").slice(0, max);
+  }
+  topInput.addEventListener("input", () => clean(topInput, 3));
+  bottomInput.addEventListener("input", () => clean(bottomInput, 2));
+
+  function showError(message) {
+    errorBox.textContent = message;
+    errorBox.style.display = "block";
+  }
+  function clearError() {
+    errorBox.textContent = "";
+    errorBox.style.display = "none";
+  }
+
+  function addMod10(n, amount) {
+    return (n + amount) % 10;
+  }
+
+  function make19Doors(digit) {
+    const d = String(digit);
+    const out = [];
+    for (let i = 0; i <= 9; i++) out.push(`${d}${i}`);
+    for (let i = 0; i <= 9; i++) {
+      if (String(i) !== d) out.push(`${i}${d}`);
+    }
+    return out;
+  }
+
+  function orderedPairs(digits, includeDoubles = true) {
+    const out = [];
+    digits.forEach(a => digits.forEach(b => {
+      if (includeDoubles || a !== b) out.push(`${a}${b}`);
+    }));
+    return out;
+  }
+
+  function calculate() {
+    clearError();
+    const top = topInput.value;
+    const bottom = bottomInput.value;
+
+    if (!/^\d{3}$/.test(top)) {
+      showError("กรุณากรอกเลขบนให้ครบ 3 หลัก เช่น 234");
+      return;
+    }
+    if (!/^\d{2}$/.test(bottom)) {
+      showError("กรุณากรอกเลขล่างให้ครบ 2 หลัก เช่น 56");
+      return;
+    }
+
+    const digits = (top + bottom).split("").map(Number);
+    const sum = digits.reduce((a,b) => a + b, 0);
+    const base = sum % 10;
+    const hot = [addMod10(base, 1), addMod10(base, 2)];
+    const flow7 = Array.from({length:7}, (_,i) => addMod10(base, i));
+    const win7 = [...flow7].sort((a,b) => a-b);
+
+    current = { top, bottom, digits, sum, base, hot, flow7, win7 };
+    render();
+    saveHistory();
+    renderHistory();
+  }
+
+  function render() {
+    const r = current;
+    $("chips").innerHTML = `
+      <span class="chip">บน ${r.top}</span>
+      <span class="chip">ล่าง ${r.bottom}</span>
+      <span class="chip">ผลรวม ${r.sum}</span>
+    `;
+
+    $("sumLine").textContent =
+      `${r.digits.join(" + ")} = ${r.sum} → หลักหน่วย ${r.base} → นับเพิ่ม ${r.hot[0]}, ${r.hot[1]}`;
+
+    $("baseDigit").textContent = r.base;
+    $("hotDigits").textContent = r.hot.join("");
+    $("win7").textContent = r.win7.join("");
+
+    $("flow").innerHTML = r.flow7.map((d,i) => {
+      let cls = "flow-num";
+      if (i === 0) cls += " base";
+      if (i === 1 || i === 2) cls += " hot";
+      return `<span class="${cls}">${d}</span>`;
+    }).join("");
+
+    $("doors").innerHTML = r.hot.map(d => {
+      const values = make19Doors(d);
+      return `
+        <div style="margin-top:12px">
+          <div class="door-title">เลข ${d} — 19 ประตู</div>
+          <div class="number-list">${values.map(x => `<span class="number-chip">${x}</span>`).join("")}</div>
+        </div>
+      `;
+    }).join("");
+
+    const pairs = orderedPairs(r.win7.map(String), true);
+    $("winPairs").innerHTML = pairs.map(x => `<span class="number-chip">${x}</span>`).join("");
+    $("pairCount").textContent = `ทั้งหมด ${pairs.length} ชุด (รวมเลขเบิ้ล)`;
+
+    resultBox.style.display = "block";
+    resultBox.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function buildCopyText() {
+    const r = current;
+    const pairs = orderedPairs(r.win7.map(String), true);
+    const lines = [
+      `บน ${r.top} ล่าง ${r.bottom}`,
+      `${r.digits.join("+")} = ${r.sum}`,
+      `เลขตั้งต้น: ${r.base}`,
+      `เลขเด่น 2 ตัว: ${r.hot.join("")}`,
+      `วิน 7 ตัว: ${r.win7.join("")}`,
+      `ลำดับนับ: ${r.flow7.join(" ")}`,
+      `ชุดวิน 2 ตัว: ${pairs.join(" ")}`
+    ];
+    r.hot.forEach(d => lines.push(`19 ประตู เลข ${d}: ${make19Doors(d).join(" ")}`));
+    return lines.join("\n");
+  }
+
+  async function copy(text, message) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const area = document.createElement("textarea");
+      area.value = text;
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand("copy");
+      area.remove();
+    }
+    alert(message);
+  }
+
+  $("copyAll").addEventListener("click", () => {
+    if (current) copy(buildCopyText(), "คัดลอกผลทั้งหมดแล้ว");
+  });
+
+  $("copyWin").addEventListener("click", () => {
+    if (current) copy(current.win7.join(""), "คัดลอกวิน 7 ตัวแล้ว");
+  });
+
+  $("calculate").addEventListener("click", calculate);
+  [topInput,bottomInput].forEach(input => {
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") calculate();
+    });
+  });
+
+  $("reset").addEventListener("click", () => {
+    topInput.value = "";
+    bottomInput.value = "";
+    current = null;
+    resultBox.style.display = "none";
+    clearError();
+    topInput.focus();
+  });
+
+  function loadHistory() {
+    try {
+      return JSON.parse(localStorage.getItem("sumHotWin7History") || "[]");
+    } catch {
+      return [];
+    }
+  }
+
+  function saveHistory() {
+    const data = loadHistory();
+    const item = {
+      top: current.top,
+      bottom: current.bottom,
+      sum: current.sum,
+      hot: current.hot.join(""),
+      win7: current.win7.join(""),
+      at: new Date().toLocaleString("th-TH")
+    };
+    const filtered = data.filter(x => !(x.top === item.top && x.bottom === item.bottom));
+    filtered.unshift(item);
+    localStorage.setItem("sumHotWin7History", JSON.stringify(filtered.slice(0,10)));
+  }
+
+  function renderHistory() {
+    const data = loadHistory();
+    const box = $("history");
+    if (!data.length) {
+      box.innerHTML = `<div class="history-empty">ยังไม่มีประวัติการคำนวณ</div>`;
+      return;
+    }
+
+    box.innerHTML = `<div class="history-list">${
+      data.map((x,i) => `
+        <div class="history-item">
+          <div>
+            <div class="history-main">บน ${x.top} | ล่าง ${x.bottom}</div>
+            <div class="history-sub">รวม ${x.sum} | เด่น ${x.hot} | วิน ${x.win7} • ${x.at}</div>
+          </div>
+          <button class="use" data-index="${i}">ใช้ซ้ำ</button>
+        </div>
+      `).join("")
+    }</div>`;
+
+    box.querySelectorAll(".use").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const x = data[Number(btn.dataset.index)];
+        topInput.value = x.top;
+        bottomInput.value = x.bottom;
+        calculate();
+      });
+    });
+  }
+
+  $("clearHistory").addEventListener("click", () => {
+    if (confirm("ต้องการล้างประวัติทั้งหมดใช่ไหม?")) {
+      localStorage.removeItem("sumHotWin7History");
+      renderHistory();
+    }
+  });
+
+  topInput.value = "234";
+  bottomInput.value = "56";
+  renderHistory();
+})();
+</script>
+</body>
+</html>
