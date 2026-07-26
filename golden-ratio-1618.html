@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#9a6700">
+  <title>สูตรสัดส่วนทองคำ 1.618</title>
+  <style>
+    :root{
+      --bg:#fffaf0;--card:#fff;--gold:#9a6700;--gold2:#d4a017;
+      --text:#2d2618;--muted:#716858;--line:#eadfca;--soft:#fff5da;
+      --green:#15803d;--blue:#1d4ed8;--red:#be123c;--purple:#6d28d9;
+      --shadow:0 12px 30px rgba(135,94,10,.11);--radius:22px
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left,#fff0bd 0,transparent 32%),
+        linear-gradient(180deg,#fffefa,var(--bg))
+    }
+    .wrap{width:min(1120px,100%);margin:auto;padding:18px 14px 80px}
+    .hero{
+      padding:24px 20px;border-radius:28px;color:#fff;
+      background:linear-gradient(135deg,#7c5200,#b77900 58%,#e5b62f);
+      box-shadow:var(--shadow)
+    }
+    .hero h1{margin:0 0 7px;font-size:clamp(27px,6vw,43px);line-height:1.15}
+    .hero p{margin:0;opacity:.95;line-height:1.55}
+    .back{display:inline-block;margin-bottom:12px;color:#fff9e8;text-decoration:none;font-weight:900}
+    .card{
+      margin-top:14px;padding:18px;border:1px solid rgba(154,103,0,.11);
+      border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)
+    }
+    h2{margin:0 0 14px;font-size:21px}
+    h3{margin:0 0 8px;font-size:18px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    label{display:block;margin-bottom:7px;font-size:14px;font-weight:900}
+    input,select,button{font:inherit}
+    input,select{
+      width:100%;height:52px;padding:0 14px;border:1.5px solid var(--line);
+      border-radius:15px;background:#fff;color:var(--text);font-size:20px;outline:none
+    }
+    select{font-size:16px}
+    input:focus,select:focus{border-color:var(--gold2);box-shadow:0 0 0 4px rgba(212,160,23,.14)}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+    button{
+      min-height:49px;padding:10px 14px;border:0;border-radius:15px;
+      cursor:pointer;font-weight:900;transition:.15s ease
+    }
+    button:active{transform:scale(.98)}
+    .primary{background:var(--gold);color:#fff}
+    .secondary{background:#f5ead0;color:#6d4a00}
+    .copy{background:#e9f9ef;color:#116530}
+    .danger{background:#fff0f3;color:var(--red)}
+    .error{display:none;margin-top:12px;padding:12px 14px;border-radius:14px;background:#fff1f2;color:#9f1239;font-weight:800}
+    .formula{
+      margin-top:12px;padding:13px 14px;border-radius:15px;background:var(--soft);
+      color:#71500c;line-height:1.75;font-size:14px
+    }
+    .tabs{
+      display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px
+    }
+    .tab{
+      background:#f4ead1;color:#704d05;border:1px solid #ead8ae
+    }
+    .tab.active{background:var(--gold);color:#fff;border-color:var(--gold)}
+    .panel{display:none}
+    .panel.active{display:block}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+    .chip{padding:7px 11px;border:1px solid #ead8ad;border-radius:999px;background:#fff7e2;color:#7a5100;font-weight:900}
+    .normal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .result-card{
+      padding:16px;border:1px solid var(--line);border-radius:19px;background:#fffefa
+    }
+    .result-card h3{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .badge{padding:5px 9px;border-radius:999px;background:#fff0c4;color:#805500;font-size:12px}
+    .equation{
+      padding:13px;border-radius:14px;background:#302716;color:#fff9e8;
+      font-size:clamp(18px,4vw,24px);font-weight:1000;overflow-wrap:anywhere
+    }
+    .main-result{
+      margin-top:11px;padding:13px;border-radius:15px;background:linear-gradient(135deg,#fff4c9,#fffdf5);
+      border:1px solid #eed996
+    }
+    .label{font-size:13px;color:var(--muted);font-weight:900}
+    .big{
+      margin-top:3px;font-size:clamp(34px,8vw,50px);font-weight:1000;
+      letter-spacing:3px;color:var(--gold);overflow-wrap:anywhere
+    }
+    .mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .mini{
+      padding:10px;border:1px solid var(--line);border-radius:13px;background:#fff
+    }
+    .mini strong{display:block;margin-top:3px;font-size:22px;letter-spacing:1px}
+    .positions{
+      display:grid;gap:8px;margin-top:11px
+    }
+    .position{
+      display:flex;justify-content:space-between;gap:10px;align-items:center;
+      padding:9px 10px;border:1px solid var(--line);border-radius:12px;background:#fff
+    }
+    .position span{color:var(--muted);font-size:13px;font-weight:800}
+    .position b{font-size:20px;letter-spacing:1px}
+    .win-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .win-card{
+      padding:16px;border:1px solid var(--line);border-radius:19px;background:#fffefa
+    }
+    .win-card.recommended{border:2px solid #bb8c12;background:linear-gradient(135deg,#fff4c9,#fff)}
+    .win-title{font-weight:1000;color:#725000;margin-bottom:6px}
+    .win-number{
+      font-size:clamp(38px,9vw,58px);font-weight:1000;letter-spacing:4px;
+      color:var(--blue);overflow-wrap:anywhere
+    }
+    .priority{margin-top:7px;color:var(--muted);font-size:13px;line-height:1.6}
+    .number-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+    .number-chip{
+      min-width:44px;padding:7px 8px;border:1px solid #eadcc0;border-radius:10px;
+      background:#fff;text-align:center;font-weight:900;color:#59451e
+    }
+    .small-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .small-actions button{min-height:41px;font-size:13px}
+    .note{
+      margin-top:14px;padding:12px 14px;border-radius:14px;background:#fff8db;
+      color:#795400;font-size:13px;line-height:1.65
+    }
+    .history-empty{text-align:center;color:var(--muted);padding:18px 0}
+    .history-list{display:grid;gap:9px}
+    .history-item{
+      display:flex;justify-content:space-between;align-items:center;gap:10px;
+      padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:#fffefa
+    }
+    .history-main{font-weight:900}
+    .history-sub{font-size:13px;color:var(--muted);margin-top:3px}
+    .use{min-height:38px;padding:6px 10px;background:#f5ead0;color:#6d4a00;flex:0 0 auto}
+    .footer-note{text-align:center;color:var(--muted);font-size:13px;line-height:1.6;margin-top:15px}
+    @media(max-width:900px){
+      .normal-grid,.win-grid{grid-template-columns:1fr}
+    }
+    @media(max-width:620px){
+      .grid,.actions,.tabs{grid-template-columns:1fr}
+      .hero{padding:22px 18px}.card{padding:15px}
+    }
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <a class="back" href="index.html">← กลับหน้าหลัก</a>
+    <h1>✨ สูตรสัดส่วนทองคำ 1.618</h1>
+    <p>แยกสูตรปกติจากสูตรวิน 7 ตัว พร้อมคำนวณเลขบน–ล่างและตำแหน่งเด่นตามตัวอย่างในหนังสือ</p>
+  </section>
+
+  <section class="card">
+    <h2>กรอกผลรางวัล</h2>
+    <div class="grid">
+      <div>
+        <label for="top">เลขบน 3 ตัว</label>
+        <input id="top" inputmode="numeric" maxlength="3" placeholder="เช่น 245" autocomplete="off">
+      </div>
+      <div>
+        <label for="bottom">เลขล่าง 2 ตัว</label>
+        <input id="bottom" inputmode="numeric" maxlength="2" placeholder="เช่น 67" autocomplete="off">
+      </div>
+    </div>
+
+    <div style="margin-top:12px">
+      <label for="directSource">สูตรเลือกชุดเลข ใช้ชุดใดคูณ 1.618</label>
+      <select id="directSource">
+        <option value="top3">3 ตัวบน</option>
+        <option value="top2">2 ตัวบน (สิบ–หน่วย)</option>
+        <option value="bottom2">2 ตัวล่าง</option>
+      </select>
+    </div>
+
+    <div class="formula">
+      <strong>สูตรปกติในห้องนี้</strong><br>
+      1) ต่อเลขบน 3 ตัวกับล่าง 2 ตัว แล้วคูณ 1.618<br>
+      2) บวกเลขทั้ง 5 หลัก แล้วนำผลรวมคูณ 1.618<br>
+      3) เลือก 3 ตัวบน / 2 ตัวบน / 2 ตัวล่าง แล้วคูณ 1.618
+    </div>
+
+    <div class="actions">
+      <button id="calculate" class="primary">คำนวณทั้งหมด</button>
+      <button id="reset" class="secondary">ล้างข้อมูล</button>
+    </div>
+    <div id="error" class="error"></div>
+  </section>
+
+  <section id="result" class="card" style="display:none">
+    <div class="tabs">
+      <button class="tab active" data-tab="normal">สูตรปกติ 1.618</button>
+      <button class="tab" data-tab="win7">สูตรวิน 7 ตัว</button>
+    </div>
+
+    <div id="normalPanel" class="panel active">
+      <h2>ผลสูตรปกติ</h2>
+      <div id="chips" class="chips"></div>
+      <div id="normalGrid" class="normal-grid"></div>
+
+      <div class="actions">
+        <button id="copyNormal" class="copy">คัดลอกสูตรปกติทั้งหมด</button>
+        <button id="copyHot" class="secondary">คัดลอกเลขเด่น</button>
+      </div>
+    </div>
+
+    <div id="win7Panel" class="panel">
+      <h2>วิน 7 ตัวอัตโนมัติ</h2>
+      <div id="winGrid" class="win-grid"></div>
+
+      <div class="note">
+        <strong>สำคัญ:</strong> หนังสืออธิบายตำแหน่งเลขเด่นและพิกัด แต่ไม่ได้กำหนดวิธีคัดวิน 7 ตัวไว้โดยตรง
+        ส่วนวิน 7 ในโปรแกรมเป็นสูตรเสริม โดยให้เลขเด่นจากสูตรปกติมีลำดับความสำคัญก่อน
+        แล้วเก็บเลขในผลคำนวณที่ไม่ซ้ำจนครบ 7 ตัว
+      </div>
+
+      <div class="actions">
+        <button id="copyAllWins" class="copy">คัดลอกวิน 7 ทั้งหมด</button>
+        <button id="copyMixed" class="secondary">คัดลอกวิน 7 ผสม</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>ประวัติ 10 รายการล่าสุด</h2>
+    <div id="history"></div>
+    <div class="actions">
+      <button id="clearHistory" class="danger">ล้างประวัติ</button>
+    </div>
+  </section>
+
+  <p class="footer-note">
+    โปรแกรมคำนวณตามรูปแบบสูตรเท่านั้น ผลรางวัลเป็นการสุ่มและไม่สามารถรับรองผลหรือกำไรได้
+  </p>
+</main>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const topInput = $("top");
+  const bottomInput = $("bottom");
+  const directSource = $("directSource");
+  const resultBox = $("result");
+  const errorBox = $("error");
+  let current = null;
+
+  function clean(input, max) {
+    input.value = input.value.replace(/\D/g, "").slice(0, max);
+  }
+  topInput.addEventListener("input", () => clean(topInput, 3));
+  bottomInput.addEventListener("input", () => clean(bottomInput, 2));
+
+  function showError(message) {
+    errorBox.textContent = message;
+    errorBox.style.display = "block";
+  }
+  function clearError() {
+    errorBox.textContent = "";
+    errorBox.style.display = "none";
+  }
+
+  function multiply1618(numberText) {
+    const n = BigInt(numberText || "0");
+    const scaled = n * 1618n;
+    const integerPart = scaled / 1000n;
+    const fractionPart = (scaled % 1000n).toString().padStart(3, "0");
+    return {
+      source: numberText,
+      integer: integerPart.toString(),
+      fraction: fractionPart,
+      display: `${Number(integerPart).toLocaleString("en-US")}.${fractionPart}`,
+      digits: `${integerPart}${fractionPart}`.split("")
+    };
+  }
+
+  function firstTwo(text) {
+    return text.padEnd(2, "0").slice(0, 2);
+  }
+  function secondThird(text) {
+    const t = text.padEnd(3, "0");
+    return t.slice(1, 3);
+  }
+  function crossDecimal(result) {
+    const lastInt = result.integer.slice(-1);
+    const firstFrac = result.fraction[0];
+    return `${lastInt}${firstFrac}`;
+  }
+  function lastThree(text) {
+    return text.padStart(3, "0").slice(-3);
+  }
+  function directValue(top, bottom, mode) {
+    if (mode === "top2") return top.slice(-2);
+    if (mode === "bottom2") return bottom;
+    return top;
+  }
+  function directLabel(mode) {
+    if (mode === "top2") return "2 ตัวบน";
+    if (mode === "bottom2") return "2 ตัวล่าง";
+    return "3 ตัวบน";
+  }
+
+  function uniquePriority(groups, fallbackGroups = []) {
+    const out = [];
+    const add = value => {
+      String(value).split("").forEach(ch => {
+        if (/^\d$/.test(ch) && !out.includes(ch) && out.length < 7) out.push(ch);
+      });
+    };
+    groups.forEach(add);
+    fallbackGroups.forEach(add);
+    for (let i = 0; i <= 9 && out.length < 7; i++) add(String(i));
+    return {
+      priority: out.slice(0, 7),
+      sorted: out.slice(0, 7).sort((a,b) => Number(a) - Number(b))
+    };
+  }
+
+  function orderedPairs(digits, includeDoubles = true) {
+    const out = [];
+    digits.forEach(a => digits.forEach(b => {
+      if (includeDoubles || a !== b) out.push(`${a}${b}`);
+    }));
+    return out;
+  }
+
+  function calculate() {
+    clearError();
+    const top = topInput.value;
+    const bottom = bottomInput.value;
+    const mode = directSource.value;
+
+    if (!/^\d{3}$/.test(top)) {
+      showError("กรุณากรอกเลขบนให้ครบ 3 หลัก เช่น 245");
+      return;
+    }
+    if (!/^\d{2}$/.test(bottom)) {
+      showError("กรุณากรอกเลขล่างให้ครบ 2 หลัก เช่น 67");
+      return;
+    }
+
+    const concatSource = top + bottom;
+    const digits = concatSource.split("").map(Number);
+    const sum = digits.reduce((a,b) => a + b, 0);
+    const selected = directValue(top, bottom, mode);
+
+    const formula1 = multiply1618(concatSource);
+    const formula2 = multiply1618(String(sum));
+    const formula3 = multiply1618(selected);
+
+    formula1.hotFront = firstTwo(formula1.integer);
+    formula1.hotSecond = secondThird(formula1.integer);
+    formula1.hotCross = crossDecimal(formula1);
+    formula1.upperZone = lastThree(formula1.integer);
+    formula1.lowerZone = formula1.fraction;
+
+    formula2.hotCross = crossDecimal(formula2);
+    formula3.hotCross = crossDecimal(formula3);
+
+    const win1 = uniquePriority(
+      [formula1.hotFront, formula1.hotSecond, formula1.hotCross],
+      [formula1.upperZone, formula1.lowerZone, concatSource]
+    );
+    const win2 = uniquePriority(
+      [formula2.hotCross],
+      [formula2.integer, formula2.fraction, String(sum), concatSource]
+    );
+    const win3 = uniquePriority(
+      [formula3.hotCross],
+      [formula3.integer, formula3.fraction, selected, concatSource]
+    );
+    const winMixed = uniquePriority(
+      [formula1.hotFront, formula1.hotSecond, formula1.hotCross, formula2.hotCross, formula3.hotCross],
+      [formula1.integer, formula1.fraction, formula2.integer, formula2.fraction, formula3.integer, formula3.fraction, concatSource]
+    );
+
+    current = {
+      top,bottom,mode,selected,sum,digits,
+      formula1,formula2,formula3,
+      win1,win2,win3,winMixed
+    };
+
+    render();
+    saveHistory();
+    renderHistory();
+  }
+
+  function formulaCard1(r) {
+    return `
+      <article class="result-card">
+        <h3>สูตร 1: ต่อเลข 5 หลัก <span class="badge">${r.formula1.source}</span></h3>
+        <div class="equation">${r.formula1.source} × 1.618 = ${r.formula1.display}</div>
+        <div class="main-result">
+          <div class="label">เลขเด่นหน้าสุด 2 ตัว</div>
+          <div class="big">${r.formula1.hotFront}</div>
+        </div>
+        <div class="mini-grid">
+          <div class="mini"><span class="label">เลขเด่นลำดับ 2–3</span><strong>${r.formula1.hotSecond}</strong></div>
+          <div class="mini"><span class="label">เลขเด่นข้ามจุด</span><strong>${r.formula1.hotCross}</strong></div>
+        </div>
+        <div class="positions">
+          <div class="position"><span>พิกัดบน / วิ่ง–รูด</span><b>${r.formula1.upperZone}</b></div>
+          <div class="position"><span>พิกัดล่าง / วิ่ง–รูด</span><b>${r.formula1.lowerZone}</b></div>
+        </div>
+      </article>
+    `;
+  }
+
+  function formulaCard2(r) {
+    return `
+      <article class="result-card">
+        <h3>สูตร 2: ผลรวม 5 หลัก <span class="badge">รวม ${r.sum}</span></h3>
+        <div class="equation">${r.digits.join("+")} = ${r.sum}<br>${r.sum} × 1.618 = ${r.formula2.display}</div>
+        <div class="main-result">
+          <div class="label">เลขเด่นหน้า–หลังจุด</div>
+          <div class="big">${r.formula2.hotCross}</div>
+        </div>
+        <div class="positions">
+          <div class="position"><span>เลขหน้าจุด</span><b>${r.formula2.integer.slice(-1)}</b></div>
+          <div class="position"><span>เลขหลังจุดตัวแรก</span><b>${r.formula2.fraction[0]}</b></div>
+        </div>
+      </article>
+    `;
+  }
+
+  function formulaCard3(r) {
+    return `
+      <article class="result-card">
+        <h3>สูตร 3: เลือกชุดเลข <span class="badge">${directLabel(r.mode)} ${r.selected}</span></h3>
+        <div class="equation">${r.selected} × 1.618 = ${r.formula3.display}</div>
+        <div class="main-result">
+          <div class="label">เลขเด่นหน้า–หลังจุด</div>
+          <div class="big">${r.formula3.hotCross}</div>
+        </div>
+        <div class="positions">
+          <div class="position"><span>เลขหน้าจุด</span><b>${r.formula3.integer.slice(-1)}</b></div>
+          <div class="position"><span>เลขหลังจุดตัวแรก</span><b>${r.formula3.fraction[0]}</b></div>
+        </div>
+      </article>
+    `;
+  }
+
+  function winCard(title, win, className = "") {
+    const pairs = orderedPairs(win.sorted, true);
+    return `
+      <article class="win-card ${className}">
+        <div class="win-title">${title}</div>
+        <div class="win-number">${win.sorted.join("")}</div>
+        <div class="priority">ลำดับก่อนเรียง: ${win.priority.join(" → ")}</div>
+        <div class="small-actions">
+          <button class="copy copy-win" data-win="${win.sorted.join("")}">คัดลอกวิน 7</button>
+          <button class="secondary toggle-pairs">ดูชุด 2 ตัว</button>
+        </div>
+        <div class="pairs-box" style="display:none">
+          <div class="number-list">${pairs.map(x => `<span class="number-chip">${x}</span>`).join("")}</div>
+          <div class="priority">ทั้งหมด ${pairs.length} ชุด รวมเลขเบิ้ล</div>
+        </div>
+      </article>
+    `;
+  }
+
+  function render() {
+    const r = current;
+    $("chips").innerHTML = `
+      <span class="chip">บน ${r.top}</span>
+      <span class="chip">ล่าง ${r.bottom}</span>
+      <span class="chip">ต่อเลข ${r.top}${r.bottom}</span>
+      <span class="chip">ผลรวม ${r.sum}</span>
+    `;
+
+    $("normalGrid").innerHTML =
+      formulaCard1(r) +
+      formulaCard2(r) +
+      formulaCard3(r);
+
+    $("winGrid").innerHTML =
+      winCard("วิน 7 จากสูตร 1", r.win1) +
+      winCard("วิน 7 จากสูตร 2", r.win2) +
+      winCard("วิน 7 ผสมสูตร 1–3 (แนะนำ)", r.winMixed, "recommended");
+
+    bindWinActions();
+
+    resultBox.style.display = "block";
+    resultBox.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function bindWinActions() {
+    document.querySelectorAll(".copy-win").forEach(btn => {
+      btn.addEventListener("click", () => copy(btn.dataset.win, "คัดลอกวิน 7 แล้ว"));
+    });
+    document.querySelectorAll(".toggle-pairs").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const box = btn.closest(".win-card").querySelector(".pairs-box");
+        const open = box.style.display !== "none";
+        box.style.display = open ? "none" : "block";
+        btn.textContent = open ? "ดูชุด 2 ตัว" : "ซ่อนชุด 2 ตัว";
+      });
+    });
+  }
+
+  function normalText() {
+    const r = current;
+    return [
+      `บน ${r.top} ล่าง ${r.bottom}`,
+      `สูตร 1: ${r.formula1.source} × 1.618 = ${r.formula1.display}`,
+      `เด่นหน้าสุด ${r.formula1.hotFront} | เด่นลำดับ 2–3 ${r.formula1.hotSecond} | ข้ามจุด ${r.formula1.hotCross}`,
+      `พิกัดบน ${r.formula1.upperZone} | พิกัดล่าง ${r.formula1.lowerZone}`,
+      `สูตร 2: ${r.sum} × 1.618 = ${r.formula2.display} | เด่น ${r.formula2.hotCross}`,
+      `สูตร 3 (${directLabel(r.mode)} ${r.selected}): ${r.formula3.display} | เด่น ${r.formula3.hotCross}`
+    ].join("\n");
+  }
+
+  async function copy(text, message) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const area = document.createElement("textarea");
+      area.value = text;
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand("copy");
+      area.remove();
+    }
+    alert(message);
+  }
+
+  $("copyNormal").addEventListener("click", () => {
+    if (current) copy(normalText(), "คัดลอกสูตรปกติแล้ว");
+  });
+
+  $("copyHot").addEventListener("click", () => {
+    if (!current) return;
+    copy(
+      `สูตร1 ${current.formula1.hotFront}/${current.formula1.hotSecond}/${current.formula1.hotCross}\nสูตร2 ${current.formula2.hotCross}\nสูตร3 ${current.formula3.hotCross}`,
+      "คัดลอกเลขเด่นแล้ว"
+    );
+  });
+
+  $("copyAllWins").addEventListener("click", () => {
+    if (!current) return;
+    copy(
+      `วิน7 สูตร1 ${current.win1.sorted.join("")}\nวิน7 สูตร2 ${current.win2.sorted.join("")}\nวิน7 ผสม ${current.winMixed.sorted.join("")}`,
+      "คัดลอกวิน 7 ทั้งหมดแล้ว"
+    );
+  });
+
+  $("copyMixed").addEventListener("click", () => {
+    if (current) copy(current.winMixed.sorted.join(""), "คัดลอกวิน 7 ผสมแล้ว");
+  });
+
+  document.querySelectorAll(".tab").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+      document.querySelectorAll(".panel").forEach(x => x.classList.remove("active"));
+      btn.classList.add("active");
+      $(btn.dataset.tab === "normal" ? "normalPanel" : "win7Panel").classList.add("active");
+    });
+  });
+
+  $("calculate").addEventListener("click", calculate);
+  [topInput,bottomInput].forEach(input => {
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") calculate();
+    });
+  });
+
+  $("reset").addEventListener("click", () => {
+    topInput.value = "";
+    bottomInput.value = "";
+    directSource.value = "top3";
+    current = null;
+    resultBox.style.display = "none";
+    clearError();
+    topInput.focus();
+  });
+
+  function loadHistory() {
+    try {
+      return JSON.parse(localStorage.getItem("goldenRatioHistory") || "[]");
+    } catch {
+      return [];
+    }
+  }
+
+  function saveHistory() {
+    const data = loadHistory();
+    const item = {
+      top: current.top,
+      bottom: current.bottom,
+      mode: current.mode,
+      hot1: current.formula1.hotFront,
+      hot2: current.formula2.hotCross,
+      win: current.winMixed.sorted.join(""),
+      at: new Date().toLocaleString("th-TH")
+    };
+    const filtered = data.filter(x =>
+      !(x.top === item.top && x.bottom === item.bottom && x.mode === item.mode)
+    );
+    filtered.unshift(item);
+    localStorage.setItem("goldenRatioHistory", JSON.stringify(filtered.slice(0,10)));
+  }
+
+  function renderHistory() {
+    const data = loadHistory();
+    const box = $("history");
+    if (!data.length) {
+      box.innerHTML = `<div class="history-empty">ยังไม่มีประวัติการคำนวณ</div>`;
+      return;
+    }
+
+    box.innerHTML = `<div class="history-list">${
+      data.map((x,i) => `
+        <div class="history-item">
+          <div>
+            <div class="history-main">บน ${x.top} | ล่าง ${x.bottom}</div>
+            <div class="history-sub">เด่นสูตร1 ${x.hot1} | สูตร2 ${x.hot2} | วิน ${x.win} • ${x.at}</div>
+          </div>
+          <button class="use" data-index="${i}">ใช้ซ้ำ</button>
+        </div>
+      `).join("")
+    }</div>`;
+
+    box.querySelectorAll(".use").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const x = data[Number(btn.dataset.index)];
+        topInput.value = x.top;
+        bottomInput.value = x.bottom;
+        directSource.value = x.mode || "top3";
+        calculate();
+      });
+    });
+  }
+
+  $("clearHistory").addEventListener("click", () => {
+    if (confirm("ต้องการล้างประวัติทั้งหมดใช่ไหม?")) {
+      localStorage.removeItem("goldenRatioHistory");
+      renderHistory();
+    }
+  });
+
+  topInput.value = "245";
+  bottomInput.value = "67";
+  directSource.value = "top3";
+  renderHistory();
+})();
+</script>
+</body>
+</html>
