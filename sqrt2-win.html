@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#b45309">
+  <title>สูตร √2 จับปักหรือวิน</title>
+  <style>
+    :root{
+      --bg:#fff8ed;--card:#fff;--primary:#b45309;--primary2:#f59e0b;
+      --text:#2b2118;--muted:#746557;--line:#f0dfc8;--soft:#fff5df;
+      --green:#15803d;--blue:#1d4ed8;--danger:#be123c;
+      --shadow:0 12px 30px rgba(146,84,16,.11);--radius:22px
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",sans-serif;
+      color:var(--text);
+      background:radial-gradient(circle at top left,#ffedd5 0,transparent 34%),
+                 linear-gradient(180deg,#fffdfa,var(--bg))
+    }
+    .wrap{width:min(1080px,100%);margin:auto;padding:18px 14px 80px}
+    .hero{
+      padding:24px 20px;border-radius:28px;color:#fff;
+      background:linear-gradient(135deg,#92400e,#d97706 58%,#fbbf24);
+      box-shadow:var(--shadow)
+    }
+    .hero h1{margin:0 0 7px;font-size:clamp(27px,6vw,43px);line-height:1.15}
+    .hero p{margin:0;opacity:.95;line-height:1.55}
+    .back{display:inline-block;margin-bottom:12px;color:#fff7ed;text-decoration:none;font-weight:900}
+    .card{
+      margin-top:14px;padding:18px;border:1px solid rgba(180,83,9,.10);
+      border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)
+    }
+    h2{margin:0 0 14px;font-size:21px}
+    h3{margin:0 0 8px;font-size:18px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    label{display:block;margin-bottom:7px;font-size:14px;font-weight:900}
+    input,select,button{font:inherit}
+    input,select{
+      width:100%;height:52px;padding:0 14px;border:1.5px solid var(--line);
+      border-radius:15px;background:#fff;color:var(--text);font-size:20px;outline:none
+    }
+    select{font-size:16px}
+    input:focus,select:focus{border-color:var(--primary2);box-shadow:0 0 0 4px rgba(245,158,11,.13)}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+    button{
+      min-height:48px;padding:10px 13px;border:0;border-radius:15px;
+      cursor:pointer;font-weight:900;transition:.15s ease
+    }
+    button:active{transform:scale(.98)}
+    .primary{background:var(--primary);color:#fff}
+    .secondary{background:#f8ead7;color:#71400d}
+    .copy{background:#e9f9ef;color:#116530}
+    .danger{background:#fff0f3;color:var(--danger)}
+    .error{display:none;margin-top:12px;padding:12px 14px;border-radius:14px;background:#fff1f2;color:#9f1239;font-weight:800}
+    .formula{
+      margin-top:12px;padding:13px 14px;border-radius:15px;background:var(--soft);
+      color:#765015;line-height:1.7;font-size:14px
+    }
+    .result{display:none}
+    .result-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .result-card{
+      padding:16px;border:1px solid var(--line);border-radius:20px;background:#fffdfa
+    }
+    .result-card h3{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .badge{padding:5px 9px;border-radius:999px;background:#ffedd5;color:#9a4f0b;font-size:12px}
+    .equation{
+      padding:13px;border-radius:14px;background:#2c2119;color:#fff7ed;
+      font-size:clamp(18px,4.3vw,25px);font-weight:900;overflow-wrap:anywhere
+    }
+    .decimal-label{margin-top:12px;color:var(--muted);font-size:13px;font-weight:800}
+    .decimal{
+      margin-top:5px;padding:10px;border:1px dashed #e2c69e;border-radius:12px;
+      background:#fff;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+      font-size:18px;letter-spacing:1px;overflow-wrap:anywhere
+    }
+    .win-box{
+      margin-top:12px;padding:14px;border-radius:16px;background:linear-gradient(135deg,#fff7db,#fffdf4);
+      border:1px solid #f4df9f
+    }
+    .win-label{font-size:13px;color:#765015;font-weight:900}
+    .win-number{
+      margin-top:3px;font-size:clamp(34px,8vw,52px);font-weight:1000;
+      letter-spacing:4px;color:var(--primary);overflow-wrap:anywhere
+    }
+    .digit-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:10px}
+    .digit{
+      min-height:44px;border:2px solid #ebd9bf;background:#fff;color:#65451f;
+      font-size:20px;border-radius:13px
+    }
+    .digit.selected{background:var(--primary);border-color:var(--primary);color:#fff}
+    .small-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+    .small-actions button{min-height:42px;font-size:13px}
+    .selection-status{margin-top:8px;font-size:13px;color:var(--muted);font-weight:800}
+    .output-section{margin-top:13px;padding-top:13px;border-top:1px dashed #e3d0b6}
+    .output-title{font-weight:900;color:#7a480d;margin-bottom:7px}
+    .number-list{display:flex;flex-wrap:wrap;gap:6px}
+    .number-chip{
+      min-width:45px;padding:7px 8px;border:1px solid #ebdbc4;border-radius:10px;
+      background:#fff;text-align:center;font-weight:900;color:#5e4020
+    }
+    .count{margin-top:7px;color:var(--muted);font-size:13px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .tab-btn{min-height:39px;padding:7px 10px;background:#f8ead7;color:#71400d}
+    .tab-btn.active{background:var(--primary);color:#fff}
+    .note{
+      margin-top:14px;padding:12px 14px;border-radius:14px;background:#fff8db;
+      color:#795400;font-size:13px;line-height:1.65
+    }
+    .history-empty{text-align:center;color:var(--muted);padding:18px 0}
+    .history-list{display:grid;gap:9px}
+    .history-item{
+      display:flex;justify-content:space-between;align-items:center;gap:10px;
+      padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:#fffdfa
+    }
+    .history-main{font-weight:900}
+    .history-sub{font-size:13px;color:var(--muted);margin-top:3px}
+    .use{min-height:38px;padding:6px 10px;background:#f8ead7;color:#71400d;flex:0 0 auto}
+    .footer-note{text-align:center;color:var(--muted);font-size:13px;line-height:1.6;margin-top:15px}
+    @media(max-width:760px){
+      .grid,.result-columns,.actions{grid-template-columns:1fr}
+      .hero{padding:22px 18px}.card{padding:15px}
+    }
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <a class="back" href="index.html">← กลับหน้าหลัก</a>
+    <h1>√2 สูตรจับปักหรือวิน</h1>
+    <p>นำเลขบนและเลขล่างคูณด้วย √2 พร้อมเลือกวิน 7 ตัวอัตโนมัติ ปักหลักสิบ หรือปักหลักหน่วย</p>
+  </section>
+
+  <section class="card">
+    <h2>กรอกผลรางวัล</h2>
+    <div class="grid">
+      <div>
+        <label for="top">เลขบน 3 ตัว</label>
+        <input id="top" inputmode="numeric" maxlength="3" placeholder="เช่น 314" autocomplete="off">
+      </div>
+      <div>
+        <label for="bottom">เลขล่าง 2 ตัว</label>
+        <input id="bottom" inputmode="numeric" maxlength="2" placeholder="เช่น 83" autocomplete="off">
+      </div>
+    </div>
+
+    <div style="margin-top:12px">
+      <label for="precision">จำนวนตำแหน่งทศนิยมที่ใช้</label>
+      <select id="precision">
+        <option value="8">8 ตำแหน่ง</option>
+        <option value="10" selected>10 ตำแหน่ง (ใกล้ตัวอย่างในหนังสือ)</option>
+        <option value="12">12 ตำแหน่ง</option>
+        <option value="14">14 ตำแหน่ง</option>
+      </select>
+    </div>
+
+    <div class="formula">
+      <strong>วิธีคำนวณ:</strong> เลข × √2<br>
+      ระบบจะตัดทศนิยมตามจำนวนตำแหน่งที่เลือกโดยไม่ปัดขึ้น แล้วรวบรวมเลขหลังจุดที่ไม่ซ้ำ เรียงจากน้อยไปมาก
+    </div>
+
+    <div class="actions">
+      <button id="calculate" class="primary">คำนวณสูตร</button>
+      <button id="reset" class="secondary">ล้างข้อมูล</button>
+    </div>
+    <div id="error" class="error"></div>
+  </section>
+
+  <section id="result" class="card result">
+    <h2>ผลการคำนวณ</h2>
+    <div id="resultColumns" class="result-columns"></div>
+
+    <div class="actions">
+      <button id="copyAll" class="copy">คัดลอกผลทั้งหมด</button>
+      <button id="copyWins" class="secondary">คัดลอกเลขวิน</button>
+    </div>
+
+    <div class="note">
+      ตัวอย่างในหนังสือ: 314 × √2 = 444.0630585851 และเลขหลังจุดที่ไม่ซ้ำเมื่อนำมาเรียงคือ 013568
+      โปรแกรมจะคำนวณทศนิยมเผื่อ 16 ตำแหน่ง แล้วอ่านจากด้านขวาสุดย้อนกลับเพื่อเลือกเลขไม่ซ้ำให้ครบ 7 ตัวอัตโนมัติ
+      การเลือกว่าจะปักหลักสิบหรือหลักหน่วยยังต้องดูสถิติย้อนหลัง เพราะสูตรไม่ได้กำหนดหลักให้อัตโนมัติทุกงวด
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>ประวัติ 10 รายการล่าสุด</h2>
+    <div id="history"></div>
+    <div class="actions">
+      <button id="clearHistory" class="danger">ล้างประวัติ</button>
+    </div>
+  </section>
+
+  <p class="footer-note">
+    โปรแกรมคำนวณตามรูปแบบสูตรเท่านั้น ผลรางวัลเป็นการสุ่มและไม่สามารถรับรองผลหรือกำไรได้
+  </p>
+</main>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const topInput = $("top");
+  const bottomInput = $("bottom");
+  const precisionSelect = $("precision");
+  const resultBox = $("result");
+  const resultColumns = $("resultColumns");
+  const errorBox = $("error");
+
+  let current = null;
+  let selections = { top: [], bottom: [] };
+  let modes = { top: "pairs", bottom: "pairs" };
+
+  function clean(input, max) {
+    input.value = input.value.replace(/\D/g, "").slice(0, max);
+  }
+  topInput.addEventListener("input", () => clean(topInput, 3));
+  bottomInput.addEventListener("input", () => clean(bottomInput, 2));
+
+  function showError(message) {
+    errorBox.textContent = message;
+    errorBox.style.display = "block";
+  }
+  function clearError() {
+    errorBox.textContent = "";
+    errorBox.style.display = "none";
+  }
+
+  function truncateValue(value, precision) {
+    // คำนวณเผื่ออีกหลายตำแหน่ง แล้วตัดออก เพื่อเลียนแบบค่าบนเครื่องคิดเลขในหนังสือ
+    const expanded = value.toFixed(Math.min(20, precision + 6));
+    const [integerPart, rawFraction = ""] = expanded.split(".");
+    const fraction = rawFraction.padEnd(precision, "0").slice(0, precision);
+    return {
+      integerPart,
+      fraction,
+      display: `${Number(integerPart).toLocaleString("en-US")}.${fraction}`
+    };
+  }
+
+  function uniqueSorted(text) {
+    return [...new Set(text.split(""))].sort((a, b) => Number(a) - Number(b));
+  }
+
+  function lastUnique(text, limit = 7) {
+    const picked = [];
+    for (let i = text.length - 1; i >= 0 && picked.length < limit; i--) {
+      if (!picked.includes(text[i])) picked.push(text[i]);
+    }
+    return picked.sort((a, b) => Number(a) - Number(b));
+  }
+
+  function autoWin7(fraction, input) {
+    const picked = [];
+    for (let i = fraction.length - 1; i >= 0 && picked.length < 7; i--) {
+      if (!picked.includes(fraction[i])) picked.push(fraction[i]);
+    }
+
+    // ถ้าทศนิยมยังมีเลขไม่ครบ 7 ตัว ให้เติมจากเลขผลเดิมก่อน
+    for (let i = input.length - 1; i >= 0 && picked.length < 7; i--) {
+      if (!picked.includes(input[i])) picked.push(input[i]);
+    }
+
+    // กรณีพิเศษที่ยังไม่ครบ ให้เติมเลขที่ยังไม่มีจาก 0–9
+    for (let d = 0; d <= 9 && picked.length < 7; d++) {
+      const s = String(d);
+      if (!picked.includes(s)) picked.push(s);
+    }
+
+    return picked.sort((a, b) => Number(a) - Number(b));
+  }
+
+  function calculateOne(label, input, precision) {
+    const n = Number(input);
+    const value = n * Math.SQRT2;
+    const truncated = truncateValue(value, precision);
+    const extended = truncateValue(value, 16);
+    const unique = uniqueSorted(truncated.fraction);
+    const recommended7 = autoWin7(extended.fraction, input);
+    return {
+      label, input, value, ...truncated, unique,
+      extendedFraction: extended.fraction,
+      recommended7
+    };
+  }
+
+  function orderedPairs(digits, includeDoubles = true) {
+    const out = [];
+    digits.forEach(a => digits.forEach(b => {
+      if (includeDoubles || a !== b) out.push(`${a}${b}`);
+    }));
+    return out;
+  }
+
+  function pinTens(digits) {
+    const out = [];
+    digits.forEach(a => {
+      for (let b = 0; b <= 9; b++) out.push(`${a}${b}`);
+    });
+    return out;
+  }
+
+  function pinUnits(digits) {
+    const out = [];
+    for (let a = 0; a <= 9; a++) {
+      digits.forEach(b => out.push(`${a}${b}`));
+    }
+    return out;
+  }
+
+  function outputFor(mode, digits) {
+    if (mode === "tens") return pinTens(digits);
+    if (mode === "units") return pinUnits(digits);
+    if (mode === "pairsNoDouble") return orderedPairs(digits, false);
+    return orderedPairs(digits, true);
+  }
+
+  function calculate() {
+    clearError();
+    const top = topInput.value;
+    const bottom = bottomInput.value;
+    const precision = Number(precisionSelect.value);
+
+    if (!/^\d{3}$/.test(top)) {
+      showError("กรุณากรอกเลขบนให้ครบ 3 หลัก เช่น 314");
+      return;
+    }
+    if (!/^\d{2}$/.test(bottom)) {
+      showError("กรุณากรอกเลขล่างให้ครบ 2 หลัก เช่น 83");
+      return;
+    }
+
+    current = {
+      top: calculateOne("เลขบน", top, precision),
+      bottom: calculateOne("เลขล่าง", bottom, precision),
+      precision
+    };
+
+    selections.top = [...current.top.recommended7];
+    selections.bottom = [...current.bottom.recommended7];
+
+    modes = { top: "pairs", bottom: "pairs" };
+
+    render();
+    saveHistory();
+    renderHistory();
+  }
+
+  function resultCard(key, data) {
+    const selected = selections[key];
+    const mode = modes[key];
+    const outputs = outputFor(mode, selected);
+    const modeLabels = {
+      pairs: "จับคู่วิน รวมเลขเบิ้ล",
+      pairsNoDouble: "จับคู่วิน ไม่รวมเลขเบิ้ล",
+      tens: "ปักหลักสิบ",
+      units: "ปักหลักหน่วย"
+    };
+
+    return `
+      <article class="result-card" data-key="${key}">
+        <h3>${data.label}<span class="badge">${data.input}</span></h3>
+
+        <div class="equation">${data.input} × √2 = ${data.display}</div>
+
+        <div class="decimal-label">เลขหลังจุดทศนิยม ${current.precision} ตำแหน่ง</div>
+        <div class="decimal">${data.fraction}</div>
+
+        <div class="win-box">
+          <div class="win-label">เลขไม่ซ้ำจากทศนิยมที่แสดง</div>
+          <div class="win-number">${data.unique.join("") || "-"}</div>
+
+          <div class="win-label" style="margin-top:10px">วิน 7 ตัวแนะนำอัตโนมัติ</div>
+          <div class="win-number" style="color:var(--green)">${data.recommended7.join("")}</div>
+          <div class="selection-status">เลือกจากทศนิยมด้านขวาสุดย้อนกลับ โดยไม่เอาเลขซ้ำ</div>
+
+          <div class="win-label" style="margin-top:11px">เลขที่ใช้สร้างชุดด้านล่าง</div>
+          <div class="digit-grid">
+            ${[0,1,2,3,4,5,6,7,8,9].map(d => {
+              const s = String(d);
+              return `<button class="digit ${selected.includes(s) ? "selected" : ""}" data-digit="${s}">${s}</button>`;
+            }).join("")}
+          </div>
+
+          <div class="small-actions">
+            <button class="secondary select-auto">ใช้วิน 7 อัตโนมัติ</button>
+            <button class="secondary select-unique">เลือกเลขไม่ซ้ำทั้งหมด</button>
+          </div>
+          <div class="selection-status">เลือกแล้ว ${selected.length} ตัว: ${selected.join("") || "-"}</div>
+        </div>
+
+        <div class="tabs">
+          ${[
+            ["pairs","วินรวมเบิ้ล"],
+            ["pairsNoDouble","วินไม่เบิ้ล"],
+            ["tens","ปักสิบ"],
+            ["units","ปักหน่วย"]
+          ].map(([value,label]) =>
+            `<button class="tab-btn ${mode === value ? "active" : ""}" data-mode="${value}">${label}</button>`
+          ).join("")}
+        </div>
+
+        <div class="output-section">
+          <div class="output-title">${modeLabels[mode]}</div>
+          <div class="number-list">${outputs.map(x => `<span class="number-chip">${x}</span>`).join("")}</div>
+          <div class="count">ทั้งหมด ${outputs.length} ชุด</div>
+        </div>
+
+        <div class="small-actions">
+          <button class="copy copy-output">คัดลอกชุดเลข</button>
+          <button class="secondary copy-selected">คัดลอกเลขวิน</button>
+        </div>
+      </article>
+    `;
+  }
+
+  function render() {
+    resultColumns.innerHTML =
+      resultCard("top", current.top) +
+      resultCard("bottom", current.bottom);
+
+    resultColumns.querySelectorAll(".result-card").forEach(card => {
+      const key = card.dataset.key;
+
+      card.querySelectorAll(".digit").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const digit = btn.dataset.digit;
+          const selected = selections[key];
+          const index = selected.indexOf(digit);
+          if (index >= 0) selected.splice(index, 1);
+          else selected.push(digit);
+          selected.sort((a, b) => Number(a) - Number(b));
+          render();
+        });
+      });
+
+      card.querySelector(".select-auto").addEventListener("click", () => {
+        selections[key] = [...current[key].recommended7];
+        render();
+      });
+
+      card.querySelector(".select-unique").addEventListener("click", () => {
+        selections[key] = [...current[key].unique];
+        render();
+      });
+
+      card.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          modes[key] = btn.dataset.mode;
+          render();
+        });
+      });
+
+      card.querySelector(".copy-output").addEventListener("click", () => {
+        const values = outputFor(modes[key], selections[key]);
+        copy(values.join(" "), `คัดลอกชุดเลข${current[key].label}แล้ว`);
+      });
+
+      card.querySelector(".copy-selected").addEventListener("click", () => {
+        copy(selections[key].join(""), `คัดลอกวิน${current[key].label}แล้ว`);
+      });
+    });
+
+    resultBox.style.display = "block";
+    resultBox.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function buildCopyText() {
+    const lines = [];
+    ["top","bottom"].forEach(key => {
+      const d = current[key];
+      const outputs = outputFor(modes[key], selections[key]);
+      lines.push(
+        `${d.label} ${d.input}`,
+        `${d.input} × √2 = ${d.display}`,
+        `ทศนิยม: ${d.fraction}`,
+        `เลขไม่ซ้ำ: ${d.unique.join("")}`,
+        `วิน 7 ตัวแนะนำ: ${d.recommended7.join("")}`,
+        `วินที่ใช้: ${selections[key].join("")}`,
+        `ชุดเลข: ${outputs.join(" ")}`,
+        ""
+      );
+    });
+    return lines.join("\n");
+  }
+
+  async function copy(text, message) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const area = document.createElement("textarea");
+      area.value = text;
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand("copy");
+      area.remove();
+    }
+    alert(message);
+  }
+
+  $("copyAll").addEventListener("click", () => {
+    if (current) copy(buildCopyText(), "คัดลอกผลทั้งหมดแล้ว");
+  });
+
+  $("copyWins").addEventListener("click", () => {
+    if (!current) return;
+    copy(`บน ${selections.top.join("")}\nล่าง ${selections.bottom.join("")}`, "คัดลอกเลขวินแล้ว");
+  });
+
+  $("calculate").addEventListener("click", calculate);
+  [topInput,bottomInput].forEach(input => {
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") calculate();
+    });
+  });
+
+  $("reset").addEventListener("click", () => {
+    topInput.value = "";
+    bottomInput.value = "";
+    precisionSelect.value = "10";
+    current = null;
+    resultBox.style.display = "none";
+    clearError();
+    topInput.focus();
+  });
+
+  function loadHistory() {
+    try {
+      return JSON.parse(localStorage.getItem("sqrt2WinHistory") || "[]");
+    } catch {
+      return [];
+    }
+  }
+
+  function saveHistory() {
+    const data = loadHistory();
+    const item = {
+      top: current.top.input,
+      bottom: current.bottom.input,
+      precision: current.precision,
+      topWin: current.top.recommended7.join(""),
+      bottomWin: current.bottom.recommended7.join(""),
+      at: new Date().toLocaleString("th-TH")
+    };
+    const filtered = data.filter(x =>
+      !(x.top === item.top && x.bottom === item.bottom && x.precision === item.precision)
+    );
+    filtered.unshift(item);
+    localStorage.setItem("sqrt2WinHistory", JSON.stringify(filtered.slice(0,10)));
+  }
+
+  function renderHistory() {
+    const data = loadHistory();
+    const box = $("history");
+    if (!data.length) {
+      box.innerHTML = `<div class="history-empty">ยังไม่มีประวัติการคำนวณ</div>`;
+      return;
+    }
+
+    box.innerHTML = `<div class="history-list">${
+      data.map((x,i) => `
+        <div class="history-item">
+          <div>
+            <div class="history-main">บน ${x.top} | ล่าง ${x.bottom}</div>
+            <div class="history-sub">วินบน ${x.topWin} | วินล่าง ${x.bottomWin} • ${x.at}</div>
+          </div>
+          <button class="use" data-index="${i}">ใช้ซ้ำ</button>
+        </div>
+      `).join("")
+    }</div>`;
+
+    box.querySelectorAll(".use").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const x = data[Number(btn.dataset.index)];
+        topInput.value = x.top;
+        bottomInput.value = x.bottom;
+        precisionSelect.value = String(x.precision);
+        calculate();
+      });
+    });
+  }
+
+  $("clearHistory").addEventListener("click", () => {
+    if (confirm("ต้องการล้างประวัติทั้งหมดใช่ไหม?")) {
+      localStorage.removeItem("sqrt2WinHistory");
+      renderHistory();
+    }
+  });
+
+  topInput.value = "314";
+  bottomInput.value = "83";
+  precisionSelect.value = "10";
+  renderHistory();
+})();
+</script>
+</body>
+</html>
