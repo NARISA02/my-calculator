@@ -26,4 +26,94 @@ function comparePositions(a,eyes,shift,stakes,payouts,minTrain,actual){return la
 function renderBestPosition(list,currentPos){let current=list.find(x=>x.pos===currentPos),best=list[0];if(!current||!best||!best.count){bestAdvice.textContent='ต้องมีข้อมูลมากกว่ารอบทดสอบขั้นต่ำ';bestTable.innerHTML='';return}let better=best.pos!==currentPos&&(best.actualNet>current.actualNet||best.rate-current.rate>=.08);bestAdvice.textContent=better?'หลักที่สถิติย้อนหลังรวมดีกว่าตอนนี้คือ '+best.name+' กำไร/ขาดทุนจริง '+money(best.actualNet)+' เทียบกับหลักที่เลือก '+labels[currentPos]+' '+money(current.actualNet):'หลักที่เลือกอยู่ยังไม่แพ้หลักอื่นชัดเจน ดูคู่/คี่ เล็ก/ใหญ่ประกอบก่อนเปลี่ยน';bestTable.innerHTML=list.map((x,i)=>'<tr><td>'+x.name+(x.pos===currentPos?' (ที่เลือก)':'')+'</td><td>'+x.digitWins+'/'+x.count+'</td><td>'+x.parityWins+'/'+x.count+'</td><td>'+x.sizeWins+'/'+x.count+'</td><td class='+(x.actualNet>=0?'pos':'neg')+'>'+money(x.actualNet)+'</td><td>'+(i===0?'น่าเล่นสุดตอนนี้':(x.pos===currentPos?'ที่เลือกอยู่':'สำรอง'))+'</td></tr>').join('')}
 function run(){try{rows=parse();saveState();error.classList.add('hidden');let pos=+position.value,eyes=1,shift=Math.max(1,+shiftEvery.value||5),autoStick=rows.length+1,completedSticks=rows.length,stakes={digit:Math.max(0,+digitStake.value||0),parity:Math.max(0,+parityStake.value||0),size:Math.max(0,+sizeStake.value||0)},payouts={digit:Math.max(0,+digitPayout.value||0),parity:Math.max(0,+parityPayout.value||0),size:Math.max(0,+sizePayout.value||0)},trainSize=Math.max(5,Math.min(+minTrain.value||20,rows.length-1)),actual=parseActualStakes().slice(-(rows.length-trainSize)),p=plan(rows,pos,autoStick,shift,eyes),side=picks(rows,pos),f=forward(rows,pos,eyes,shift,stakes,payouts,trainSize,actual),best=comparePositions(rows,eyes,shift,stakes,payouts,trainSize,actual),recent=rows.slice(-Math.min(rows.length,20)),parity=sideStats(recent,pos,side.parity,'parity'),size=sideStats(recent,pos,side.size,'size'),watch=p.order.filter(x=>x.hot).map(x=>x.d).join(', ')||p.order.slice(-3).map(x=>x.d).join(', ');stickNo.value=autoStick;omitNow.textContent=p.omit.join(', ');why.textContent='เลขที่ออกใน '+NO_OMIT_RECENT+' รอบล่าสุดจะไม่ถูกเว้น: '+watch+' · ถ้าชนเลขเว้น ระบบจะเลื่อนชุดเว้นทันที';renderDigits(p);renderBestPosition(best,pos);digitCost.textContent=money(p.play.length*stakes.digit);playedSticks.textContent=completedSticks+' ไม้';nextStick.textContent='ไม้ '+autoStick;hitRate.textContent=(f.rate*100).toFixed(1)+'% ('+f.digitWins+'/'+f.count+')';parityPick.textContent='รอบต่อไป: '+side.parity;parityDetail.textContent='คาดจากคะแนนฝั่งคู่ '+side.parityScore.onScore.toFixed(1)+' / คี่ '+side.parityScore.offScore.toFixed(1)+' · ย้อนหลัง 20 รอบ '+(parity.rate*100).toFixed(1)+'%';parityResult.innerHTML='<span class="'+(parity.rate>=.5?'win':'lose')+'">ถูก '+parity.wins+'/'+recent.length+'</span>';sizePick.textContent='รอบต่อไป: '+side.size;sizeDetail.textContent='คาดจากคะแนนฝั่งเล็ก '+side.sizeScore.onScore.toFixed(1)+' / ใหญ่ '+side.sizeScore.offScore.toFixed(1)+' · ย้อนหลัง 20 รอบ '+(size.rate*100).toFixed(1)+'%';sizeResult.innerHTML='<span class="'+(size.rate>=.5?'win':'lose')+'">ถูก '+size.wins+'/'+recent.length+'</span>';renderSchedule(rows,pos,autoStick,eyes,shift,stakes);walk.innerHTML='<tr><td>'+labels[pos]+'</td><td>'+f.count+'</td><td>'+f.digitWins+'/'+f.count+'</td><td>'+f.parityWins+'/'+f.count+'</td><td>'+f.sizeWins+'/'+f.count+'</td><td class='+(f.net>=0?'pos':'neg')+'>'+money(f.net)+'</td><td class='+(f.actualNet>=0?'pos':'neg')+'>'+money(f.actualNet)+'</td></tr>';walkNote.textContent=f.count?'ใช้เฉพาะผลก่อนหน้าในการเลือกเลขเว้น คู่/คี่ และเล็ก/ใหญ่ แล้วตรวจผลรอบถัดไป':'ต้องมีข้อมูลมากกว่ารอบทดสอบขั้นต่ำ'}catch(e){error.textContent=e.message;error.classList.remove('hidden')}}
 function saveState(){try{localStorage.setItem('thai-minute:data',data.value);localStorage.setItem('thai-minute:actual',realStakes.value)}catch(e){}}function appendActualStake(){let v=Math.max(0,+actualStakeNow.value||0),list=parseActualStakes();list.push(v);realStakes.value=list.join(' ');saveState();run()}function clearActualStakes(){realStakes.value='';saveState();run()}function autoRunOnEnter(e){if(e.key==='Enter')setTimeout(run,20)}document.querySelector('.wrap').insertAdjacentHTML('afterbegin','<a href="index.html" style="display:inline-block;margin-bottom:14px;color:#2864dc;font-weight:700;text-decoration:none">← กลับห้องหลัก</a>');go.onclick=run;saveActual.onclick=appendActualStake;clearActual.onclick=clearActualStakes;data.addEventListener('input',saveState);realStakes.addEventListener('input',()=>{saveState();setTimeout(run,80)});data.addEventListener('keydown',autoRunOnEnter);restore.onclick=()=>{data.value=sample;saveState();run()};clear.onclick=()=>{data.value='';saveState();data.focus()};data.value=localStorage.getItem('thai-minute:data')||sample;realStakes.value=localStorage.getItem('thai-minute:actual')||'';run();
-</script></body></html>
+</script>
+<!-- ปุ่ม Enter และ Enter อัตโนมัติสำหรับมือถือ/iPad -->
+<style id="auto-enter-style">
+  .auto-enter-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
+  .auto-enter-btn{appearance:none;border:0;border-radius:11px;background:#2563eb;color:#fff;padding:12px 22px;font:700 16px system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 5px 12px rgba(37,99,235,.22);cursor:pointer}
+  .auto-enter-btn:active{transform:translateY(1px);background:#1d4ed8}
+  .auto-enter-hint{font-size:13px;color:#64748b}
+</style>
+<script id="auto-enter-feature">
+(() => {
+  const config = {"fields":[{"id":"data","size":2}],"action":"go"};
+  const byId = id => document.getElementById(id);
+  const clickAction = id => {
+    const button = byId(id);
+    if (button) button.click();
+  };
+  const notifyInput = field => field.dispatchEvent(new Event("input", { bubbles: true }));
+  const addNewLine = (field, actionId) => {
+    const start = field.selectionStart ?? field.value.length;
+    const end = field.selectionEnd ?? start;
+    const before = field.value.slice(0, start);
+    const after = field.value.slice(end);
+    const separator = before.endsWith("\n") ? "" : "\n";
+    field.value = before + separator + after.replace(/^\n+/, "");
+    const cursor = before.length + separator.length;
+    field.setSelectionRange(cursor, cursor);
+    notifyInput(field);
+    clickAction(actionId);
+    field.focus();
+  };
+  const currentLine = field => {
+    const cursor = field.selectionStart ?? field.value.length;
+    return field.value.slice(0, cursor).split(/\r?\n/).pop().trim();
+  };
+  const appendAutomaticNewLine = (field, actionId) => {
+    const cursor = field.selectionStart ?? field.value.length;
+    if (field.value[cursor] === "\n") return;
+    field.setRangeText("\n", cursor, cursor, "end");
+    notifyInput(field);
+    clickAction(actionId);
+  };
+  const attachFixed = (field, item, actionId) => {
+    let timer = 0;
+    field.setAttribute("inputmode", item.chars ? "text" : "numeric");
+    field.addEventListener("input", event => {
+      if (event.inputType && !String(event.inputType).startsWith("insert")) return;
+      if (event.inputType === "insertFromPaste") return;
+      clearTimeout(timer);
+      const line = currentLine(field);
+      if (item.variableTen) {
+        if (line === "10") appendAutomaticNewLine(field, actionId);
+        else if (/^[1-9]$/.test(line)) timer = setTimeout(() => {
+          if (currentLine(field) === line) appendAutomaticNewLine(field, actionId);
+        }, 550);
+        return;
+      }
+      const compact = item.chars ? line.replace(/\s/g, "") : line.replace(/\D/g, "");
+      if (compact.length === item.size) appendAutomaticNewLine(field, actionId);
+    });
+  };
+  (config.fields || []).forEach(item => {
+    const field = byId(item.id);
+    if (!field || field.dataset.autoEnterReady) return;
+    field.dataset.autoEnterReady = "1";
+    const actionId = (config.fieldActions && config.fieldActions[item.id]) || config.action;
+    const bar = document.createElement("div");
+    bar.className = "auto-enter-bar";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "auto-enter-btn";
+    button.textContent = "↵ Enter";
+    button.addEventListener("click", () => addNewLine(field, actionId));
+    const hint = document.createElement("span");
+    hint.className = "auto-enter-hint";
+    hint.textContent = item.variableTen
+      ? "ขึ้นบรรทัดใหม่อัตโนมัติหลังกรอกเลข 1–10"
+      : "ขึ้นบรรทัดใหม่อัตโนมัติเมื่อกรอกครบ " + item.size + " หลัก";
+    bar.append(button, hint);
+    field.insertAdjacentElement("afterend", bar);
+    attachFixed(field, item, actionId);
+    field.addEventListener("keydown", event => {
+      if (event.key !== "Enter" || event.isComposing) return;
+      setTimeout(() => {
+        notifyInput(field);
+        clickAction(actionId);
+      }, 0);
+    });
+  });
+})();
+</script>
+</body></html>

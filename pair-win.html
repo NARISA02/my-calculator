@@ -874,5 +874,49 @@
   renderHistory();
 })();
 </script>
+
+<!-- ปุ่ม Enter และคำนวณอัตโนมัติสำหรับมือถือ/iPad -->
+<style id="auto-enter-style">
+  .auto-enter-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
+  .auto-enter-btn{appearance:none;border:0;border-radius:11px;background:#2563eb;color:#fff;padding:12px 22px;font:700 16px system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 5px 12px rgba(37,99,235,.22);cursor:pointer}
+  .auto-enter-btn:active{transform:translateY(1px);background:#1d4ed8}
+  .auto-enter-hint{font-size:13px;color:#64748b}
+</style>
+<script id="auto-enter-feature">
+(() => {
+  const top = document.getElementById("top");
+  const bottom = document.getElementById("bottom");
+  const calculate = document.getElementById("calculate");
+  if (!top || !bottom || !calculate) return;
+  const complete = () => /^\d{3}$/.test(top.value) && /^\d{2}$/.test(bottom.value);
+  let lastAutomatic = "";
+  const run = () => {
+    if (!complete()) return;
+    lastAutomatic = top.value + "|" + bottom.value;
+    calculate.click();
+  };
+  const onTop = () => {
+    if (/^\d{3}$/.test(top.value)) bottom.focus();
+  };
+  const onBottom = event => {
+    const key = top.value + "|" + bottom.value;
+    if (complete() && key !== lastAutomatic && event.inputType !== "insertFromPaste") run();
+  };
+  top.addEventListener("input", onTop);
+  bottom.addEventListener("input", onBottom);
+  const bar = document.createElement("div");
+  bar.className = "auto-enter-bar";
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "auto-enter-btn";
+  button.textContent = "↵ Enter / คำนวณ";
+  button.addEventListener("click", run);
+  const hint = document.createElement("span");
+  hint.className = "auto-enter-hint";
+  hint.textContent = "คำนวณอัตโนมัติเมื่อกรอกเลขบน 3 ตัวและเลขล่าง 2 ตัวครบ";
+  bar.append(button, hint);
+  calculate.parentElement.insertAdjacentElement("beforebegin", bar);
+})();
+</script>
 </body>
 </html>

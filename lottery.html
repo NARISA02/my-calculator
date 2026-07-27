@@ -57,5 +57,95 @@ function run(){try{rows=parse();saveState();error.classList.add('hidden');let n=
 function autoRunOnEnter(e){if(e.key==='Enter')setTimeout(run,20)}
 go.onclick=run;saveActual.onclick=appendActualStake;clearActual.onclick=clearActualStakes;data.addEventListener('input',saveState);realStakes.addEventListener('input',()=>{saveState();setTimeout(run,80)});data.addEventListener('keydown',autoRunOnEnter);restore.onclick=()=>{data.value=sample;run()};clear.onclick=()=>{data.value='';saveState();data.focus()};data.value=localStorage.getItem('lottery:data')||sample;realStakes.value=localStorage.getItem('lottery:actual')||'';run();
 </script>
+
+<!-- ปุ่ม Enter และ Enter อัตโนมัติสำหรับมือถือ/iPad -->
+<style id="auto-enter-style">
+  .auto-enter-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 14px}
+  .auto-enter-btn{appearance:none;border:0;border-radius:11px;background:#2563eb;color:#fff;padding:12px 22px;font:700 16px system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 5px 12px rgba(37,99,235,.22);cursor:pointer}
+  .auto-enter-btn:active{transform:translateY(1px);background:#1d4ed8}
+  .auto-enter-hint{font-size:13px;color:#64748b}
+</style>
+<script id="auto-enter-feature">
+(() => {
+  const config = {"fields":[{"id":"data","size":2}],"action":"go"};
+  const byId = id => document.getElementById(id);
+  const clickAction = id => {
+    const button = byId(id);
+    if (button) button.click();
+  };
+  const notifyInput = field => field.dispatchEvent(new Event("input", { bubbles: true }));
+  const addNewLine = (field, actionId) => {
+    const start = field.selectionStart ?? field.value.length;
+    const end = field.selectionEnd ?? start;
+    const before = field.value.slice(0, start);
+    const after = field.value.slice(end);
+    const separator = before.endsWith("\n") ? "" : "\n";
+    field.value = before + separator + after.replace(/^\n+/, "");
+    const cursor = before.length + separator.length;
+    field.setSelectionRange(cursor, cursor);
+    notifyInput(field);
+    clickAction(actionId);
+    field.focus();
+  };
+  const currentLine = field => {
+    const cursor = field.selectionStart ?? field.value.length;
+    return field.value.slice(0, cursor).split(/\r?\n/).pop().trim();
+  };
+  const appendAutomaticNewLine = (field, actionId) => {
+    const cursor = field.selectionStart ?? field.value.length;
+    if (field.value[cursor] === "\n") return;
+    field.setRangeText("\n", cursor, cursor, "end");
+    notifyInput(field);
+    clickAction(actionId);
+  };
+  const attachFixed = (field, item, actionId) => {
+    let timer = 0;
+    field.setAttribute("inputmode", item.chars ? "text" : "numeric");
+    field.addEventListener("input", event => {
+      if (event.inputType && !String(event.inputType).startsWith("insert")) return;
+      if (event.inputType === "insertFromPaste") return;
+      clearTimeout(timer);
+      const line = currentLine(field);
+      if (item.variableTen) {
+        if (line === "10") appendAutomaticNewLine(field, actionId);
+        else if (/^[1-9]$/.test(line)) timer = setTimeout(() => {
+          if (currentLine(field) === line) appendAutomaticNewLine(field, actionId);
+        }, 550);
+        return;
+      }
+      const compact = item.chars ? line.replace(/\s/g, "") : line.replace(/\D/g, "");
+      if (compact.length === item.size) appendAutomaticNewLine(field, actionId);
+    });
+  };
+  (config.fields || []).forEach(item => {
+    const field = byId(item.id);
+    if (!field || field.dataset.autoEnterReady) return;
+    field.dataset.autoEnterReady = "1";
+    const actionId = (config.fieldActions && config.fieldActions[item.id]) || config.action;
+    const bar = document.createElement("div");
+    bar.className = "auto-enter-bar";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "auto-enter-btn";
+    button.textContent = "↵ Enter";
+    button.addEventListener("click", () => addNewLine(field, actionId));
+    const hint = document.createElement("span");
+    hint.className = "auto-enter-hint";
+    hint.textContent = item.variableTen
+      ? "ขึ้นบรรทัดใหม่อัตโนมัติหลังกรอกเลข 1–10"
+      : "ขึ้นบรรทัดใหม่อัตโนมัติเมื่อกรอกครบ " + item.size + " หลัก";
+    bar.append(button, hint);
+    field.insertAdjacentElement("afterend", bar);
+    attachFixed(field, item, actionId);
+    field.addEventListener("keydown", event => {
+      if (event.key !== "Enter" || event.isComposing) return;
+      setTimeout(() => {
+        notifyInput(field);
+        clickAction(actionId);
+      }, 0);
+    });
+  });
+})();
+</script>
 </body>
 </html>
