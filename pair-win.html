@@ -306,6 +306,20 @@
       .card{padding:15px}
       .digit-grid{grid-template-columns:repeat(5,1fr)}
     }
+    .tracker-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+    .tracker-stat{background:#f7f3ff;border:1px solid #e5d8ff;border-radius:14px;padding:14px;text-align:center}
+    .tracker-stat b{display:block;font-size:24px;color:#6d28d9;margin-top:5px}
+    .cycle-line{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:14px 0}
+    .cycle-step{border-radius:10px;padding:9px 4px;text-align:center;font-size:12px;background:#eeeaf7;color:#665b76}
+    .cycle-step.bet{background:#dcfce7;color:#166534}.cycle-step.recalc{background:#ffedd5;color:#9a3412}
+    .cycle-step.active{outline:3px solid #7c3aed;outline-offset:2px;font-weight:800}
+    .tracker-table{width:100%;border-collapse:collapse;font-size:14px}
+    .tracker-table th,.tracker-table td{padding:9px 7px;border-bottom:1px solid #eee;text-align:center}
+    .tracker-table th{background:#f8fafc}.profit{color:#15803d;font-weight:800}.loss{color:#dc2626;font-weight:800}
+    .status-pill{display:inline-block;border-radius:999px;padding:5px 10px;font-weight:800;font-size:12px}
+    .status-skip{background:#eeeaf7;color:#665b76}.status-bet{background:#dcfce7;color:#166534}.status-recalc{background:#ffedd5;color:#9a3412}
+    .tracker-help{background:#fff7ed;border-left:4px solid #fb923c;padding:12px 14px;border-radius:10px;line-height:1.6;margin:12px 0}
+    @media(max-width:700px){.tracker-grid{grid-template-columns:repeat(2,1fr)}.cycle-line{grid-template-columns:repeat(4,1fr)}.tracker-table{font-size:12px}}
   </style>
 </head>
 <body>
@@ -387,6 +401,51 @@
         <button id="copyAll" class="btn-copy">คัดลอกผลทั้งหมด</button>
         <button id="copyAutoWin" class="btn-copy">คัดลอกวิน 7 แนะนำ</button>
         <button id="copyWin" class="btn-secondary">คัดลอกวินที่เลือกเอง</button>
+      </div>
+    </section>
+
+    <section class="card" id="winTracker">
+      <h2>📊 ติดตามชุดคู่วินและกำไร–ขาดทุน</h2>
+      <div class="tracker-help">
+        รอบของหนึ่งชุด: <b>เว้น 2 งวด → เดิมพัน 4 งวด → เว้น 1 งวดและคำนวณชุดใหม่</b><br>
+        หนึ่งชุดเดิมพันไม่เกิน 5 ตา และโปรแกรมจะตรวจผลงานแยกหลักสิบกับหลักหน่วย
+      </div>
+      <div class="grid">
+        <div><label for="trackerSource">ตรวจเลขจาก</label><select id="trackerSource"><option value="bottom">เลขล่าง 2 ตัว</option><option value="top">2 ตัวท้ายของเลขบน</option></select></div>
+        <div><label for="trackerStake">เงินเดิมพันต่อเลข</label><input id="trackerStake" type="number" min="0" step="0.01" value="5"></div>
+        <div><label for="trackerPayout">อัตราจ่ายเลขเดี่ยว</label><input id="trackerPayout" type="number" min="0" step="0.01" value="9.9"></div>
+        <div><label>ชุดวินที่กำลังใช้</label><div id="trackerWin" class="target-number">ยังไม่ได้เริ่ม</div></div>
+      </div>
+      <div class="actions" style="margin-top:12px">
+        <button id="startTracker" type="button" class="btn-primary">เริ่มรอบด้วยวิน 7 แนะนำปัจจุบัน</button>
+        <button id="resetTracker" type="button" class="btn-secondary">ล้างสถิติชุดคู่วิน</button>
+      </div>
+      <div id="cycleLine" class="cycle-line"></div>
+      <div id="trackerMessage" class="formula-box">คำนวณสูตรก่อน แล้วกดเริ่มรอบติดตาม</div>
+
+      <h3>เพิ่มผลรางวัลที่ออก</h3>
+      <div class="grid">
+        <div><label for="actualTop">เลขบน 3 ตัว</label><input id="actualTop" inputmode="numeric" maxlength="3" placeholder="เช่น 348" autocomplete="off"></div>
+        <div><label for="actualBottom">เลขล่าง 2 ตัว</label><input id="actualBottom" inputmode="numeric" maxlength="2" placeholder="เช่น 69" autocomplete="off"></div>
+      </div>
+      <div class="actions" style="margin-top:12px">
+        <button id="recordOutcome" type="button" class="btn-primary">↵ Enter บันทึกผลและคำนวณสถิติ</button>
+        <button id="undoOutcome" type="button" class="btn-secondary">ย้อนกลับผลล่าสุด</button>
+      </div>
+
+      <div class="tracker-grid" style="margin-top:18px">
+        <div class="tracker-stat">เล่นมาแล้ว<b id="trackedRounds">0 งวด</b></div>
+        <div class="tracker-stat">เดิมพันจริง<b id="trackedBets">0 ตา</b></div>
+        <div class="tracker-stat">กำไรหลักสิบ<b id="tensPnl">0.00</b></div>
+        <div class="tracker-stat">กำไรหลักหน่วย<b id="unitsPnl">0.00</b></div>
+      </div>
+      <div id="positionAdvice" class="formula-box" style="margin-top:14px">ยังมีข้อมูลไม่พอสำหรับเปรียบเทียบหลัก</div>
+
+      <div class="table-wrap" style="margin-top:14px">
+        <table class="tracker-table">
+          <thead><tr><th>งวด</th><th>ผล</th><th>สถานะ</th><th>วิน</th><th>หลักสิบ</th><th>หลักหน่วย</th><th>กำไรสิบ</th><th>กำไรหน่วย</th></tr></thead>
+          <tbody id="trackerRows"></tbody>
+        </table>
       </div>
     </section>
 
@@ -614,6 +673,9 @@
     selectedDigits = [...digits];
 
     renderResult();
+    window.dispatchEvent(new CustomEvent("pairwin:calculated", {
+      detail: { top, bottom, formula, win: [...autoDigits] }
+    }));
     saveHistory();
     renderHistory();
   }
@@ -872,6 +934,200 @@
   formulaSelect.value = "2";
   updateFormulaInfo();
   renderHistory();
+})();
+</script>
+
+<script id="pair-win-tracker">
+(() => {
+  const $ = id => document.getElementById(id);
+  const STORAGE_KEY = "pairWinTrackerV1";
+  const PHASES = [
+    { type:"skip", label:"เว้น 1" },
+    { type:"skip", label:"เว้น 2" },
+    { type:"bet", label:"เดิมพัน 1" },
+    { type:"bet", label:"เดิมพัน 2" },
+    { type:"bet", label:"เดิมพัน 3" },
+    { type:"bet", label:"เดิมพัน 4" },
+    { type:"recalc", label:"เว้น/คำนวณใหม่" }
+  ];
+  let latestCalculation = null;
+  let state = load();
+
+  function blankState() {
+    return { active:null, records:[], settings:{source:"bottom",stake:5,payout:9.9} };
+  }
+  function load() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+      return saved && Array.isArray(saved.records) ? saved : blankState();
+    } catch (_) { return blankState(); }
+  }
+  function save() {
+    state.settings = {
+      source: $("trackerSource").value,
+      stake: Math.max(0, Number($("trackerStake").value) || 0),
+      payout: Math.max(0, Number($("trackerPayout").value) || 0)
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+  function clean(input, size) {
+    input.value = input.value.replace(/\D/g, "").slice(0, size);
+  }
+  function money(value) {
+    return Number(value || 0).toLocaleString("th-TH", {minimumFractionDigits:2,maximumFractionDigits:2});
+  }
+  function resultDigits(top, bottom, source) {
+    const value = source === "top" ? top.slice(-2) : bottom;
+    return { value, tens:Number(value[0]), units:Number(value[1]) };
+  }
+  function pnlFor(hit, settings) {
+    const cost = settings.stake * 7;
+    return hit ? (settings.stake * settings.payout) - cost : -cost;
+  }
+  function startCycle(calc, automatic=false) {
+    if (!calc || !Array.isArray(calc.win) || calc.win.length !== 7) {
+      $("trackerMessage").textContent = "ยังไม่มีวิน 7 ตัวแนะนำ กรุณาคำนวณสูตรก่อน";
+      return;
+    }
+    state.active = {
+      id: Date.now(),
+      sourceTop:calc.top,
+      sourceBottom:calc.bottom,
+      formula:Number(calc.formula),
+      win:calc.win.map(Number).sort((a,b)=>a-b),
+      phase:0,
+      bets:0
+    };
+    save();
+    render();
+    $("trackerMessage").textContent = automatic
+      ? `คำนวณชุดใหม่อัตโนมัติจาก ${calc.top} | ${calc.bottom} แล้ว เริ่มเว้นงวดที่ 1`
+      : "เริ่มรอบแล้ว: งวดถัดไปเป็นงวดเว้นที่ 1";
+  }
+  function recordOutcome() {
+    const top = $("actualTop").value;
+    const bottom = $("actualBottom").value;
+    if (!/^\d{3}$/.test(top) || !/^\d{2}$/.test(bottom)) {
+      $("trackerMessage").textContent = "กรุณากรอกเลขบน 3 ตัวและเลขล่าง 2 ตัวให้ครบ";
+      return;
+    }
+    if (!state.active) {
+      $("trackerMessage").textContent = "กรุณาคำนวณสูตรและกดเริ่มรอบก่อนบันทึกผล";
+      return;
+    }
+    const phase = PHASES[state.active.phase] || PHASES[0];
+    const picked = resultDigits(top,bottom,state.settings.source);
+    const isBet = phase.type === "bet" && state.active.bets < 5;
+    const tensHit = state.active.win.includes(picked.tens);
+    const unitsHit = state.active.win.includes(picked.units);
+    const record = {
+      id:Date.now(), top, bottom, checked:picked.value,
+      phase:phase.type, phaseLabel:phase.label,
+      formula:state.active.formula, win:[...state.active.win],
+      tens:picked.tens, units:picked.units,
+      tensHit, unitsHit, isBet,
+      tensPnl:isBet ? pnlFor(tensHit,state.settings) : 0,
+      unitsPnl:isBet ? pnlFor(unitsHit,state.settings) : 0,
+      settings:{...state.settings}, cycleId:state.active.id
+    };
+    state.records.push(record);
+    if (isBet) state.active.bets++;
+    state.active.phase++;
+    const shouldRecalculate = phase.type === "recalc" || state.active.phase >= PHASES.length;
+    save();
+    $("actualTop").value = "";
+    $("actualBottom").value = "";
+    $("actualTop").focus();
+    if (shouldRecalculate) {
+      $("top").value = top;
+      $("bottom").value = bottom;
+      $("calculate").click();
+      setTimeout(() => startCycle(latestCalculation, true), 0);
+    } else {
+      render();
+      $("trackerMessage").textContent = isBet
+        ? `บันทึกเดิมพันแล้ว: หลักสิบ${tensHit?"เข้า":"ไม่เข้า"} • หลักหน่วย${unitsHit?"เข้า":"ไม่เข้า"}`
+        : `บันทึกงวดเว้นแล้ว • งวดถัดไป: ${PHASES[state.active.phase].label}`;
+    }
+  }
+  function totals() {
+    const bets = state.records.filter(r=>r.isBet);
+    const tensHits = bets.filter(r=>r.tensHit).length;
+    const unitsHits = bets.filter(r=>r.unitsHit).length;
+    return {
+      bets:bets.length, tensHits, unitsHits,
+      tensPnl:bets.reduce((n,r)=>n+r.tensPnl,0),
+      unitsPnl:bets.reduce((n,r)=>n+r.unitsPnl,0)
+    };
+  }
+  function renderCycle() {
+    const activePhase = state.active ? state.active.phase : -1;
+    $("cycleLine").innerHTML = PHASES.map((p,i) =>
+      `<div class="cycle-step ${p.type} ${i===activePhase?"active":""}">${p.label}</div>`
+    ).join("");
+  }
+  function render() {
+    $("trackerSource").value = state.settings.source || "bottom";
+    $("trackerStake").value = state.settings.stake ?? 5;
+    $("trackerPayout").value = state.settings.payout ?? 9.9;
+    $("trackerWin").textContent = state.active ? state.active.win.join("") : "ยังไม่ได้เริ่ม";
+    renderCycle();
+    const t = totals();
+    $("trackedRounds").textContent = `${state.records.length} งวด`;
+    $("trackedBets").textContent = `${t.bets} ตา`;
+    $("tensPnl").textContent = `${t.tensPnl>=0?"+":""}${money(t.tensPnl)} บาท`;
+    $("unitsPnl").textContent = `${t.unitsPnl>=0?"+":""}${money(t.unitsPnl)} บาท`;
+    $("tensPnl").className = t.tensPnl >= 0 ? "profit" : "loss";
+    $("unitsPnl").className = t.unitsPnl >= 0 ? "profit" : "loss";
+    if (!t.bets) {
+      $("positionAdvice").textContent = "ยังไม่มีงวดเดิมพันจริงสำหรับเปรียบเทียบหลัก";
+    } else {
+      const tensRate = t.tensHits/t.bets*100, unitsRate = t.unitsHits/t.bets*100;
+      const better = t.tensPnl === t.unitsPnl ? "ทั้งสองหลักทำผลงานเท่ากัน" : t.tensPnl > t.unitsPnl ? "ชุดนี้เหมาะกับหลักสิบมากกว่า" : "ชุดนี้เหมาะกับหลักหน่วยมากกว่า";
+      $("positionAdvice").innerHTML = `<b>${better}</b><br>หลักสิบเข้า ${t.tensHits}/${t.bets} (${tensRate.toFixed(1)}%) • หลักหน่วยเข้า ${t.unitsHits}/${t.bets} (${unitsRate.toFixed(1)}%)`;
+    }
+    const rows = state.records.slice().reverse();
+    $("trackerRows").innerHTML = rows.length ? rows.map((r,i) => {
+      const statusClass = r.phase==="bet"?"status-bet":r.phase==="recalc"?"status-recalc":"status-skip";
+      return `<tr>
+        <td>${state.records.length-i}</td><td>${r.top} | ${r.bottom}<br><small>ตรวจ ${r.checked}</small></td>
+        <td><span class="status-pill ${statusClass}">${r.phaseLabel}</span></td><td>${r.win.join("")}</td>
+        <td>${r.tens} ${r.isBet?(r.tensHit?"✅":"❌"):"—"}</td><td>${r.units} ${r.isBet?(r.unitsHit?"✅":"❌"):"—"}</td>
+        <td class="${r.tensPnl>=0?"profit":"loss"}">${r.isBet?money(r.tensPnl):"0.00"}</td>
+        <td class="${r.unitsPnl>=0?"profit":"loss"}">${r.isBet?money(r.unitsPnl):"0.00"}</td>
+      </tr>`;
+    }).join("") : `<tr><td colspan="8">ยังไม่มีสถิติผลรางวัล</td></tr>`;
+  }
+  window.addEventListener("pairwin:calculated", event => {
+    latestCalculation = event.detail;
+  });
+  $("actualTop").addEventListener("input", () => {
+    clean($("actualTop"),3);
+    if ($("actualTop").value.length===3) $("actualBottom").focus();
+  });
+  $("actualBottom").addEventListener("input", event => {
+    clean($("actualBottom"),2);
+    if ($("actualBottom").value.length===2 && event.inputType!=="insertFromPaste") recordOutcome();
+  });
+  [$("actualTop"),$("actualBottom")].forEach(input => input.addEventListener("keydown", event => {
+    if (event.key==="Enter") { event.preventDefault(); recordOutcome(); }
+  }));
+  $("recordOutcome").addEventListener("click", recordOutcome);
+  $("startTracker").addEventListener("click", () => startCycle(latestCalculation));
+  $("undoOutcome").addEventListener("click", () => {
+    if (!state.records.length) return;
+    state.records.pop();
+    state.active = null;
+    save(); render();
+    $("trackerMessage").textContent = "ย้อนกลับผลล่าสุดแล้ว กรุณาคำนวณและเริ่มชุดใหม่เพื่อให้ลำดับรอบถูกต้อง";
+  });
+  $("resetTracker").addEventListener("click", () => {
+    if (!confirm("ล้างสถิติชุดคู่วินทั้งหมดใช่ไหม")) return;
+    state = blankState(); save(); render();
+    $("trackerMessage").textContent = "ล้างสถิติแล้ว";
+  });
+  ["trackerSource","trackerStake","trackerPayout"].forEach(id => $(id).addEventListener("change", save));
+  render();
 })();
 </script>
 
