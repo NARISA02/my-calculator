@@ -1181,5 +1181,39 @@
   calculate.parentElement.insertAdjacentElement("beforebegin", bar);
 })();
 </script>
+<script>
+(() => {
+  const draftKey = "room-draft:pair-win";
+  const fields = () => [...document.querySelectorAll("input, textarea, select")]
+    .filter(el => !["button","submit","reset","file"].includes(el.type) && (el.id || el.name));
+  function saveDraft() {
+    try {
+      const data = {};
+      fields().forEach((el,index) => {
+        const name = el.id || el.name || String(index);
+        data[name] = (el.type === "checkbox" || el.type === "radio") ? {checked:el.checked} : {value:el.value};
+      });
+      localStorage.setItem(draftKey, JSON.stringify(data));
+    } catch {}
+  }
+  function restoreDraft() {
+    try {
+      const data = JSON.parse(localStorage.getItem(draftKey) || "null");
+      if (!data) return;
+      fields().forEach((el,index) => {
+        const saved = data[el.id || el.name || String(index)];
+        if (!saved) return;
+        if ("checked" in saved) el.checked = saved.checked;
+        if ("value" in saved) el.value = saved.value;
+      });
+    } catch {}
+  }
+  restoreDraft();
+  document.addEventListener("input", saveDraft);
+  document.addEventListener("change", saveDraft);
+  document.querySelectorAll("button").forEach(button => button.addEventListener("click", () => setTimeout(saveDraft, 0)));
+  window.addEventListener("pagehide", saveDraft);
+})();
+</script>
 </body>
 </html>
