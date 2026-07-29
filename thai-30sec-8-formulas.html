@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="th">
 <head>
@@ -261,7 +262,35 @@
     </section>
 
     <section class="card">
-      <h2>3. สรุปผลทดสอบย้อนหลัง</h2>
+      <h2>3. สูตรแนะนำและหลักแนะนำ</h2>
+      <div class="help">เปรียบเทียบทั้ง 8 สูตร × หลักหน่วย/หลักสิบ จากผลทดสอบล่าสุด โดยแต่ละงวดใช้ผลก่อนหน้าเท่านั้น หากใส่ผล 5 งวด จะทดสอบได้ 4 รอบ</div>
+      <div class="form-grid" style="margin-top:14px">
+        <label>
+          ใช้รอบทดสอบล่าสุด
+          <input id="recommendRounds" type="number" min="1" value="5">
+        </label>
+      </div>
+      <div id="recommendSummary" class="notice" style="margin-top:14px"></div>
+      <div style="overflow:auto">
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>อันดับ</th>
+              <th>สูตร</th>
+              <th>หลัก</th>
+              <th>ถูก/ทดสอบ</th>
+              <th>อัตราเข้า</th>
+              <th>กำไร–ขาดทุน</th>
+              <th>คำแนะนำ</th>
+            </tr>
+          </thead>
+          <tbody id="recommendBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>4. สรุปผลทดสอบย้อนหลัง</h2>
 
       <div class="metric-grid">
         <div class="metric">
@@ -284,7 +313,7 @@
     </section>
 
     <section class="card">
-      <h2>4. เทียบหลักที่น่าเล่นกว่า</h2>
+      <h2>5. เทียบหลักที่น่าเล่นกว่า</h2>
       <div class="help">เปรียบเทียบสูตรเดียวกันระหว่างหลักหน่วยกับหลักสิบ โดยใช้เงินและอัตราจ่ายชุดเดียวกัน</div>
       <div style="overflow:auto">
         <table class="compare-table">
@@ -303,7 +332,7 @@
     </section>
 
     <section class="card">
-      <h2>5. ทดสอบย้อนหลังแบบไม่ดูอนาคต</h2>
+      <h2>6. ทดสอบย้อนหลังแบบไม่ดูอนาคต</h2>
       <div class="help">แต่ละแถวใช้ผลรอบก่อนหน้าเลือกเลขเว้น แล้วตรวจผลของรอบถัดไปเท่านั้น</div>
       <div style="overflow:auto">
         <table class="backtest-table">
@@ -349,6 +378,7 @@
   const startingBankInput = $("startingBank");
   const minimumRoundsInput = $("minimumRounds");
   const recentRoundsInput = $("recentRounds");
+  const recommendRoundsInput = $("recommendRounds");
   const savedBankInput = $("savedBank");
   const resultSection = $("resultSection");
   const errorBox = $("error");
@@ -446,6 +476,43 @@
     return {unit, tens, best};
   }
 
+  function recommendationRanking(results, stake, payout, recentCount) {
+    const positions = [
+      {key:"unit", label:"หลักหน่วย"},
+      {key:"tens", label:"หลักสิบ"}
+    ];
+    const ranking = [];
+
+    formulas.forEach((formula, formulaIndex) => {
+      positions.forEach((position, positionIndex) => {
+        const full = backtest(results, formula, position.key, stake, payout);
+        const rows = full.rows.slice(-recentCount);
+        const wins = rows.filter(row => row.hit).length;
+        const net = rows.reduce((sum, row) => sum + row.profit, 0);
+        ranking.push({
+          formula,
+          formulaIndex,
+          position: position.key,
+          positionLabel: position.label,
+          positionIndex,
+          rows,
+          rounds: rows.length,
+          wins,
+          rate: rows.length ? wins / rows.length : 0,
+          net
+        });
+      });
+    });
+
+    return ranking.sort((a,b) =>
+      b.wins - a.wins ||
+      b.rate - a.rate ||
+      b.net - a.net ||
+      a.formulaIndex - b.formulaIndex ||
+      a.positionIndex - b.positionIndex
+    );
+  }
+
   function showError(message) {
     errorBox.textContent = message;
     errorBox.style.display = "block";
@@ -467,6 +534,7 @@
     const startingBank = Number(startingBankInput.value);
     const minimumRounds = Math.max(1, Number(minimumRoundsInput.value) || 1);
     const recentRounds = Math.max(3, Number(recentRoundsInput.value) || 20);
+    const recommendRounds = Math.max(1, Number(recommendRoundsInput.value) || 5);
 
     if (results.length < 2) {
       showError("กรุณาใส่ผลย้อนหลังอย่างน้อย 2 งวด เพื่อคำนวณและทดสอบย้อนหลัง");
@@ -483,11 +551,12 @@
     const bet = allowedDigits(omit);
     const stats = backtest(results, formula, position, stake, payout);
     const comparison = comparePositions(results, formula, stake, payout);
+    const recommendations = recommendationRanking(results, stake, payout, recommendRounds);
 
     current = {
       results, formula, position, stake, payout, startingBank,
-      minimumRounds, recentRounds, latest, sourceDigit, omit, bet,
-      stats, comparison
+      minimumRounds, recentRounds, recommendRounds, latest, sourceDigit, omit, bet,
+      stats, comparison, recommendations
     };
 
     render();
@@ -531,11 +600,46 @@
       ? `มีข้อมูลทดสอบ ${c.stats.rounds} รอบ ครบขั้นต่ำ ${c.minimumRounds} รอบแล้ว แต่ยังควรใช้เป็นข้อมูลประกอบเท่านั้น`
       : `ตอนนี้มีข้อมูลทดสอบ ${c.stats.rounds} รอบ ยังไม่ถึงขั้นต่ำ ${c.minimumRounds} รอบ ควรเพิ่มผลย้อนหลังอีก ${c.minimumRounds - c.stats.rounds} รอบ`;
 
+    renderRecommendations();
     renderComparison();
     renderBacktest();
 
     resultSection.style.display = "block";
     resultSection.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function renderRecommendations() {
+    const c = current;
+    const ranking = c.recommendations;
+    const best = ranking[0];
+    const tied = ranking.filter(row =>
+      row.wins === best.wins &&
+      row.rate === best.rate &&
+      row.net === best.net
+    );
+    const available = best ? best.rounds : 0;
+
+    $("recommendSummary").textContent = !best || !available
+      ? "ยังมีข้อมูลไม่พอสำหรับแนะนำสูตร กรุณาใส่ผลอย่างน้อย 2 งวด"
+      : tied.length > 1
+        ? `ผลล่าสุด ${available} รอบมีคะแนนสูสีกัน ${tied.length} ตัวเลือก: ` +
+          tied.map(row => `${row.formula.name} · ${row.positionLabel}`).join(" / ")
+        : `แนะนำตอนนี้: ${best.formula.name} · ${best.positionLabel} เข้า ${best.wins}/${best.rounds} รอบ (${percent(best.wins,best.rounds)})`;
+
+    $("recommendBody").innerHTML = ranking.map((row,index) => {
+      const isTop = best && row.wins === best.wins && row.rate === best.rate && row.net === best.net;
+      return `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${row.formula.name}</td>
+          <td>${row.positionLabel}</td>
+          <td>${row.wins}/${row.rounds}</td>
+          <td>${percent(row.wins,row.rounds)}</td>
+          <td class="${row.net >= 0 ? "profit" : "loss"}">${row.net >= 0 ? "+" : ""}${money(row.net)}</td>
+          <td>${isTop ? '<span class="badge">แนะนำ</span>' : '<span class="badge reserve">สำรอง</span>'}</td>
+        </tr>
+      `;
+    }).join("");
   }
 
   function renderComparison() {
@@ -583,6 +687,7 @@
       if (settings.startingBank != null) startingBankInput.value = settings.startingBank;
       if (settings.minimumRounds != null) minimumRoundsInput.value = settings.minimumRounds;
       if (settings.recentRounds != null) recentRoundsInput.value = settings.recentRounds;
+      if (settings.recommendRounds != null) recommendRoundsInput.value = settings.recommendRounds;
       const bank = localStorage.getItem("thai30RealBank");
       if (bank !== null) savedBankInput.value = bank;
     } catch {}
@@ -596,7 +701,8 @@
       payout: payoutInput.value,
       startingBank: startingBankInput.value,
       minimumRounds: minimumRoundsInput.value,
-      recentRounds: recentRoundsInput.value
+      recentRounds: recentRoundsInput.value,
+      recommendRounds: recommendRoundsInput.value
     };
     localStorage.setItem("thai30Settings", JSON.stringify(settings));
   }

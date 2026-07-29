@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -178,6 +179,7 @@
       margin:6px 0 2px;
       overflow-wrap:anywhere;
     }
+
     .count{color:var(--muted);font-size:14px}
     .auto-win{
       margin-top:14px;
@@ -358,6 +360,7 @@
 
       <div class="actions">
         <button id="calculate" class="btn-primary">คำนวณ</button>
+
         <button id="reset" class="btn-secondary">ล้างข้อมูล</button>
       </div>
 
@@ -538,6 +541,7 @@
   const autoWinNumber = el("autoWinNumber");
   const autoReason = el("autoReason");
   const scoreList = el("scoreList");
+
   const adjustBox = el("adjust");
   const adjustHelp = el("adjustHelp");
   const digitGrid = el("digitGrid");
@@ -718,6 +722,7 @@
       : "โปรแกรมให้คะแนนเลขจริงสูงกว่าคู่จีบ และเพิ่มคะแนนให้ตำแหน่งที่ถูกใช้ซ้ำในสูตรที่เลือก จากนั้นเลือก 7 อันดับแรก";
     scoreList.innerHTML = ranked.map(d =>
       `<span class="score-chip">${d} • ${r.recommendation.scores[d]} คะแนน</span>`
+
     ).join("");
 
     renderAdjust();
@@ -898,6 +903,7 @@
     }
 
     box.innerHTML = `<div class="history-list">${
+
       history.map((h,i) => `
         <div class="history-item">
           <div>
@@ -1078,6 +1084,7 @@
     $("tensPnl").textContent = `${t.tensPnl>=0?"+":""}${money(t.tensPnl)} บาท`;
     $("unitsPnl").textContent = `${t.unitsPnl>=0?"+":""}${money(t.unitsPnl)} บาท`;
     $("tensPnl").className = t.tensPnl >= 0 ? "profit" : "loss";
+
     $("unitsPnl").className = t.unitsPnl >= 0 ? "profit" : "loss";
     if (!t.bets) {
       $("positionAdvice").textContent = "ยังไม่มีงวดเดิมพันจริงสำหรับเปรียบเทียบหลัก";
