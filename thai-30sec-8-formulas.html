@@ -41,7 +41,23 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
 .stake-input{width:88px;height:42px;padding:0 8px;text-align:center;border-radius:10px}.segment-list{display:grid;gap:9px;margin-top:12px}.segment-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:14px}.segment-main{font-weight:900}.segment-sub{font-size:13px;color:var(--muted)}.mini{min-height:36px;padding:6px 10px;font-size:13px}.history-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:14px;margin-top:9px}.history-main{font-weight:900}.history-sub{font-size:13px;color:var(--muted)}
 .row-test td{background:#fff7dd}.row-actual td{background:#ecf9f0}.row-skip td{background:#eef3f8}.row-unassigned td{background:#f8fafc}.footer-note{text-align:center;color:var(--muted);font-size:13px;margin-top:16px;line-height:1.6}
 @media(max-width:900px){.config-grid,.metric-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:650px){.grid2,.grid3,.config-grid,.metric-grid,.actions{grid-template-columns:1fr}.card{padding:16px}.hero{padding:22px 18px}th,td{font-size:12px;padding:8px 5px}.stake-input{width:72px}.wide-table{min-width:0}.wide-table thead{display:none}.wide-table,.wide-table tbody,.wide-table tr,.wide-table td{display:block;width:100%}.wide-table tr{margin-top:12px;border:1px solid var(--line);border-radius:14px;overflow:hidden}.wide-table td{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;text-align:right;border-bottom:1px solid var(--line);font-size:13px}.wide-table td::before{content:attr(data-label);font-weight:900;color:#344054;text-align:left}.wide-table td:last-child{border-bottom:none}.wide-table .stake-input{width:74px;height:36px}}
+@media(max-width:650px){
+  .grid2,.grid3,.config-grid,.metric-grid,.actions{grid-template-columns:1fr}
+  .card{padding:12px}
+  .hero{padding:22px 18px}
+  .actual-table-wrap{overflow:hidden}
+  .wide-table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse}
+  .wide-table th,.wide-table td{padding:8px 2px;font-size:10.5px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:clip}
+  .wide-table th{font-size:9.5px;white-space:normal;font-weight:900}
+  .wide-table th:nth-child(1),.wide-table td:nth-child(1){width:9%}
+  .wide-table th:nth-child(2),.wide-table td:nth-child(2){width:18%}
+  .wide-table th:nth-child(3),.wide-table td:nth-child(3){width:12%}
+  .wide-table th:nth-child(4),.wide-table td:nth-child(4){width:18%}
+  .wide-table th:nth-child(5),.wide-table td:nth-child(5){width:17%}
+  .wide-table th:nth-child(6),.wide-table td:nth-child(6){width:26%}
+  .wide-table .stake-input{width:48px;height:32px;padding:0 3px;font-size:12px;border-radius:8px}
+  .wide-table .profit,.wide-table .loss{font-size:10.5px}
+}
 </style>
 </head>
 <body>
@@ -134,7 +150,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
 <section class="card">
 <h2>5. บัญชีเงินจริงรายไม้</h2>
 <div class="help">กำไร–ขาดทุนส่วนนี้ใช้สูตรและหลักที่ล็อกไว้ในแต่ละช่วง พร้อมยอดเดิมพันจริงของแต่ละไม้ ไม่ย้อนแก้ยอดเดิมเมื่อเปลี่ยนสูตร</div>
-<div style="overflow:auto"><table class="wide-table">
+<div class="actual-table-wrap"><table class="wide-table">
 <thead><tr><th>ไม้</th><th>ผลก่อน</th><th>เว้น</th><th>ผลถัดไป</th><th>บาท/เลข</th><th>กำไร/ขาดทุน</th></tr></thead>
 <tbody id="actualBody"></tbody>
 </table></div>
@@ -452,12 +468,12 @@ function renderActualTable(){
 
     if(row.status==="unassigned"){
       return `<tr class="${rowClass}">
-        <td data-label="ไม้">ไม้ ${row.round}</td>
-        <td data-label="ผลก่อน">${row.previous}</td>
-        <td data-label="เว้น">-</td>
-        <td data-label="ผลถัดไป">${row.next}</td>
-        <td data-label="บาท/เลข">0</td>
-        <td data-label="กำไร/ขาดทุน">0.00 บาท</td>
+        <td>ไม้ ${row.round}</td>
+        <td>${row.previous}</td>
+        <td>-</td>
+        <td>${row.next}</td>
+        <td>0</td>
+        <td>0.00 บาท</td>
       </tr>`;
     }
 
@@ -467,12 +483,12 @@ function renderActualTable(){
     const profit=row.status==="test"?0:row.profit;
 
     return `<tr class="${rowClass}">
-      <td data-label="ไม้">ไม้ ${row.round}</td>
-      <td data-label="ผลก่อน">${row.previous} → ${row.source}</td>
-      <td data-label="เว้น">${row.omit}</td>
-      <td data-label="ผลถัดไป">${row.next} → ${row.actual}</td>
-      <td data-label="บาท/เลข">${stakeCell}</td>
-      <td data-label="กำไร/ขาดทุน" class="${profit>=0?"profit":"loss"}">${profit>=0?"+":""}${money(profit)}</td>
+      <td>ไม้ ${row.round}</td>
+      <td>${row.previous} → ${row.source}</td>
+      <td>${row.omit}</td>
+      <td>${row.next} → ${row.actual}</td>
+      <td>${stakeCell}</td>
+      <td class="${profit>=0?"profit":"loss"}">${profit>=0?"+":""}${money(profit)}</td>
     </tr>`;
   }).join("");
 
