@@ -39,7 +39,7 @@ button:active{transform:scale(.985)}.primary{background:var(--primary);color:#ff
 table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}td:first-child,th:first-child{text-align:left}.profit{color:var(--green);font-weight:1000}.loss{color:var(--red);font-weight:1000}
 .badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#e7f6ee;color:#087a45;font-size:12px;font-weight:900}.badge.test{background:#fff4d6;color:#8a5b00}.badge.skip{background:#edf1f7;color:#475467}.badge.formula{background:#e9efff;color:#254b9c}
 .stake-input{width:88px;height:42px;padding:0 8px;text-align:center;border-radius:10px}.segment-list{display:grid;gap:9px;margin-top:12px}.segment-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:14px}.segment-main{font-weight:900}.segment-sub{font-size:13px;color:var(--muted)}.mini{min-height:36px;padding:6px 10px;font-size:13px}.history-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:14px;margin-top:9px}.history-main{font-weight:900}.history-sub{font-size:13px;color:var(--muted)}
-.footer-note{text-align:center;color:var(--muted);font-size:13px;margin-top:16px;line-height:1.6}
+.row-test td{background:#fff7dd}.row-actual td{background:#ecf9f0}.row-skip td{background:#eef3f8}.row-unassigned td{background:#f8fafc}.footer-note{text-align:center;color:var(--muted);font-size:13px;margin-top:16px;line-height:1.6}
 @media(max-width:900px){.config-grid,.metric-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:650px){.grid2,.grid3,.config-grid,.metric-grid,.actions{grid-template-columns:1fr}.card{padding:16px}.hero{padding:22px 18px}th,td{font-size:12px;padding:8px 5px}.stake-input{width:72px}.wide-table{min-width:980px}}
 </style>
@@ -75,8 +75,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
 <div style="margin-top:14px">
 <label for="historyInput">ผลย้อนหลัง เรียงจากเก่าไปใหม่</label>
 <textarea id="historyInput" inputmode="numeric" placeholder="04&#10;79&#10;32&#10;47&#10;81"></textarea>
-<div class="actions"><button id="enterButton" class="teal" type="button">↵ Enter เพิ่มงวด</button></div>
-<div class="help">พิมพ์ครบ 2 หลักจะขึ้นบรรทัดใหม่อัตโนมัติ หรือวางเลขยาวต่อกันได้</div>
+<div class="help">พิมพ์ครบ 2 หลัก ระบบจะขึ้นบรรทัดใหม่และคำนวณอัตโนมัติทันที หรือวางเลขยาวต่อกันได้</div>
 </div>
 </section>
 
@@ -136,7 +135,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
 <h2>5. บัญชีเงินจริงรายไม้</h2>
 <div class="help">กำไร–ขาดทุนส่วนนี้ใช้สูตรและหลักที่ล็อกไว้ในแต่ละช่วง พร้อมยอดเดิมพันจริงของแต่ละไม้ ไม่ย้อนแก้ยอดเดิมเมื่อเปลี่ยนสูตร</div>
 <div style="overflow:auto"><table class="wide-table">
-<thead><tr><th>ไม้</th><th></th><th>ผลก่อน</th><th>เว้น</th><th>ผลถัดไป</th><th>ถูก/ผิด</th><th>เดิมพันจริง</th><th>กำไร/ขาดทุน</th></tr></thead>
+<thead><tr><th>ไม้</th><th>ผลก่อน</th><th>เว้น</th><th>ผลถัดไป</th><th>เดิมพันจริง</th><th>กำไร/ขาดทุน</th></tr></thead>
 <tbody id="actualBody"></tbody>
 </table></div>
 </section>
@@ -443,25 +442,29 @@ function renderActualTable(){
   const c=current;
   const rows=c.actualRows.slice(-c.recent);
   $("actualBody").innerHTML=rows.map(row=>{
+    const rowClass=row.status==="test"?"row-test":row.status==="skip"?"row-skip":row.status==="unassigned"?"row-unassigned":"row-actual";
+
     if(row.status==="unassigned"){
-      return `<tr><td>ไม้ ${row.round}</td><td><span class="badge skip">ยังไม่ล็อกสูตร</span></td><td>${row.previous}</td><td>-</td><td>${row.next}</td><td>-</td><td>0</td><td>0.00 บาท</td></tr>`;
+      return `<tr class="${rowClass}">
+        <td>ไม้ ${row.round}</td>
+        <td>${row.previous}</td>
+        <td>-</td>
+        <td>${row.next}</td>
+        <td>0</td>
+        <td>0.00 บาท</td>
+      </tr>`;
     }
-    const status=row.status==="test"
-      ? '<span class="badge test">ทดสอบ ไม่คิดเงิน</span>'
-      : row.status==="skip"
-        ? '<span class="badge skip">ข้ามไม้</span>'
-        : '<span class="badge">นับเงินจริง</span>';
+
     const stakeCell=row.status==="test"
-      ? '<span class="help">ไม่คิดเงิน</span>'
+      ? '<span class="help">—</span>'
       : `<input class="stake-input" data-round="${row.round}" type="number" min="0" step=".01" value="${row.stake}">`;
     const profit=row.status==="test"?0:row.profit;
-    return `<tr>
+
+    return `<tr class="${rowClass}">
       <td>ไม้ ${row.round}</td>
-      <td>${status}</td>
       <td>${row.previous} → ${row.source}</td>
       <td>${row.omit}</td>
       <td>${row.next} → ${row.actual}</td>
-      <td class="${row.hit?"profit":"loss"}">${row.hit?"ถูก":"ผิด"}</td>
       <td>${stakeCell}</td>
       <td class="${profit>=0?"profit":"loss"}">${profit>=0?"+":""}${money(profit)}</td>
     </tr>`;
@@ -663,14 +666,17 @@ $("moneyStartRound").addEventListener("change",()=>{
   });
 });
 
-$("enterButton").addEventListener("click",()=>{
-  const pos=historyInput.selectionStart??historyInput.value.length;
-  if(historyInput.value[pos-1]!=="\n")historyInput.setRangeText("\n",pos,pos,"end");
-  historyInput.focus();
-  saveDraft();
-  setSuggestedSegmentRound();
-  if(parseResults(historyInput.value).length>=2)calculate();
-});
+const enterButton = $("enterButton");
+if(enterButton){
+  enterButton.addEventListener("click",()=>{
+    const pos=historyInput.selectionStart??historyInput.value.length;
+    if(historyInput.value[pos-1]!=="\n")historyInput.setRangeText("\n",pos,pos,"end");
+    historyInput.focus();
+    saveDraft();
+    setSuggestedSegmentRound();
+    if(parseResults(historyInput.value).length>=2)calculate();
+  });
+}
 
 let autoLock=false;
 historyInput.addEventListener("input",event=>{
