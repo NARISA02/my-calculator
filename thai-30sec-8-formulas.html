@@ -81,7 +81,25 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
 </section>
 
 <section class="card">
-<h2>2. ตั้งค่าการทดสอบและเงินจริง</h2>
+<h2>2. แนวทางสูตรที่กำลังเลือก</h2>
+<div class="recommend-box">
+<div class="help">เลขเว้น <span id="omitCount">0</span> ตัว</div>
+<div id="omitNumber" class="omit-number">-</div>
+<div id="sourceNote" class="help"></div>
+<div style="margin-top:16px;font-weight:900"><span id="betLabel">เลขแทง</span> <span id="betCount">0</span> <span id="betUnit">ตัว</span></div>
+<div id="digitRow" class="digit-row"></div>
+<div class="metric-grid">
+<div class="metric"><div class="metric-label">เดิมพันปกติต่อไม้</div><div id="roundCost" class="metric-value"></div></div>
+<div class="metric"><div class="metric-label">ผลที่กรอกแล้ว</div><div id="playedRounds" class="metric-value"></div></div>
+<div class="metric"><div class="metric-label">ไม้ถัดไป</div><div id="nextRound" class="metric-value"></div></div>
+<div class="metric"><div class="metric-label">อัตราเข้าของสูตรที่เลือก</div><div id="selectedWinRate" class="metric-value green"></div></div>
+</div>
+</div>
+<div id="minimumNotice" class="notice"></div>
+</section>
+
+<section class="card">
+<h2>3. ตั้งค่าการทดสอบและเงินจริง</h2>
 <div class="config-grid">
 <div><label for="defaultStake">ยอดเดิมพันปกติต่อไม้ รวมทั้งหมด (บาท)</label><input id="defaultStake" type="number" min="0" step=".01" value="20"></div>
 <div><label for="payout">อัตราจ่ายเลขเดี่ยว</label><input id="payout" type="number" min="0" step=".01" value="9.9"></div>
@@ -106,35 +124,19 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
 </section>
 
 <section class="card">
-<h2>3. ประวัติการเปลี่ยนสูตรเงินจริง</h2>
+<h2>4. ประวัติการเปลี่ยนสูตรเงินจริง</h2>
 <div class="help">สูตรที่ล็อกไว้จะไม่ถูกคำนวณย้อนหลังใหม่เมื่อแพทเปลี่ยนเมนูสูตร สูตรใหม่มีผลตั้งแต่ไม้ที่ระบุเท่านั้น</div>
 <div id="segmentList" class="segment-list"></div>
 </section>
 
 <section id="resultSection" class="result-section">
-<section class="card">
-<h2>4. แนวทางสูตรที่กำลังเลือก</h2>
-<div class="recommend-box">
-<div class="help">เลขเว้น <span id="omitCount">0</span> ตัว</div>
-<div id="omitNumber" class="omit-number">-</div>
-<div id="sourceNote" class="help"></div>
-<div style="margin-top:16px;font-weight:900"><span id="betLabel">เลขแทง</span> <span id="betCount">0</span> <span id="betUnit">ตัว</span></div>
-<div id="digitRow" class="digit-row"></div>
-<div class="metric-grid">
-<div class="metric"><div class="metric-label">เดิมพันปกติต่อไม้</div><div id="roundCost" class="metric-value"></div></div>
-<div class="metric"><div class="metric-label">ผลที่กรอกแล้ว</div><div id="playedRounds" class="metric-value"></div></div>
-<div class="metric"><div class="metric-label">ไม้ถัดไป</div><div id="nextRound" class="metric-value"></div></div>
-<div class="metric"><div class="metric-label">อัตราเข้าของสูตรที่เลือก</div><div id="selectedWinRate" class="metric-value green"></div></div>
-</div>
-</div>
-<div id="minimumNotice" class="notice"></div>
-</section>
+
 
 <section class="card">
 <h2>5. บัญชีเงินจริงรายไม้</h2>
 <div class="help">กำไร–ขาดทุนส่วนนี้ใช้สูตรและหลักที่ล็อกไว้ในแต่ละช่วง พร้อมยอดเดิมพันจริงของแต่ละไม้ ไม่ย้อนแก้ยอดเดิมเมื่อเปลี่ยนสูตร</div>
 <div style="overflow:auto"><table class="wide-table">
-<thead><tr><th>ไม้</th><th>สถานะ</th><th>สูตรจริง</th><th>ผลก่อน</th><th>เว้น</th><th>ผลถัดไป</th><th>ถูก/ผิด</th><th>เดิมพันจริง</th><th>กำไร/ขาดทุน</th></tr></thead>
+<thead><tr><th>ไม้</th><th></th><th>ผลก่อน</th><th>เว้น</th><th>ผลถัดไป</th><th>ถูก/ผิด</th><th>เดิมพันจริง</th><th>กำไร/ขาดทุน</th></tr></thead>
 <tbody id="actualBody"></tbody>
 </table></div>
 </section>
@@ -442,16 +444,13 @@ function renderActualTable(){
   const rows=c.actualRows.slice(-c.recent);
   $("actualBody").innerHTML=rows.map(row=>{
     if(row.status==="unassigned"){
-      return `<tr><td>ไม้ ${row.round}</td><td><span class="badge skip">ยังไม่ล็อกสูตร</span></td><td>-</td><td>${row.previous}</td><td>-</td><td>${row.next}</td><td>-</td><td>0</td><td>0.00 บาท</td></tr>`;
+      return `<tr><td>ไม้ ${row.round}</td><td><span class="badge skip">ยังไม่ล็อกสูตร</span></td><td>${row.previous}</td><td>-</td><td>${row.next}</td><td>-</td><td>0</td><td>0.00 บาท</td></tr>`;
     }
     const status=row.status==="test"
       ? '<span class="badge test">ทดสอบ ไม่คิดเงิน</span>'
       : row.status==="skip"
         ? '<span class="badge skip">ข้ามไม้</span>'
         : '<span class="badge">นับเงินจริง</span>';
-    const formulaLabel=row.segment
-      ? `${row.formula.name}<br><span class="help">${row.position==="unit"?"หน่วย":"สิบ"}</span>`
-      : `${c.formula.name}<br><span class="help">ดูสถิติ</span>`;
     const stakeCell=row.status==="test"
       ? '<span class="help">ไม่คิดเงิน</span>'
       : `<input class="stake-input" data-round="${row.round}" type="number" min="0" step=".01" value="${row.stake}">`;
@@ -459,7 +458,6 @@ function renderActualTable(){
     return `<tr>
       <td>ไม้ ${row.round}</td>
       <td>${status}</td>
-      <td>${formulaLabel}</td>
       <td>${row.previous} → ${row.source}</td>
       <td>${row.omit}</td>
       <td>${row.next} → ${row.actual}</td>
