@@ -488,7 +488,7 @@ function renderActualTable(){
       <td>${row.omit}</td>
       <td>${row.next} → ${row.actual}</td>
       <td>${stakeCell}</td>
-      <td class="${profit>=0?"profit":"loss"}">${profit>=0?"+":""}${money(profit)}</td>
+      <td class="${row.hit?"profit":"loss"}">${row.hit&&profit>0?"+":""}${money(profit)}</td>
     </tr>`;
   }).join("");
 
