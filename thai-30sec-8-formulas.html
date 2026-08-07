@@ -1,698 +1,745 @@
 <!doctype html>
 <html lang="th">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#2563eb">
-  <title>ห้องรวม 8 สูตร หวยไทย 30 วิ</title>
-  <style>
-    :root{
-      --bg:#eef4fb;--card:#fff;--text:#172033;--muted:#667085;
-      --line:#dbe4f0;--primary:#2563eb;--primary2:#60a5fa;
-      --green:#087a45;--red:#c43122;--amber:#9a6700;
-      --soft:#edf5ff;--shadow:0 12px 28px rgba(15,23,42,.08);--radius:24px
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;min-height:100vh;
-      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",sans-serif;
-      color:var(--text);
-      background:linear-gradient(180deg,#f8fbff,var(--bg))
-    }
-    .wrap{width:min(1100px,100%);margin:auto;padding:18px 14px 80px}
-    .hero{
-      padding:24px 20px;border-radius:28px;color:#fff;
-      background:linear-gradient(135deg,#1d4ed8,#2563eb 55%,#60a5fa);
-      box-shadow:var(--shadow)
-    }
-    .hero h1{margin:0 0 7px;font-size:clamp(27px,6vw,44px);line-height:1.15}
-    .hero p{margin:0;opacity:.95;line-height:1.55}
-    .back{
-      display:inline-flex;align-items:center;gap:6px;margin-bottom:12px;
-      color:#fff;text-decoration:none;font-weight:900;
-      background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);
-      padding:8px 12px;border-radius:999px
-    }
-    .card{
-      margin-top:14px;padding:20px;border:1px solid rgba(37,99,235,.09);
-      border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)
-    }
-    h2{margin:0 0 16px;font-size:clamp(24px,5vw,36px)}
-    h3{margin:0 0 10px;font-size:20px}
-    label{display:block;margin-bottom:7px;font-size:14px;font-weight:900}
-    input,select,textarea,button{font:inherit}
-    input,select,textarea{
-      width:100%;border:1.5px solid #bdcce0;border-radius:15px;
-      background:#fff;color:var(--text);outline:none
-    }
-    input,select{height:52px;padding:0 14px}
-    textarea{
-      min-height:230px;padding:14px;resize:vertical;
-      font-size:20px;line-height:1.45
-    }
-    input:focus,select:focus,textarea:focus{
-      border-color:var(--primary2);box-shadow:0 0 0 4px rgba(37,99,235,.11)
-    }
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .config-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
-    .actions{
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-      gap:10px;margin-top:14px
-    }
-    button{
-      min-height:48px;padding:10px 14px;border:0;border-radius:15px;
-      cursor:pointer;font-weight:900;transition:.15s ease
-    }
-    button:active{transform:scale(.98)}
-    .primary{background:var(--primary);color:#fff}
-    .secondary{background:#e8edf5;color:#344054}
-    .copy{background:#e9f9ef;color:#116530}
-    .danger{background:#fff0f3;color:#be123c}
-    .error{
-      display:none;margin-top:12px;padding:12px 14px;border-radius:14px;
-      background:#fff1f2;color:#9f1239;font-weight:800
-    }
-    .help{color:var(--muted);font-size:13px;line-height:1.6;margin-top:7px}
-    .result-section{display:none}
-    .recommend-box{
-      padding:18px;border-radius:20px;background:linear-gradient(135deg,#eaf4ff,#f9fcff);
-      border:1px solid #d8e8fb
-    }
-    .recommend-label{color:var(--muted);font-size:14px;font-weight:900}
-    .omit-number{
-      margin-top:3px;font-size:clamp(42px,12vw,68px);font-weight:1000;
-      letter-spacing:5px;color:#172033
-    }
-    .bet-title{margin-top:18px;color:var(--muted);font-weight:900}
-    .digit-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-    .digit{
-      width:64px;height:64px;display:grid;place-items:center;border-radius:15px;
-      font-size:30px;font-weight:1000;background:#e4efff;color:#1753a6
-    }
-    .digit.omit{
-      color:#b6291c;background:#ffe3da;text-decoration:line-through
-    }
-    .metric-grid{
-      display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px
-    }
-    .metric{
-      padding:14px;border-radius:16px;background:#f1f4f8;min-height:102px
-    }
-    .metric-label{font-size:13px;color:#344054;font-weight:900}
-    .metric-value{margin-top:6px;font-size:clamp(23px,5vw,34px);font-weight:1000}
-    .metric-value.green{color:var(--green)}
-    .metric-value.red{color:var(--red)}
-    .notice{
-      margin-top:15px;padding:13px 15px;border-radius:15px;
-      background:#fff7e4;color:#795400;font-size:14px;line-height:1.65;font-weight:700
-    }
-    .compare-table,.backtest-table{
-      width:100%;border-collapse:collapse;margin-top:12px
-    }
-    th,td{padding:12px 9px;border-bottom:1px solid var(--line);text-align:center}
-    th{font-size:14px;color:#344054}
-    td:first-child,th:first-child{text-align:left}
-    .profit{color:var(--green);font-weight:1000}
-    .loss{color:var(--red);font-weight:1000}
-    .badge{
-      display:inline-block;padding:5px 9px;border-radius:999px;
-      background:#e7f6ee;color:#087a45;font-size:12px;font-weight:900
-    }
-    .badge.reserve{background:#edf1f7;color:#475467}
-    .history-list{display:grid;gap:9px}
-    .history-item{
-      display:flex;justify-content:space-between;align-items:center;gap:10px;
-      padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:#fcfdff
-    }
-    .history-main{font-weight:900}
-    .history-sub{font-size:13px;color:var(--muted);margin-top:3px}
-    .use{min-height:38px;padding:6px 10px;background:#e9eef8;color:#344054;flex:0 0 auto}
-    .empty{text-align:center;color:var(--muted);padding:18px}
-    .footer-note{text-align:center;color:var(--muted);font-size:13px;line-height:1.6;margin-top:16px}
-    @media(max-width:850px){
-      .grid3,.config-grid,.metric-grid{grid-template-columns:1fr 1fr}
-    }
-    @media(max-width:620px){
-      .grid2,.grid3,.config-grid,.metric-grid,.actions{grid-template-columns:1fr}
-      .card{padding:16px}.hero{padding:22px 18px}
-      th,td{padding:10px 6px;font-size:13px}
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#2563eb">
+<title>ห้องรวม 17 สูตร หวยไทย 30 วิ</title>
+<style>
+:root{
+  --bg:#eef4fb;--card:#fff;--text:#172033;--muted:#667085;--line:#dbe4f0;
+  --primary:#2563eb;--primary2:#60a5fa;--green:#087a45;--red:#c43122;
+  --amber:#9a6700;--teal:#0f766e;--shadow:0 12px 28px rgba(15,23,42,.08);--radius:24px
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",sans-serif;color:var(--text);background:linear-gradient(180deg,#f8fbff,var(--bg))}
+.wrap{width:min(1180px,100%);margin:auto;padding:18px 14px 80px}
+.hero{padding:24px 20px;border-radius:28px;color:#fff;background:linear-gradient(135deg,#1d4ed8,#2563eb 55%,#60a5fa);box-shadow:var(--shadow)}
+.hero h1{margin:0 0 7px;font-size:clamp(27px,6vw,44px);line-height:1.15}.hero p{margin:0;opacity:.95;line-height:1.55}
+.back{display:inline-flex;margin-bottom:12px;color:#fff;text-decoration:none;font-weight:900;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:8px 12px;border-radius:999px}
+.card{margin-top:14px;padding:20px;border:1px solid rgba(37,99,235,.09);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
+h2{margin:0 0 16px;font-size:clamp(23px,5vw,35px)}h3{margin:0 0 10px}
+label{display:block;margin-bottom:7px;font-size:14px;font-weight:900}
+input,select,textarea,button{font:inherit}
+input,select,textarea{width:100%;border:1.5px solid #bdcce0;border-radius:15px;background:#fff;color:var(--text);outline:none}
+input,select{height:52px;padding:0 14px}textarea{min-height:230px;padding:14px;resize:vertical;font-size:20px;line-height:1.45}
+input:focus,select:focus,textarea:focus{border-color:var(--primary2);box-shadow:0 0 0 4px rgba(37,99,235,.11)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.config-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-top:14px}
+button{min-height:48px;padding:10px 14px;border:0;border-radius:15px;cursor:pointer;font-weight:900}
+button:active{transform:scale(.985)}.primary{background:var(--primary);color:#fff}.secondary{background:#e8edf5;color:#344054}.danger{background:#fff0f3;color:#be123c}.teal{background:var(--teal);color:#fff}
+.error{display:none;margin-top:12px;padding:12px 14px;border-radius:14px;background:#fff1f2;color:#9f1239;font-weight:800}
+.help{color:var(--muted);font-size:13px;line-height:1.65;margin-top:7px}.formula-note{margin-top:12px;padding:12px 14px;border-radius:14px;background:#fff7e4;color:#795400;line-height:1.65}
+.notice{margin-top:14px;padding:13px 15px;border-radius:15px;background:#fff7e4;color:#795400;line-height:1.65;font-weight:700}
+.success-note{background:#eaf8f0;color:#12653b}.result-section{display:none}
+.recommend-box{padding:18px;border-radius:20px;background:linear-gradient(135deg,#eaf4ff,#f9fcff);border:1px solid #d8e8fb}
+.omit-number{font-size:clamp(42px,12vw,68px);font-weight:1000;letter-spacing:5px}.digit-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.digit{min-width:58px;height:58px;padding:0 10px;display:grid;place-items:center;border-radius:15px;font-size:27px;font-weight:1000;background:#e4efff;color:#1753a6}.digit.omit{color:#b6291c;background:#ffe3da;text-decoration:line-through}
+.metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}.metric{padding:14px;border-radius:16px;background:#f1f4f8;min-height:102px}.metric-label{font-size:13px;color:#344054;font-weight:900}.metric-value{margin-top:6px;font-size:clamp(21px,5vw,33px);font-weight:1000}.green{color:var(--green)}.red{color:var(--red)}
+table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}td:first-child,th:first-child{text-align:left}.profit{color:var(--green);font-weight:1000}.loss{color:var(--red);font-weight:1000}
+.badge{display:inline-block;padding:5px 9px;border-radius:999px;background:#e7f6ee;color:#087a45;font-size:12px;font-weight:900}.badge.test{background:#fff4d6;color:#8a5b00}.badge.skip{background:#edf1f7;color:#475467}.badge.formula{background:#e9efff;color:#254b9c}
+.stake-input{width:88px;height:42px;padding:0 8px;text-align:center;border-radius:10px}.segment-list{display:grid;gap:9px;margin-top:12px}.segment-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:14px}.segment-main{font-weight:900}.segment-sub{font-size:13px;color:var(--muted)}.mini{min-height:36px;padding:6px 10px;font-size:13px}.history-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:14px;margin-top:9px}.history-main{font-weight:900}.history-sub{font-size:13px;color:var(--muted)}
+.row-test td{background:#fff7dd}.row-actual td{background:#ecf9f0}.row-skip td{background:#eef3f8}.row-unassigned td{background:#f8fafc}.footer-note{text-align:center;color:var(--muted);font-size:13px;margin-top:16px;line-height:1.6}
+@media(max-width:900px){.config-grid,.metric-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){
+  .grid2,.grid3,.config-grid,.metric-grid,.actions{grid-template-columns:1fr}
+  .card{padding:12px}
+  .hero{padding:22px 18px}
+  .actual-table-wrap{overflow:hidden}
+  .wide-table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse}
+  .wide-table th,.wide-table td{padding:8px 2px;font-size:10.5px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:clip}
+  .wide-table th{font-size:9.5px;white-space:normal;font-weight:900}
+  .wide-table th:nth-child(1),.wide-table td:nth-child(1){width:9%}
+  .wide-table th:nth-child(2),.wide-table td:nth-child(2){width:18%}
+  .wide-table th:nth-child(3),.wide-table td:nth-child(3){width:12%}
+  .wide-table th:nth-child(4),.wide-table td:nth-child(4){width:18%}
+  .wide-table th:nth-child(5),.wide-table td:nth-child(5){width:17%}
+  .wide-table th:nth-child(6),.wide-table td:nth-child(6){width:26%}
+  .wide-table .stake-input{width:48px;height:32px;padding:0 3px;font-size:12px;border-radius:8px}
+  .wide-table .profit,.wide-table .loss{font-size:10.5px}
+}
+</style>
 </head>
 <body>
 <main class="wrap">
-  <section class="hero">
-    <a class="back" href="index.html">← กลับหน้าหลัก</a>
-    <h1>⏱️ ห้องรวม 8 สูตร หวยไทย 30 วิ</h1>
-    <p>เลือกชื่อสูตรที่ต้องการ ใส่ผลย้อนหลัง แล้วดูเลขเว้น อัตราชนะ จำนวนงวด และกำไร–ขาดทุนแบบไม่มองอนาคต</p>
-  </section>
+<section class="hero">
+<a class="back" href="index.html">← กลับหน้าหลัก</a>
+<h1>⏱️ ห้องรวม 17 สูตร หวยไทย 30 วิ</h1>
+<p>แยกการทดสอบสูตรออกจากเงินจริง เปลี่ยนสูตรกลางทางได้ และบันทึกยอดเดิมพันจริงของแต่ละไม้</p>
+</section>
 
-  <section class="card">
-    <h2>1. ตั้งค่าและข้อมูลย้อนหลัง</h2>
+<section class="card">
+<h2>1. สูตรและผลย้อนหลัง</h2>
+<div class="grid2">
+<div><label for="formulaSelect">สูตรที่กำลังดู/จะใช้ต่อ</label><select id="formulaSelect"><option value="blue_thai">สูตรเลขมงคล</option>
+<option value="formula2">สูตร 2</option>
+<option value="green_cat">สูตรแมวกวัก</option>
+<option value="ku30">สูตร KU หวยไทย 30 วิ</option>
+<option value="to_kan_jai_v2">สูตรโต้ดทันใจ V.2</option>
+<option value="blue_dark">สูตรเงิน</option>
+<option value="teal">สูตรเขียว</option>
+<option value="gold">สูตรทอง</option>
+<option value="next_formula">สูตรถัดมา</option>
+<option value="laksami">สูตรลักษมีประทานพร</option>
+<option value="kwak_money">สูตรกวักเงิน 30 วิ</option>
+<option value="morning_flow">สูตรไหลเช้านี้</option>
+<option value="front3_back4">สูตรหน้า3หลัง4</option>
+<option value="rati">สูตรพี่รตี</option></select></div>
+<div><label for="positionSelect">ปักหลัก</label><select id="positionSelect"><option value="unit">หลักหน่วย</option><option value="tens">หลักสิบ</option></select></div>
+</div>
+<div id="formulaNote" class="formula-note"></div>
+<div style="margin-top:14px">
+<label for="historyInput">ผลย้อนหลัง เรียงจากเก่าไปใหม่</label>
+<textarea id="historyInput" inputmode="numeric" placeholder="04&#10;79&#10;32&#10;47&#10;81"></textarea>
+<div class="help">พิมพ์ครบ 2 หลัก ระบบจะขึ้นบรรทัดใหม่และคำนวณอัตโนมัติทันที หรือวางเลขยาวต่อกันได้</div>
+</div>
+</section>
 
-    <div class="grid2">
-      <div>
-        <label for="formulaSelect">เลือกชื่อสูตร</label>
-        <select id="formulaSelect"><option value="far_flow">สูตรไกล</option>
-</select>
-      </div>
-      <div>
-        <label for="positionSelect">ปักหลัก</label>
-        <select id="positionSelect">
-          <option value="unit">หลักหน่วย</option>
-          <option value="tens">หลักสิบ</option>
-        </select>
-      </div>
-    </div>
+<section class="card">
+<h2>2. แนวทางสูตรที่กำลังเลือก</h2>
+<div class="recommend-box">
+<div class="help">เลขเว้น <span id="omitCount">0</span> ตัว</div>
+<div id="omitNumber" class="omit-number">-</div>
+<div id="sourceNote" class="help"></div>
+<div style="margin-top:16px;font-weight:900"><span id="betLabel">เลขแทง</span> <span id="betCount">0</span> <span id="betUnit">ตัว</span></div>
+<div id="digitRow" class="digit-row"></div>
+<div class="metric-grid">
+<div class="metric"><div class="metric-label">เงินใช้ต่อไม้</div><div id="roundCost" class="metric-value"></div></div>
+<div class="metric"><div class="metric-label">ผลที่กรอกแล้ว</div><div id="playedRounds" class="metric-value"></div></div>
+<div class="metric"><div class="metric-label">ไม้ถัดไป</div><div id="nextRound" class="metric-value"></div></div>
+<div class="metric"><div class="metric-label">อัตราเข้าของสูตรที่เลือก</div><div id="selectedWinRate" class="metric-value green"></div></div>
+</div>
+</div>
+<div id="minimumNotice" class="notice"></div>
+</section>
 
-    <div style="margin-top:14px">
-      <label for="historyInput">ผลรางวัลย้อนหลัง เรียงจากเก่าไปใหม่</label>
-      <textarea id="historyInput" placeholder="ตัวอย่าง
-04
-79
-32
-47
-81"></textarea>
-      <div class="help">พิมพ์ทีละ 2 หลัก หรือวางเป็นเลขยาวต่อกันได้ โปรแกรมจะแบ่งทีละ 2 หลักอัตโนมัติ</div>
-    </div>
+<section class="card">
+<h2>3. ตั้งค่าการทดสอบและเงินจริง</h2>
+<div class="config-grid">
+<div><label for="defaultStake">เดิมพันต่อเลข (บาท)</label><input id="defaultStake" type="number" min="2" step="1" value="2"></div>
+<div><label for="payout">อัตราจ่ายเลขเดี่ยว</label><input id="payout" type="number" min="0" step=".01" value="9.5"></div>
+<div><label for="startingBank">เงินจริงตั้งต้น (บาท)</label><input id="startingBank" type="number" min="0" step=".01" value="100"></div>
+<div><label for="moneyStartRound">เริ่มนับเงินตั้งแต่ไม้ที่</label><input id="moneyStartRound" type="number" min="1" step="1" value="5"></div>
+<div><label for="minimumTestRounds">ไม้ทดสอบขั้นต่ำ</label><input id="minimumTestRounds" type="number" min="1" step="1" value="4"></div>
+<div><label for="recentRounds">แสดงตารางย้อนหลัง</label><input id="recentRounds" type="number" min="1" step="1" value="20"></div>
+<div><label for="recommendRounds">สูตรแนะนำย้อนหลัง</label><input id="recommendRounds" type="number" min="1" step="1" value="20"></div>
+<div><label for="segmentStartRound">สูตรที่เลือกเริ่มใช้ตั้งแต่ไม้ที่</label><input id="segmentStartRound" type="number" min="1" step="1" value="5"></div>
+</div>
+<div class="notice">
+ไม้ก่อน “เริ่มนับเงิน” เป็นช่วงทดสอบเท่านั้น ไม่คิดเงินจริง ค่าเดิมพันเป็นยอดต่อเลข ขั้นต่ำเลขละ 2 บาท หรือใส่ 0 เพื่อข้ามไม้
+</div>
+<div class="actions">
+<button id="calculate" class="primary">คำนวณทั้งหมด</button>
+<button id="lockFormula" class="teal">ล็อกสูตรนี้ตั้งแต่ไม้ที่กำหนด</button>
+<button id="sample" class="secondary">ข้อมูลตัวอย่าง</button>
+<button id="clearResults" class="secondary">ล้างผลย้อนหลัง</button>
+<button id="resetActual" class="danger">รีเซ็ตบัญชีเงินจริง</button>
+</div>
+<div id="error" class="error"></div>
+</section>
 
-    <div class="config-grid">
-      <div>
-        <label for="stakePerDigit">เงินต่อเลข 1 ตัว (บาท)</label>
-        <input id="stakePerDigit" type="number" min="0" step="0.01" value="5">
-      </div>
-      <div>
-        <label for="payout">อัตราจ่ายเลขเดี่ยว</label>
-        <input id="payout" type="number" min="0" step="0.01" value="9.9">
-      </div>
-      <div>
-        <label for="startingBank">เงินตั้งต้น (บาท)</label>
-        <input id="startingBank" type="number" min="0" step="0.01" value="45">
-      </div>
-      <div>
-        <label for="minimumRounds">รอบทดสอบขั้นต่ำ</label>
-        <input id="minimumRounds" type="number" min="1" step="1" value="20">
-      </div>
-      <div>
-        <label for="recentRounds">แสดงผลย้อนหลังล่าสุด</label>
-        <input id="recentRounds" type="number" min="3" max="100" step="1" value="20">
-      </div>
-      <div>
-        <label for="savedBank">เงินจริงที่บันทึกไว้</label>
-        <input id="savedBank" type="number" min="0" step="0.01" placeholder="ยังไม่ได้บันทึก">
-      </div>
-    </div>
+<section class="card">
+<h2>4. ประวัติการเปลี่ยนสูตรเงินจริง</h2>
+<div class="help">สูตรที่ล็อกไว้จะไม่ถูกคำนวณย้อนหลังใหม่เมื่อแพทเปลี่ยนเมนูสูตร สูตรใหม่มีผลตั้งแต่ไม้ที่ระบุเท่านั้น</div>
+<div id="segmentList" class="segment-list"></div>
+</section>
 
-    <div class="actions">
-      <button id="calculate" class="primary">คำนวณ</button>
-      <button id="sample" class="secondary">ข้อมูลตัวอย่าง</button>
-      <button id="saveBank" class="secondary">บันทึกเงินจริง</button>
-      <button id="clearBank" class="secondary">ล้างเงินจริง</button>
-      <button id="clearAll" class="danger">ล้างข้อมูล</button>
-    </div>
-    <div id="error" class="error"></div>
-  </section>
+<section id="resultSection" class="result-section">
 
-  <section id="resultSection" class="result-section">
-    <section class="card">
-      <h2>2. แนวทางรอบนี้</h2>
 
-      <div class="recommend-box">
-        <div class="recommend-label">เลขเว้น <span id="omitCount">0</span> ตัว</div>
-        <div id="omitNumber" class="omit-number">-</div>
-        <div id="sourceNote" class="help"></div>
+<section class="card">
+<h2>5. บัญชีเงินจริงรายไม้</h2>
+<div class="help">กำไร–ขาดทุนส่วนนี้ใช้สูตรและหลักที่ล็อกไว้ในแต่ละช่วง พร้อมยอดเดิมพันจริงของแต่ละไม้ ไม่ย้อนแก้ยอดเดิมเมื่อเปลี่ยนสูตร</div>
+<div class="actual-table-wrap"><table class="wide-table">
+<thead><tr><th>ไม้</th><th>ผลก่อน</th><th>เว้น</th><th>ผลถัดไป</th><th>บาท/เลข</th><th>กำไร/ขาดทุน</th></tr></thead>
+<tbody id="actualBody"></tbody>
+</table></div>
+</section>
 
-        <div class="bet-title">เลขแทง <span id="betCount">0</span> ตัว</div>
-        <div id="digitRow" class="digit-row"></div>
+<section class="card">
+<h2>6. สรุปเงินจริง</h2>
+<div class="metric-grid">
+<div class="metric"><div class="metric-label">ไม้ทดสอบ</div><div id="warmupCount" class="metric-value"></div></div>
+<div class="metric"><div class="metric-label">ไม้ที่ลงเงินจริง</div><div id="actualCount" class="metric-value"></div></div>
+<div class="metric"><div class="metric-label">ถูก / ผิดเงินจริง</div><div id="actualWinsLosses" class="metric-value"></div></div>
+<div class="metric"><div class="metric-label">กำไร–ขาดทุนเงินจริง</div><div id="actualNet" class="metric-value"></div></div>
+<div class="metric"><div class="metric-label">เงินคงเหลือ</div><div id="endingBank" class="metric-value"></div></div>
+<div class="metric"><div class="metric-label">ยอดเดิมพันรวม</div><div id="totalStaked" class="metric-value"></div></div>
+<div class="metric"><div class="metric-label">ไม้ข้าม/เดิมพัน 0</div><div id="skippedCount" class="metric-value"></div></div>
+<div class="metric"><div class="metric-label">อัตราชนะเงินจริง</div><div id="actualRate" class="metric-value"></div></div>
+</div>
+</section>
 
-        <div class="metric-grid">
-          <div class="metric">
-            <div class="metric-label">ทุนเลขเดี่ยว/ตา</div>
-            <div id="roundCost" class="metric-value">0 บาท</div>
-          </div>
-          <div class="metric">
-            <div class="metric-label">เล่นมาแล้ว</div>
-            <div id="playedRounds" class="metric-value">0 รอบ</div>
-          </div>
-          <div class="metric">
-            <div class="metric-label">ไม้ถัดไป</div>
-            <div id="nextRound" class="metric-value">ไม้ 1</div>
-          </div>
-          <div class="metric">
-            <div class="metric-label">อัตราถูกเลขเดี่ยว</div>
-            <div id="winRate" class="metric-value green">0%</div>
-          </div>
-        </div>
-      </div>
+<section class="card">
+<h2>7. เทียบหลักของสูตรที่เลือก</h2>
+<div style="overflow:auto"><table><thead><tr><th>หลัก</th><th>ถูก/ทดสอบ</th><th>อัตราชนะ</th><th>กำไรจำลอง</th><th>คำแนะนำ</th></tr></thead><tbody id="compareBody"></tbody></table></div>
+</section>
 
-      <div id="minimumNotice" class="notice"></div>
-    </section>
+<section class="card">
+<h2>8. สูตรแนะนำ</h2>
+<div class="help">เทียบทั้ง 17 สูตรและทั้งสองหลักตามจำนวนรอบย้อนหลังที่เลือก ส่วนนี้เป็นสถิติ ไม่แก้บัญชีเงินจริง</div>
+<div id="recommendSummary" class="notice"></div>
+<div id="recommendList"></div>
+</section>
+</section>
 
-    <section class="card">
-      <h2>3. สรุปผลทดสอบย้อนหลัง</h2>
+<section class="card">
+<h2>ประวัติสรุปการเล่น 10 ครั้งล่าสุด</h2>
+<div id="calculationHistory"></div>
+<div class="actions"><button id="saveSession" class="secondary">บันทึกสรุปครั้งนี้</button><button id="clearHistory" class="danger">ล้างประวัติ</button></div>
+</section>
 
-      <div class="metric-grid">
-        <div class="metric">
-          <div class="metric-label">จำนวนงวดที่ทดสอบ</div>
-          <div id="testedRounds" class="metric-value">0</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">ถูก / ผิด</div>
-          <div id="winsLosses" class="metric-value">0 / 0</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">กำไร–ขาดทุนสุทธิ</div>
-          <div id="netProfit" class="metric-value">0 บาท</div>
-        </div>
-        <div class="metric">
-          <div class="metric-label">เงินคงเหลือจำลอง</div>
-          <div id="endingBank" class="metric-value">0 บาท</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>4. เทียบหลักที่น่าเล่นกว่า</h2>
-      <div class="help">เปรียบเทียบสูตรเดียวกันระหว่างหลักหน่วยกับหลักสิบ โดยใช้เงินและอัตราจ่ายชุดเดียวกัน</div>
-      <div style="overflow:auto">
-        <table class="compare-table">
-          <thead>
-            <tr>
-              <th>หลัก</th>
-              <th>ถูก/ทดสอบ</th>
-              <th>อัตราชนะ</th>
-              <th>กำไร–ขาดทุน</th>
-              <th>คำแนะนำ</th>
-            </tr>
-          </thead>
-          <tbody id="compareBody"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>5. ทดสอบย้อนหลังแบบไม่ดูอนาคต</h2>
-      <div class="help">แต่ละแถวใช้ผลรอบก่อนหน้าเลือกเลขเว้น แล้วตรวจผลของรอบถัดไปเท่านั้น</div>
-      <div style="overflow:auto">
-        <table class="backtest-table">
-          <thead>
-            <tr>
-              <th>รอบ</th>
-              <th>ผลก่อนหน้า</th>
-              <th>เว้น</th>
-              <th>ผลถัดไป</th>
-              <th>ถูก/ผิด</th>
-              <th>กำไร–ขาดทุน</th>
-            </tr>
-          </thead>
-          <tbody id="backtestBody"></tbody>
-        </table>
-      </div>
-    </section>
-  </section>
-
-  <section class="card">
-    <h2>ประวัติการคำนวณ 10 รายการล่าสุด</h2>
-    <div id="calculationHistory"></div>
-    <div class="actions">
-      <button id="clearHistory" class="danger">ล้างประวัติการคำนวณ</button>
-    </div>
-  </section>
-
-  <p class="footer-note">
-    สูตรเป็นแนวทางจากสถิติย้อนหลัง ผลสุ่มไม่สามารถรับประกันได้ และการทดสอบย้อนหลังไม่ใช่ผลลัพธ์ในอนาคต
-  </p>
+<p class="footer-note">สถิติย้อนหลังไม่รับประกันผลในอนาคต ระบบนี้ช่วยบันทึกยอดตามที่กรอกเท่านั้น ควรกำหนดงบและไม่ไล่ทบเมื่อขาดทุน</p>
 </main>
 
 <script>
 (() => {
-  const formulas = [{"id": "blue_thai", "name": "สูตรเลขมงคล", "theme": "blue-thai", "map": {"0": "278", "1": "348", "2": "459", "3": "560", "4": "167", "5": "278", "6": "348", "7": "459", "8": "056", "9": "167"}}, {"id": "formula2", "name": "สูตร 2", "theme": "plain", "map": {"0": "084", "1": "980", "2": "896", "3": "805", "4": "713", "5": "620", "6": "528", "7": "436", "8": "352", "9": "260"}}, {"id": "green_cat", "name": "สูตรแมวกวัก", "theme": "green", "map": {"0": "349", "1": "045", "2": "015", "3": "126", "4": "378", "5": "348", "6": "459", "7": "056", "8": "167", "9": "278"}}, {"id": "ku30", "name": "สูตร KU หวยไทย 30 วิ", "theme": "plain", "map": {"0": "139", "1": "236", "2": "139", "3": "145", "4": "356", "5": "034", "6": "016", "7": "267", "8": "056", "9": "028"}}, {"id": "to_kan_jai_v2", "name": "สูตรโต้ดทันใจ V.2", "theme": "plain", "map": {"0": "19", "1": "02", "2": "13", "3": "24", "4": "35", "5": "46", "6": "57", "7": "68", "8": "79", "9": "08"}}, {"id": "blue_dark", "name": "สูตรเงิน", "theme": "blue-dark", "map": {"0": "456", "1": "567", "2": "678", "3": "789", "4": "069", "5": "019", "6": "012", "7": "129", "8": "234", "9": "345"}}, {"id": "teal", "name": "สูตรเขียว", "theme": "teal", "map": {"0": "157", "1": "489", "2": "179", "3": "579", "4": "359", "5": "238", "6": "019", "7": "238", "8": "359", "9": "012"}}, {"id": "gold", "name": "สูตรทอง", "theme": "gold", "map": {"0": "148", "1": "589", "2": "089", "3": "048", "4": "026", "5": "346", "6": "359", "7": "356", "8": "024", "9": "678"}}];
-  const $ = id => document.getElementById(id);
+"use strict";
 
-  const formulaSelect = $("formulaSelect");
-  const positionSelect = $("positionSelect");
-  const historyInput = $("historyInput");
-  const stakeInput = $("stakePerDigit");
-  const payoutInput = $("payout");
-  const startingBankInput = $("startingBank");
-  const minimumRoundsInput = $("minimumRounds");
-  const recentRoundsInput = $("recentRounds");
-  const savedBankInput = $("savedBank");
-  const resultSection = $("resultSection");
-  const errorBox = $("error");
+const formulas=[{"id":"blue_thai","name":"สูตรเลขมงคล","map":{"0":"278","1":"348","2":"459","3":"560","4":"167","5":"278","6":"348","7":"459","8":"056","9":"167"}},{"id":"formula2","name":"สูตร 2","map":{"0":"084","1":"980","2":"896","3":"805","4":"713","5":"620","6":"528","7":"436","8":"352","9":"260"}},{"id":"green_cat","name":"สูตรแมวกวัก","map":{"0":"349","1":"045","2":"015","3":"126","4":"378","5":"348","6":"459","7":"056","8":"167","9":"278"}},{"id":"ku30","name":"สูตร KU หวยไทย 30 วิ","map":{"0":"139","1":"236","2":"139","3":"145","4":"356","5":"034","6":"016","7":"267","8":"056","9":"028"}},{"id":"to_kan_jai_v2","name":"สูตรโต้ดทันใจ V.2","betMode":"toad","toadPayout":49,"map":{"0":"19","1":"02","2":"13","3":"24","4":"35","5":"46","6":"57","7":"68","8":"79","9":"08"},"note":"สูตรโต๊ด 2 ตัว ใช้หลักที่เลือกหาเลขเว้น แล้วตรวจผล 2 หลักแบบไม่สนลำดับ"},{"id":"blue_dark","name":"สูตรเงิน","map":{"0":"456","1":"567","2":"678","3":"789","4":"069","5":"019","6":"012","7":"129","8":"234","9":"345"}},{"id":"teal","name":"สูตรเขียว","map":{"0":"157","1":"489","2":"179","3":"579","4":"359","5":"238","6":"019","7":"238","8":"359","9":"012"}},{"id":"gold","name":"สูตรทอง","map":{"0":"148","1":"589","2":"089","3":"048","4":"026","5":"346","6":"359","7":"356","8":"024","9":"678"}},{"id":"next_formula","name":"สูตรถัดมา","map":{"0":"459","1":"056","2":"167","3":"278","4":"389","5":"049","6":"015","7":"126","8":"237","9":"459"},"note":"สูตรแนะนำให้ดูย้อนหลังอย่างน้อย 4 งวด แต่หน้าสถิติจะคำนวณตามจำนวนรอบที่เลือกด้านล่าง"},{"id":"laksami","name":"สูตรลักษมีประทานพร","betMode":"toad","toadPayout":49,"preferredPosition":"unit","map":{"0":"39","1":"05","2":"15","3":"57","4":"85","5":"02","6":"26","7":"39","8":"40","9":"16"},"note":"สูตรโต๊ด 2 ตัว ใช้ได้ทุกหลัก เน้นหลักหน่วยมาเว้น แนะนำเล่นรอบเร็ว 10–12 ไม้ และไม่ทบ"},{"id":"kwak_money","name":"สูตรกวักเงิน 30 วิ","map":{"0":"239","1":"034","2":"145","3":"256","4":"367","5":"478","6":"589","7":"069","8":"017","9":"128"},"note":"แนวทางไม่ทบ เดินเงินอย่างมีสติ เน้นกำไรแล้วถอน"},{"id":"morning_flow","name":"สูตรไหลเช้านี้","map":{"0":"045","1":"015","2":"126","3":"378","4":"348","5":"459","6":"056","7":"167","8":"278","9":"346"},"note":"แนะนำให้ดูย้อนหลังอย่างน้อย 4 งวด หากหลุด 2 ไม้ให้ข้าม 2 ไม้ แนะนำเล่นเซตละ 10 ไม้ ไม่ทบ แต่หน้าสถิติจะคำนวณตามจำนวนรอบที่เลือก"},{"id":"front3_back4","name":"สูตรหน้า3หลัง4","map":{"0":"056","1":"167","2":"278","3":"389","4":"049","5":"015","6":"126","7":"237","8":"348","9":"459"},"note":"แนะนำให้ดูย้อนหลังอย่างน้อย 4 งวด หากหลุด 2 ไม้ให้ข้าม 2 ไม้ แนะนำเล่นเซตละ 10 ไม้ ไม่ทบ แต่หน้าสถิติจะคำนวณตามจำนวนรอบที่เลือก"},{"id":"rati","name":"สูตรพี่รตี","map":{"0":"456","1":"567","2":"678","3":"789","4":"890","5":"901","6":"012","7":"123","8":"234","9":"345"},"note":"ใช้ผลรอบก่อนหน้าเลือกเลขเว้น แล้วตรวจผลรอบถัดไป ใช้ได้ทั้งหลักสิบและหลักหน่วย"}];
+const $=id=>document.getElementById(id);
+const formulaSelect=$("formulaSelect");
+formulas.push(
+  {id:"flow_luck",name:"สูตรไหลรับโชค",recommendRounds:4,map:{"0":"146","1":"257","2":"368","3":"479","4":"058","5":"169","6":"027","7":"138","8":"249","9":"035"},note:"แนะนำให้ดูย้อนหลัง 4 งวด หลุด 2 ไม้ให้ข้าม 2 ไม้ เล่นเซตละ 10 ไม้ ไม่ทบ"},
+  {id:"ai_ngong",name:"สูตรเอไองง",recommendRounds:4,map:{"0":"278","1":"238","2":"059","3":"156","4":"267","5":"238","6":"389","7":"059","8":"156","9":"267"},note:"แนะนำให้ดูย้อนหลัง 4 งวด หลุด 2 ไม้ให้ข้าม 2 ไม้ เล่นเซตละ 10 ไม้ ไม่ทบ"},
+  {id:"klai",name:"สูตรไกล",recommendRounds:4,map:{"0":"189","1":"029","2":"013","3":"124","4":"235","5":"346","6":"457","7":"568","8":"379","9":"078"},note:"แนะนำให้ดูย้อนหลัง 4 งวด หลุด 2 ไม้ให้ข้าม 2 ไม้ เล่นเซตละ 10 ไม้ ไม่ทบ"}
+);
+formulas.slice(-3).forEach(formula=>formulaSelect.add(new Option(formula.name,formula.id)));
+const positionSelect=$("positionSelect");
+const historyInput=$("historyInput");
+const resultSection=$("resultSection");
+const errorBox=$("error");
 
-  let current = null;
+const KEYS={
+  settings:"thai30-real-v4-settings",
+  segments:"thai30-real-v3-segments",
+  stakes:"thai30-real-v4-stakes",
+  draft:"thai30-real-v3-draft",
+  history:"thai30-real-v3-history"
+};
 
-  formulas.forEach(f => {
-    const option = document.createElement("option");
-    option.value = f.id;
-    option.textContent = f.name;
-    formulaSelect.appendChild(option);
+let current=null;
+let segments=loadJson(KEYS.segments,[]);
+let stakeOverrides=loadJson(KEYS.stakes,{});
+
+function loadJson(key,fallback){
+  try{
+    const value=JSON.parse(localStorage.getItem(key)||"null");
+    return value===null?fallback:value;
+  }catch{return fallback}
+}
+function saveJson(key,value){localStorage.setItem(key,JSON.stringify(value))}
+function formulaById(id){return formulas.find(f=>f.id===id)||formulas[0]}
+function isToad(f){return f.betMode==="toad"}
+function parseResults(text){
+  const digits=text.replace(/\D/g,"");
+  const out=[];
+  for(let i=0;i+1<digits.length;i+=2)out.push(digits.slice(i,i+2));
+  return out;
+}
+function selectedDigit(result,position){return position==="tens"?result[0]:result[1]}
+function allowedDigits(omit){
+  const omitted=new Set(omit.split(""));
+  return [...Array(10).keys()].map(String).filter(d=>!omitted.has(d));
+}
+function toadPairs(omit){
+  const digits=allowedDigits(omit),pairs=[];
+  for(let i=0;i<digits.length;i++)for(let j=i+1;j<digits.length;j++)pairs.push(digits[i]+digits[j]);
+  return pairs;
+}
+function money(value){
+  return Number(value||0).toLocaleString("th-TH",{minimumFractionDigits:2,maximumFractionDigits:2})+" บาท";
+}
+function percent(wins,rounds){return rounds?((wins/rounds)*100).toFixed(1)+"%":"0.0%"}
+function getDefaultStake(){return Math.max(2,Number($("defaultStake").value)||2)}
+function getPayout(){return Math.max(0,Number($("payout").value)||0)}
+function getMoneyStart(){return Math.max(1,Math.floor(Number($("moneyStartRound").value)||5))}
+function normalizeSegments(){
+  const seen=new Map();
+  segments.forEach(s=>{
+    const start=Math.max(1,Math.floor(Number(s.startRound)||1));
+    if(formulas.some(f=>f.id===s.formulaId)&&["unit","tens"].includes(s.position)){
+      seen.set(start,{startRound:start,formulaId:s.formulaId,position:s.position});
+    }
   });
-
-  function formulaById(id) {
-    return formulas.find(f => f.id === id) || formulas[0];
+  segments=[...seen.values()].sort((a,b)=>a.startRound-b.startRound);
+  saveJson(KEYS.segments,segments);
+}
+function segmentForRound(round){
+  let found=null;
+  for(const segment of segments){
+    if(segment.startRound<=round)found=segment;
+    else break;
   }
+  return found;
+}
+function buildRow(results,round,formula,position){
+  const previous=results[round-1];
+  const next=results[round];
+  const source=selectedDigit(previous,position);
+  const omit=formula.map[source];
+  const bet=isToad(formula)?toadPairs(omit):allowedDigits(omit);
+  const actual=isToad(formula)?[...next].sort().join(""):selectedDigit(next,position);
+  const hit=isToad(formula)
+    ? next[0]!==next[1]&&bet.includes(actual)
+    : !omit.includes(actual);
+  return{round,previous,next,source,omit,bet,betCount:bet.length,actual,hit,formula,position};
+}
+function totalCostFromUnitStake(row,unitStake){
+  const stake=Math.max(0,Number(unitStake)||0);
+  return stake*row.betCount;
+}
+function profitFromUnitStake(row,unitStake,payout){
+  const stake=Math.max(0,Number(unitStake)||0);
+  if(stake===0||!row.betCount)return 0;
+  const totalCost=totalCostFromUnitStake(row,stake);
+  const rate=isToad(row.formula)?Number(row.formula.toadPayout||49):payout;
+  return row.hit?(stake*rate)-totalCost:-totalCost;
+}
+function backtest(results,formula,position,unitStake,payout){
+  const rows=[];
+  let wins=0,net=0;
+  for(let round=1;round<results.length;round++){
+    const row=buildRow(results,round,formula,position);
+    row.stake=unitStake;
+    row.totalCost=totalCostFromUnitStake(row,unitStake);
+    row.profit=profitFromUnitStake(row,unitStake,payout);
+    if(row.hit)wins++;
+    net+=row.profit;
+    rows.push(row);
+  }
+  return{rows,wins,losses:rows.length-wins,rounds:rows.length,net,rate:rows.length?wins/rows.length:0};
+}
+function ensureInitialSegment(){
+  normalizeSegments();
+  if(segments.length)return;
+  segments=[{
+    startRound:getMoneyStart(),
+    formulaId:formulaSelect.value,
+    position:positionSelect.value
+  }];
+  saveJson(KEYS.segments,segments);
+}
+function currentNextRound(){
+  const results=parseResults(historyInput.value);
+  return Math.max(getMoneyStart(),results.length);
+}
+function setSuggestedSegmentRound(){
+  $("segmentStartRound").value=String(currentNextRound());
+}
+function showFormulaNote(){
+  const formula=formulaById(formulaSelect.value);
+  $("formulaNote").textContent=formula.note||"ใช้ผลรอบก่อนหน้าเลือกเลขเว้น แล้วตรวจผลรอบถัดไป";
+  if(formula.preferredPosition)positionSelect.value=formula.preferredPosition;
+}
+function showError(message){
+  errorBox.textContent=message;
+  errorBox.style.display="block";
+}
+function clearError(){errorBox.textContent="";errorBox.style.display="none"}
 
-  function parseResults(text) {
-    const digits = text.replace(/\D/g, "");
-    const out = [];
-    for (let i = 0; i + 1 < digits.length; i += 2) {
-      out.push(digits.slice(i, i + 2));
+function calculate({scroll=false}={}){
+  clearError();
+  const results=parseResults(historyInput.value);
+  if(results.length<2){
+    showError("กรุณาใส่ผลย้อนหลังอย่างน้อย 2 งวด");
+    return;
+  }
+  const formula=formulaById(formulaSelect.value);
+  const position=positionSelect.value;
+  const defaultStake=getDefaultStake();
+  const payout=getPayout();
+  const startingBank=Math.max(0,Number($("startingBank").value)||0);
+  const moneyStart=getMoneyStart();
+  const minimumTest=Math.max(1,Math.floor(Number($("minimumTestRounds").value)||4));
+  const recent=Math.max(1,Math.floor(Number($("recentRounds").value)||20));
+  const recommendRounds=Math.max(1,Math.floor(Number($("recommendRounds").value)||20));
+
+  ensureInitialSegment();
+  normalizeSegments();
+
+  const selectedStats=backtest(results,formula,position,defaultStake,payout);
+  const unitStats=backtest(results,formula,"unit",defaultStake,payout);
+  const tensStats=backtest(results,formula,"tens",defaultStake,payout);
+
+  const actualRows=[];
+  for(let round=1;round<results.length;round++){
+    const inWarmup=round<moneyStart;
+    const segment=segmentForRound(round);
+    if(inWarmup){
+      const preview=buildRow(results,round,formula,position);
+      actualRows.push({...preview,status:"test",stake:0,profit:0,segment:null});
+      continue;
     }
-    return out;
-  }
-
-  function selectedDigit(result, position) {
-    return position === "tens" ? result[0] : result[1];
-  }
-
-  function allowedDigits(omit) {
-    const omitted = new Set(omit.split(""));
-    return [...Array(10).keys()].map(String).filter(d => !omitted.has(d));
-  }
-
-  function money(value) {
-    return Number(value).toLocaleString("th-TH", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }) + " บาท";
-  }
-
-  function percent(wins, rounds) {
-    if (!rounds) return "0.0%";
-    return ((wins / rounds) * 100).toFixed(1) + "%";
-  }
-
-  function roundProfit(hit, betCount, stake, payout) {
-    const totalStake = betCount * stake;
-    return hit ? (stake * payout) - totalStake : -totalStake;
-  }
-
-  function backtest(results, formula, position, stake, payout) {
-    const rows = [];
-    let wins = 0;
-    let losses = 0;
-    let net = 0;
-
-    for (let i = 1; i < results.length; i++) {
-      const previous = results[i - 1];
-      const next = results[i];
-      const source = selectedDigit(previous, position);
-      const omit = formula.map[source];
-      const bet = allowedDigits(omit);
-      const actual = selectedDigit(next, position);
-      const hit = !omit.includes(actual);
-      const profit = roundProfit(hit, bet.length, stake, payout);
-
-      if (hit) wins++; else losses++;
-      net += profit;
-
-      rows.push({
-        round: i,
-        previous,
-        source,
-        omit,
-        bet,
-        next,
-        actual,
-        hit,
-        profit
-      });
+    if(!segment){
+      actualRows.push({round,status:"unassigned",previous:results[round-1],next:results[round],stake:0,profit:0,segment:null});
+      continue;
     }
-
-    return {
-      rows,
-      wins,
-      losses,
-      rounds: rows.length,
-      net,
-      winRate: rows.length ? wins / rows.length : 0
-    };
+    const actualFormula=formulaById(segment.formulaId);
+    const row=buildRow(results,round,actualFormula,segment.position);
+    const stake=Object.prototype.hasOwnProperty.call(stakeOverrides,String(round))
+      ? Math.max(0,Number(stakeOverrides[String(round)])||0)
+      : defaultStake;
+    const totalCost=totalCostFromUnitStake(row,stake);
+    const profit=profitFromUnitStake(row,stake,payout);
+    actualRows.push({...row,status:stake>0?"actual":"skip",stake,totalCost,profit,segment});
   }
 
-  function comparePositions(results, formula, stake, payout) {
-    const unit = backtest(results, formula, "unit", stake, payout);
-    const tens = backtest(results, formula, "tens", stake, payout);
-    const best = [unit, tens].sort((a,b) =>
-      b.net - a.net || b.winRate - a.winRate
-    )[0];
+  const moneyRows=actualRows.filter(r=>r.status==="actual");
+  const skippedRows=actualRows.filter(r=>r.status==="skip");
+  const actualWins=moneyRows.filter(r=>r.hit).length;
+  const actualLosses=moneyRows.length-actualWins;
+  const actualNet=moneyRows.reduce((sum,r)=>sum+r.profit,0);
+  const totalStaked=moneyRows.reduce((sum,r)=>sum+(r.totalCost||0),0);
 
-    return {unit, tens, best};
+  current={
+    results,formula,position,defaultStake,payout,startingBank,moneyStart,minimumTest,recent,recommendRounds,
+    selectedStats,unitStats,tensStats,actualRows,moneyRows,skippedRows,actualWins,actualLosses,actualNet,totalStaked
+  };
+  saveSettings();
+  saveDraft();
+  render();
+  if(scroll)resultSection.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function render(){
+  const c=current;
+  const latest=c.results.at(-1);
+  const source=selectedDigit(latest,c.position);
+  const omit=c.formula.map[source];
+  const bet=isToad(c.formula)?toadPairs(omit):allowedDigits(omit);
+
+  $("omitCount").textContent=omit.length;
+  $("omitNumber").textContent=[...omit].join(", ");
+  $("sourceNote").textContent=`ผลล่าสุด ${latest} • ใช้${c.position==="unit"?"หลักหน่วย":"หลักสิบ"} ${source} • ${c.formula.name}`;
+  $("betLabel").textContent=isToad(c.formula)?"คู่โต๊ด":"เลขแทง";
+  $("betCount").textContent=bet.length;
+  $("betUnit").textContent=isToad(c.formula)?"คู่":"ตัว";
+  $("digitRow").innerHTML=isToad(c.formula)
+    ? bet.map(pair=>`<span class="digit">${pair}</span>`).join("")
+    : [...Array(10).keys()].map(n=>{
+        const d=String(n);
+        return `<span class="digit ${omit.includes(d)?"omit":""}">${d}</span>`;
+      }).join("");
+
+  $("roundCost").textContent=`${money(c.defaultStake*bet.length)} (${c.defaultStake} บาท × ${bet.length} ${isToad(c.formula)?"คู่":"ตัว"})`;
+  $("playedRounds").textContent=`${c.results.length-1} ไม้`;
+  $("nextRound").textContent=`ไม้ ${c.results.length}`;
+  $("selectedWinRate").textContent=`${percent(c.selectedStats.wins,c.selectedStats.rounds)} (${c.selectedStats.wins}/${c.selectedStats.rounds})`;
+
+  const completedWarmup=Math.min(c.results.length-1,Math.max(0,c.moneyStart-1));
+  $("minimumNotice").textContent=completedWarmup>=c.minimumTest
+    ? `มีช่วงทดสอบ ${completedWarmup} ไม้ ครบขั้นต่ำ ${c.minimumTest} ไม้แล้ว เริ่มบัญชีเงินจริงที่ไม้ ${c.moneyStart}`
+    : `มีช่วงทดสอบ ${completedWarmup} ไม้ ยังขาด ${c.minimumTest-completedWarmup} ไม้ถึงขั้นต่ำ ${c.minimumTest} ไม้`;
+
+  renderSegments();
+  renderActualTable();
+  renderActualSummary();
+  renderComparison();
+  renderRecommendations();
+  resultSection.style.display="block";
+  setSuggestedSegmentRound();
+}
+
+function renderSegments(){
+  normalizeSegments();
+  const box=$("segmentList");
+  if(!segments.length){
+    box.innerHTML='<div class="help">ยังไม่มีช่วงสูตร ระบบจะล็อกสูตรที่เลือกเมื่อกดคำนวณครั้งแรก</div>';
+    return;
   }
-
-  function showError(message) {
-    errorBox.textContent = message;
-    errorBox.style.display = "block";
-  }
-
-  function clearError() {
-    errorBox.textContent = "";
-    errorBox.style.display = "none";
-  }
-
-  function calculate() {
-    clearError();
-
-    const results = parseResults(historyInput.value);
-    const formula = formulaById(formulaSelect.value);
-    const position = positionSelect.value;
-    const stake = Number(stakeInput.value);
-    const payout = Number(payoutInput.value);
-    const startingBank = Number(startingBankInput.value);
-    const minimumRounds = Math.max(1, Number(minimumRoundsInput.value) || 1);
-    const recentRounds = Math.max(3, Number(recentRoundsInput.value) || 20);
-
-    if (results.length < 2) {
-      showError("กรุณาใส่ผลย้อนหลังอย่างน้อย 2 งวด เพื่อคำนวณและทดสอบย้อนหลัง");
-      return;
-    }
-    if (!Number.isFinite(stake) || stake < 0 || !Number.isFinite(payout) || payout < 0) {
-      showError("กรุณาตรวจสอบเงินต่อเลขและอัตราจ่าย");
-      return;
-    }
-
-    const latest = results[results.length - 1];
-    const sourceDigit = selectedDigit(latest, position);
-    const omit = formula.map[sourceDigit];
-    const bet = allowedDigits(omit);
-    const stats = backtest(results, formula, position, stake, payout);
-    const comparison = comparePositions(results, formula, stake, payout);
-
-    current = {
-      results, formula, position, stake, payout, startingBank,
-      minimumRounds, recentRounds, latest, sourceDigit, omit, bet,
-      stats, comparison
-    };
-
-    render();
-    saveCalculationHistory();
-    renderCalculationHistory();
-  }
-
-  function render() {
-    const c = current;
-
-    $("omitCount").textContent = c.omit.length;
-    $("omitNumber").textContent = c.omit.split("").join(", ");
-    $("sourceNote").textContent =
-      `ผลล่าสุด ${c.latest} • ใช้${c.position === "unit" ? "หลักหน่วย" : "หลักสิบ"}เลข ${c.sourceDigit} • ${c.formula.name}`;
-
-    $("betCount").textContent = c.bet.length;
-    $("digitRow").innerHTML = [...Array(10).keys()].map(n => {
-      const d = String(n);
-      const omitted = c.omit.includes(d);
-      return `<span class="digit ${omitted ? "omit" : ""}">${d}</span>`;
-    }).join("");
-
-    $("roundCost").textContent = money(c.bet.length * c.stake);
-    $("playedRounds").textContent = `${c.stats.rounds} รอบ`;
-    $("nextRound").textContent = `ไม้ ${c.stats.rounds + 1}`;
-    $("winRate").textContent = `${percent(c.stats.wins, c.stats.rounds)} (${c.stats.wins}/${c.stats.rounds})`;
-
-    $("testedRounds").textContent = c.stats.rounds;
-    $("winsLosses").textContent = `${c.stats.wins} / ${c.stats.losses}`;
-
-    const netEl = $("netProfit");
-    netEl.textContent = (c.stats.net >= 0 ? "+" : "") + money(c.stats.net);
-    netEl.className = "metric-value " + (c.stats.net >= 0 ? "green" : "red");
-
-    const ending = c.startingBank + c.stats.net;
-    const endingEl = $("endingBank");
-    endingEl.textContent = money(ending);
-    endingEl.className = "metric-value " + (ending >= c.startingBank ? "green" : "red");
-
-    $("minimumNotice").textContent = c.stats.rounds >= c.minimumRounds
-      ? `มีข้อมูลทดสอบ ${c.stats.rounds} รอบ ครบขั้นต่ำ ${c.minimumRounds} รอบแล้ว แต่ยังควรใช้เป็นข้อมูลประกอบเท่านั้น`
-      : `ตอนนี้มีข้อมูลทดสอบ ${c.stats.rounds} รอบ ยังไม่ถึงขั้นต่ำ ${c.minimumRounds} รอบ ควรเพิ่มผลย้อนหลังอีก ${c.minimumRounds - c.stats.rounds} รอบ`;
-
-    renderComparison();
-    renderBacktest();
-
-    resultSection.style.display = "block";
-    resultSection.scrollIntoView({behavior:"smooth", block:"start"});
-  }
-
-  function renderComparison() {
-    const c = current;
-    const rows = [
-      {key:"unit", label:"หลักหน่วย", stats:c.comparison.unit},
-      {key:"tens", label:"หลักสิบ", stats:c.comparison.tens}
-    ];
-    const bestKey = c.comparison.best === c.comparison.unit ? "unit" : "tens";
-
-    $("compareBody").innerHTML = rows.map(row => `
-      <tr>
-        <td>${row.label}</td>
-        <td>${row.stats.wins}/${row.stats.rounds}</td>
-        <td>${percent(row.stats.wins,row.stats.rounds)}</td>
-        <td class="${row.stats.net >= 0 ? "profit" : "loss"}">${row.stats.net >= 0 ? "+" : ""}${money(row.stats.net)}</td>
-        <td>${row.key === bestKey ? '<span class="badge">น่าเล่นกว่าตอนนี้</span>' : '<span class="badge reserve">สำรอง</span>'}</td>
-      </tr>
-    `).join("");
-  }
-
-  function renderBacktest() {
-    const rows = current.stats.rows.slice(-current.recentRounds);
-    $("backtestBody").innerHTML = rows.map(row => `
-      <tr>
-        <td>${row.round}</td>
-        <td>${row.previous} → ${row.source}</td>
-        <td>${row.omit}</td>
-        <td>${row.next} → ${row.actual}</td>
-        <td class="${row.hit ? "profit" : "loss"}">${row.hit ? "ถูก" : "ผิด"}</td>
-        <td class="${row.profit >= 0 ? "profit" : "loss"}">${row.profit >= 0 ? "+" : ""}${money(row.profit)}</td>
-      </tr>
-    `).join("");
-  }
-
-  function loadSavedSettings() {
-    try {
-      const settings = JSON.parse(localStorage.getItem("thai30Settings") || "{}");
-      if (settings.formula) formulaSelect.value = settings.formula;
-      if (settings.position) positionSelect.value = settings.position;
-      if (settings.stake != null) stakeInput.value = settings.stake;
-      if (settings.payout != null) payoutInput.value = settings.payout;
-      if (settings.startingBank != null) startingBankInput.value = settings.startingBank;
-      if (settings.minimumRounds != null) minimumRoundsInput.value = settings.minimumRounds;
-      if (settings.recentRounds != null) recentRoundsInput.value = settings.recentRounds;
-      const bank = localStorage.getItem("thai30RealBank");
-      if (bank !== null) savedBankInput.value = bank;
-    } catch {}
-  }
-
-  function saveSettings() {
-    const settings = {
-      formula: formulaSelect.value,
-      position: positionSelect.value,
-      stake: stakeInput.value,
-      payout: payoutInput.value,
-      startingBank: startingBankInput.value,
-      minimumRounds: minimumRoundsInput.value,
-      recentRounds: recentRoundsInput.value
-    };
-    localStorage.setItem("thai30Settings", JSON.stringify(settings));
-  }
-
-  $("saveBank").addEventListener("click", () => {
-    const value = Number(savedBankInput.value);
-    if (!Number.isFinite(value) || value < 0) {
-      showError("กรุณากรอกเงินจริงให้ถูกต้อง");
-      return;
-    }
-    localStorage.setItem("thai30RealBank", String(value));
-    alert("บันทึกเงินจริงแล้ว");
+  box.innerHTML=segments.map((s,index)=>{
+    const f=formulaById(s.formulaId);
+    return `<div class="segment-item">
+      <div><div class="segment-main">ตั้งแต่ไม้ ${s.startRound}: ${f.name}</div>
+      <div class="segment-sub">${s.position==="unit"?"หลักหน่วย":"หลักสิบ"}</div></div>
+      <button class="danger mini delete-segment" data-index="${index}">ลบช่วงนี้</button>
+    </div>`;
+  }).join("");
+  box.querySelectorAll(".delete-segment").forEach(button=>{
+    button.addEventListener("click",()=>{
+      segments.splice(Number(button.dataset.index),1);
+      saveJson(KEYS.segments,segments);
+      renderSegments();
+      if(current)calculate();
+    });
   });
+}
 
-  $("clearBank").addEventListener("click", () => {
-    localStorage.removeItem("thai30RealBank");
-    savedBankInput.value = "";
-  });
+function renderActualTable(){
+  const c=current;
+  const rows=c.actualRows.slice(-c.recent);
+  $("actualBody").innerHTML=rows.map(row=>{
+    const rowClass=row.status==="test"?"row-test":row.status==="skip"?"row-skip":row.status==="unassigned"?"row-unassigned":"row-actual";
 
-  $("sample").addEventListener("click", () => {
-    historyInput.value = [
-      "04","79","32","47","81","16","21","85","75","53",
-      "58","29","38","67","10","44","92","05","73","26",
-      "80","11","49","36","62"
-    ].join("\n");
-  });
-
-  $("calculate").addEventListener("click", () => {
-    saveSettings();
-    calculate();
-  });
-
-  $("clearAll").addEventListener("click", () => {
-    historyInput.value = "";
-    current = null;
-    resultSection.style.display = "none";
-    clearError();
-  });
-
-  function loadCalculationHistory() {
-    try {
-      return JSON.parse(localStorage.getItem("thai30CalculationHistory") || "[]");
-    } catch {
-      return [];
-    }
-  }
-
-  function saveCalculationHistory() {
-    const list = loadCalculationHistory();
-    const item = {
-      formula: current.formula.id,
-      formulaName: current.formula.name,
-      position: current.position,
-      results: current.results.join(""),
-      rounds: current.stats.rounds,
-      winRate: percent(current.stats.wins,current.stats.rounds),
-      net: current.stats.net,
-      at: new Date().toLocaleString("th-TH")
-    };
-    list.unshift(item);
-    localStorage.setItem("thai30CalculationHistory", JSON.stringify(list.slice(0,10)));
-  }
-
-  function renderCalculationHistory() {
-    const list = loadCalculationHistory();
-    const box = $("calculationHistory");
-
-    if (!list.length) {
-      box.innerHTML = '<div class="empty">ยังไม่มีประวัติการคำนวณ</div>';
-      return;
+    if(row.status==="unassigned"){
+      return `<tr class="${rowClass}">
+        <td>ไม้ ${row.round}</td>
+        <td>${row.previous}</td>
+        <td>-</td>
+        <td>${row.next}</td>
+        <td>0</td>
+        <td>0.00 บาท</td>
+      </tr>`;
     }
 
-    box.innerHTML = '<div class="history-list">' + list.map((x,i) => `
-      <div class="history-item">
-        <div>
-          <div class="history-main">${x.formulaName} • ${x.position === "unit" ? "หลักหน่วย" : "หลักสิบ"}</div>
-          <div class="history-sub">${x.rounds} รอบ • ชนะ ${x.winRate} • ${x.net >= 0 ? "+" : ""}${money(x.net)} • ${x.at}</div>
-        </div>
-        <button class="use" data-index="${i}">ใช้ซ้ำ</button>
-      </div>
-    `).join("") + "</div>";
+    const stakeCell=row.status==="test"
+      ? '<span class="help">—</span>'
+      : `<input class="stake-input" data-round="${row.round}" type="number" min="0" step="1" value="${row.stake}">`;
+    const profit=row.status==="test"?0:row.profit;
 
-    box.querySelectorAll(".use").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const x = list[Number(btn.dataset.index)];
-        formulaSelect.value = x.formula;
-        positionSelect.value = x.position;
-        historyInput.value = x.results.match(/.{1,2}/g).join("\n");
-        calculate();
+    return `<tr class="${rowClass}">
+      <td>ไม้ ${row.round}</td>
+      <td>${row.previous} → ${row.source}</td>
+      <td>${row.omit}</td>
+      <td>${row.next} → ${row.actual}</td>
+      <td>${stakeCell}</td>
+      <td class="${profit>=0?"profit":"loss"}">${profit>=0?"+":""}${money(profit)}</td>
+    </tr>`;
+  }).join("");
+
+  document.querySelectorAll(".stake-input").forEach(input=>{
+    input.addEventListener("change",()=>{
+      const round=String(input.dataset.round);
+      const entered=Math.max(0,Number(input.value)||0);
+      const value=entered===0?0:Math.max(2,entered);
+      input.value=String(value);
+      stakeOverrides[round]=value;
+      saveJson(KEYS.stakes,stakeOverrides);
+      calculate();
+    });
+  });
+}
+
+function renderActualSummary(){
+  const c=current;
+  const warmup=Math.min(c.results.length-1,Math.max(0,c.moneyStart-1));
+  $("warmupCount").textContent=`${warmup} ไม้`;
+  $("actualCount").textContent=`${c.moneyRows.length} ไม้`;
+  $("actualWinsLosses").textContent=`${c.actualWins} / ${c.actualLosses}`;
+  const net=$("actualNet");
+  net.textContent=(c.actualNet>=0?"+":"")+money(c.actualNet);
+  net.className="metric-value "+(c.actualNet>=0?"green":"red");
+  const ending=c.startingBank+c.actualNet;
+  const endingEl=$("endingBank");
+  endingEl.textContent=money(ending);
+  endingEl.className="metric-value "+(ending>=c.startingBank?"green":"red");
+  $("totalStaked").textContent=money(c.totalStaked);
+  $("skippedCount").textContent=`${c.skippedRows.length} ไม้`;
+  $("actualRate").textContent=percent(c.actualWins,c.moneyRows.length);
+}
+
+function renderComparison(){
+  const c=current;
+  const best=c.unitStats.net>c.tensStats.net
+    ?"unit"
+    : c.tensStats.net>c.unitStats.net
+      ?"tens"
+      : c.unitStats.rate>=c.tensStats.rate?"unit":"tens";
+  $("compareBody").innerHTML=[
+    ["unit","หลักหน่วย",c.unitStats],
+    ["tens","หลักสิบ",c.tensStats]
+  ].map(([key,label,stats])=>`<tr>
+    <td>${label}</td><td>${stats.wins}/${stats.rounds}</td><td>${percent(stats.wins,stats.rounds)}</td>
+    <td class="${stats.net>=0?"profit":"loss"}">${stats.net>=0?"+":""}${money(stats.net)}</td>
+    <td>${key===best?'<span class="badge">น่าเล่นกว่า</span>':'<span class="badge skip">สำรอง</span>'}</td>
+  </tr>`).join("");
+}
+
+function renderRecommendations(){
+  const c=current;
+  const ranking=[];
+  formulas.forEach((formula,formulaIndex)=>{
+    ["unit","tens"].forEach((position,positionIndex)=>{
+      const full=backtest(c.results,formula,position,c.defaultStake,c.payout);
+      const rows=full.rows.slice(-c.recommendRounds);
+      const wins=rows.filter(row=>row.hit).length;
+      const net=rows.reduce((sum,row)=>sum+row.profit,0);
+      ranking.push({
+        formula,formulaIndex,position,positionIndex,rows,
+        rounds:rows.length,wins,rate:rows.length?wins/rows.length:0,net
       });
     });
-  }
-
-  $("clearHistory").addEventListener("click", () => {
-    if (confirm("ต้องการล้างประวัติการคำนวณทั้งหมดใช่ไหม?")) {
-      localStorage.removeItem("thai30CalculationHistory");
-      renderCalculationHistory();
-    }
   });
+  ranking.sort((a,b)=>b.rate-a.rate||b.wins-a.wins||b.net-a.net||a.formulaIndex-b.formulaIndex||a.positionIndex-b.positionIndex);
+  const best=ranking[0];
+  $("recommendSummary").textContent=best&&best.rounds
+    ? `แนะนำจาก ${best.rounds} รอบล่าสุด: ${best.formula.name} • ${best.position==="unit"?"หลักหน่วย":"หลักสิบ"} • เข้า ${best.wins}/${best.rounds} (${percent(best.wins,best.rounds)})`
+    : "ข้อมูลยังไม่พอ";
 
-  loadSavedSettings();
-  renderCalculationHistory();
+  const seen=new Set();
+  const bestByFormula=ranking.filter(item=>{
+    if(seen.has(item.formula.id))return false;
+    seen.add(item.formula.id);
+    return true;
+  });
+  $("recommendList").innerHTML=bestByFormula.map(item=>`<div class="history-item">
+    <div><div class="history-main">${item.formula.name}</div>
+    <div class="history-sub">${item.position==="unit"?"หลักหน่วย":"หลักสิบ"} • ${item.wins}/${item.rounds} • ${percent(item.wins,item.rounds)}</div></div>
+    <span class="${item.net>=0?"profit":"loss"}">${item.net>=0?"+":""}${money(item.net)}</span>
+  </div>`).join("");
+}
+
+function lockSelectedFormula(){
+  clearError();
+  const start=Math.max(1,Math.floor(Number($("segmentStartRound").value)||currentNextRound()));
+  if(start<getMoneyStart()){
+    showError(`ช่วงเงินจริงต้องเริ่มตั้งแต่ไม้ ${getMoneyStart()} เป็นต้นไป`);
+    return;
+  }
+  const item={startRound:start,formulaId:formulaSelect.value,position:positionSelect.value};
+  segments=segments.filter(s=>Number(s.startRound)!==start);
+  segments.push(item);
+  normalizeSegments();
+  renderSegments();
+  if(parseResults(historyInput.value).length>=2)calculate();
+}
+
+function saveSettings(){
+  saveJson(KEYS.settings,{
+    formula:formulaSelect.value,
+    position:positionSelect.value,
+    defaultStake:$("defaultStake").value,
+    payout:$("payout").value,
+    startingBank:$("startingBank").value,
+    moneyStartRound:$("moneyStartRound").value,
+    minimumTestRounds:$("minimumTestRounds").value,
+    recentRounds:$("recentRounds").value,
+    recommendRounds:$("recommendRounds").value
+  });
+}
+function loadSettings(){
+  const settings=loadJson(KEYS.settings,{});
+  const legacy=loadJson("thai30Settings",{});
+  const formulaValue=settings.formula||legacy.formula;
+  const positionValue=settings.position||legacy.position;
+  if(formulaValue&&formulas.some(f=>f.id===formulaValue))formulaSelect.value=formulaValue;
+  if(["unit","tens"].includes(positionValue))positionSelect.value=positionValue;
+  ["defaultStake","payout","startingBank","moneyStartRound","minimumTestRounds","recentRounds","recommendRounds"].forEach(id=>{
+    if(settings[id]!=null)$(id).value=settings[id];
+  });
+  if(settings.payout==null&&legacy.payout!=null)$("payout").value=legacy.payout;
+  if(settings.startingBank==null&&legacy.startingBank!=null)$("startingBank").value=legacy.startingBank;
+  if(settings.recentRounds==null&&legacy.recentRounds!=null)$("recentRounds").value=legacy.recentRounds;
+  if(settings.recommendRounds==null&&legacy.recommendRounds!=null)$("recommendRounds").value=legacy.recommendRounds;
+}
+function saveDraft(){saveJson(KEYS.draft,{history:historyInput.value})}
+function loadDraft(){
+  const draft=loadJson(KEYS.draft,{});
+  const legacy=loadJson("room-draft:thai30-eight",{});
+  if(draft.history)historyInput.value=draft.history;
+  else if(legacy.history)historyInput.value=legacy.history;
+}
+function saveSession(){
+  if(!current){showError("กรุณาคำนวณก่อนบันทึก");return}
+  const list=loadJson(KEYS.history,[]);
+  list.unshift({
+    at:new Date().toLocaleString("th-TH"),
+    rounds:current.results.length-1,
+    actualCount:current.moneyRows.length,
+    wins:current.actualWins,
+    losses:current.actualLosses,
+    net:current.actualNet,
+    totalStaked:current.totalStaked
+  });
+  saveJson(KEYS.history,list.slice(0,10));
+  renderHistory();
+}
+function renderHistory(){
+  const list=loadJson(KEYS.history,[]);
+  $("calculationHistory").innerHTML=list.length
+    ? list.map(item=>`<div class="history-item"><div>
+        <div class="history-main">${item.at}</div>
+        <div class="history-sub">ผล ${item.rounds} ไม้ •เงินจริง ${item.actualCount} ไม้ • ถูก ${item.wins} ผิด ${item.losses} • เดิมพัน ${money(item.totalStaked)}</div>
+      </div><span class="${item.net>=0?"profit":"loss"}">${item.net>=0?"+":""}${money(item.net)}</span></div>`).join("")
+    : '<div class="help">ยังไม่มีประวัติสรุป</div>';
+}
+
+formulaSelect.addEventListener("change",showFormulaNote);
+positionSelect.addEventListener("change",saveSettings);
+$("calculate").addEventListener("click",()=>calculate({scroll:true}));
+$("lockFormula").addEventListener("click",lockSelectedFormula);
+$("sample").addEventListener("click",()=>{
+  historyInput.value=["04","79","32","47","81","16","21","85","75","53","58","29","38","67","10","44","92","05","73","26"].join("\n");
+  setSuggestedSegmentRound();
+});
+$("clearResults").addEventListener("click",()=>{
+  historyInput.value="";
+  current=null;
+  resultSection.style.display="none";
+  saveDraft();
+  setSuggestedSegmentRound();
+});
+$("resetActual").addEventListener("click",()=>{
+  if(!confirm("ล้างประวัติสูตรเงินจริงและยอดเดิมพันรายไม้ทั้งหมดใช่ไหม?"))return;
+  segments=[];
+  stakeOverrides={};
+  saveJson(KEYS.segments,segments);
+  saveJson(KEYS.stakes,stakeOverrides);
+  renderSegments();
+  if(parseResults(historyInput.value).length>=2)calculate();
+});
+$("saveSession").addEventListener("click",saveSession);
+$("clearHistory").addEventListener("click",()=>{
+  localStorage.removeItem(KEYS.history);
+  renderHistory();
+});
+$("moneyStartRound").addEventListener("change",()=>{
+  if(!segments.length)setSuggestedSegmentRound();
+  saveSettings();
+  if(current)calculate();
+});
+["defaultStake","payout","startingBank","minimumTestRounds","recentRounds","recommendRounds"].forEach(id=>{
+  $(id).addEventListener("change",()=>{
+    saveSettings();
+    if(current)calculate();
+  });
+});
+
+const enterButton = $("enterButton");
+if(enterButton){
+  enterButton.addEventListener("click",()=>{
+    const pos=historyInput.selectionStart??historyInput.value.length;
+    if(historyInput.value[pos-1]!=="\n")historyInput.setRangeText("\n",pos,pos,"end");
+    historyInput.focus();
+    saveDraft();
+    setSuggestedSegmentRound();
+    if(parseResults(historyInput.value).length>=2)calculate();
+  });
+}
+
+let autoLock=false;
+historyInput.addEventListener("input",event=>{
+  saveDraft();
+  if(autoLock||event.inputType==="insertFromPaste"||String(event.inputType||"").startsWith("delete")){
+    setSuggestedSegmentRound();
+    return;
+  }
+  const pos=historyInput.selectionStart??historyInput.value.length;
+  const line=historyInput.value.slice(0,pos).split(/\r?\n/).pop().replace(/\D/g,"");
+  if(line.length===2){
+    autoLock=true;
+    historyInput.setRangeText("\n",pos,pos,"end");
+    autoLock=false;
+    setSuggestedSegmentRound();
+    if(parseResults(historyInput.value).length>=2)calculate();
+  }
+});
+historyInput.addEventListener("keydown",event=>{
+  if(event.key==="Enter")setTimeout(()=>{
+    setSuggestedSegmentRound();
+    if(parseResults(historyInput.value).length>=2)calculate();
+  },0);
+});
+
+loadSettings();
+loadDraft();
+normalizeSegments();
+showFormulaNote();
+renderSegments();
+renderHistory();
+setSuggestedSegmentRound();
+if(parseResults(historyInput.value).length>=2)calculate();
 })();
 </script>
 </body>
