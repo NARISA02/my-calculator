@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#2563eb">
-<title>ห้องรวม 17 สูตร หวยไทย 30 วิ</title>
+<title>ห้องรวม 18 สูตร หวยไทย 30 วิ</title>
 <style>
 :root{
   --bg:#eef4fb;--card:#fff;--text:#172033;--muted:#667085;--line:#dbe4f0;
@@ -64,7 +64,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
 <main class="wrap">
 <section class="hero">
 <a class="back" href="index.html">← กลับหน้าหลัก</a>
-<h1>⏱️ ห้องรวม 17 สูตร หวยไทย 30 วิ</h1>
+<h1>⏱️ ห้องรวม 18 สูตร หวยไทย 30 วิ</h1>
 <p>แยกการทดสอบสูตรออกจากเงินจริง เปลี่ยนสูตรกลางทางได้ และบันทึกยอดเดิมพันจริงของแต่ละไม้</p>
 </section>
 
@@ -177,7 +177,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
 
 <section class="card">
 <h2>8. สูตรแนะนำ</h2>
-<div class="help">เทียบทั้ง 17 สูตรและทั้งสองหลักตามจำนวนรอบย้อนหลังที่เลือก ส่วนนี้เป็นสถิติ ไม่แก้บัญชีเงินจริง</div>
+<div class="help">เทียบทั้ง 18 สูตรและทั้งสองหลักตามจำนวนรอบย้อนหลังที่เลือก ส่วนนี้เป็นสถิติ ไม่แก้บัญชีเงินจริง</div>
 <div id="recommendSummary" class="notice"></div>
 <div id="recommendList"></div>
 </section>
@@ -202,9 +202,10 @@ const formulaSelect=$("formulaSelect");
 formulas.push(
   {id:"flow_luck",name:"สูตรไหลรับโชค",recommendRounds:4,map:{"0":"146","1":"257","2":"368","3":"479","4":"058","5":"169","6":"027","7":"138","8":"249","9":"035"},note:"แนะนำให้ดูย้อนหลัง 4 งวด หลุด 2 ไม้ให้ข้าม 2 ไม้ เล่นเซตละ 10 ไม้ ไม่ทบ"},
   {id:"ai_ngong",name:"สูตรเอไองง",recommendRounds:4,map:{"0":"278","1":"238","2":"059","3":"156","4":"267","5":"238","6":"389","7":"059","8":"156","9":"267"},note:"แนะนำให้ดูย้อนหลัง 4 งวด หลุด 2 ไม้ให้ข้าม 2 ไม้ เล่นเซตละ 10 ไม้ ไม่ทบ"},
-  {id:"klai",name:"สูตรไกล",recommendRounds:4,map:{"0":"189","1":"029","2":"013","3":"124","4":"235","5":"346","6":"457","7":"568","8":"379","9":"078"},note:"แนะนำให้ดูย้อนหลัง 4 งวด หลุด 2 ไม้ให้ข้าม 2 ไม้ เล่นเซตละ 10 ไม้ ไม่ทบ"}
+  {id:"klai",name:"สูตรไกล",recommendRounds:4,map:{"0":"189","1":"029","2":"013","3":"124","4":"235","5":"346","6":"457","7":"568","8":"379","9":"078"},note:"แนะนำให้ดูย้อนหลัง 4 งวด หลุด 2 ไม้ให้ข้าม 2 ไม้ เล่นเซตละ 10 ไม้ ไม่ทบ"},
+  {id:"lom",name:"สูตรล้อม",recommendRounds:4,map:{"0":"078","1":"189","2":"259","3":"356","4":"467","5":"235","6":"346","7":"047","8":"018","9":"129"},note:"แนะนำให้ดูย้อนหลัง 4 งวด หลุด 2 ไม้ให้ข้าม 2 ไม้ เล่นเซตละ 10 ไม้ ไม่ทบ"}
 );
-formulas.slice(-3).forEach(formula=>formulaSelect.add(new Option(formula.name,formula.id)));
+formulas.slice(-4).forEach(formula=>formulaSelect.add(new Option(formula.name,formula.id)));
 const positionSelect=$("positionSelect");
 const historyInput=$("historyInput");
 const resultSection=$("resultSection");
@@ -487,6 +488,7 @@ function renderActualTable(){
       ? '<span class="help">—</span>'
       : `<input class="stake-input" data-round="${row.round}" type="number" min="0" step="1" value="${row.stake}">`;
     const profit=row.status==="test"?0:row.profit;
+    const profitClass=row.status==="test"?"help":row.hit?"profit":"loss";
 
     return `<tr class="${rowClass}">
       <td>ไม้ ${row.round}</td>
@@ -494,7 +496,7 @@ function renderActualTable(){
       <td>${row.omit}</td>
       <td>${row.next} → ${row.actual}</td>
       <td>${stakeCell}</td>
-      <td class="${profit>=0?"profit":"loss"}">${profit>=0?"+":""}${money(profit)}</td>
+      <td class="${profitClass}">${profit>0?"+":""}${money(profit)}</td>
     </tr>`;
   }).join("");
 
@@ -518,8 +520,8 @@ function renderActualSummary(){
   $("actualCount").textContent=`${c.moneyRows.length} ไม้`;
   $("actualWinsLosses").textContent=`${c.actualWins} / ${c.actualLosses}`;
   const net=$("actualNet");
-  net.textContent=(c.actualNet>=0?"+":"")+money(c.actualNet);
-  net.className="metric-value "+(c.actualNet>=0?"green":"red");
+  net.textContent=(c.actualNet>0?"+":"")+money(c.actualNet);
+  net.className="metric-value "+(c.actualNet>0?"green":"red");
   const ending=c.startingBank+c.actualNet;
   const endingEl=$("endingBank");
   endingEl.textContent=money(ending);
