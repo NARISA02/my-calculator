@@ -120,7 +120,6 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
 <div><label for="payout">อัตราจ่ายเลขเดี่ยว</label><input id="payout" type="number" min="0" step=".01" value="9.5"></div>
 <div><label for="startingBank">เงินจริงตั้งต้น (บาท)</label><input id="startingBank" type="number" min="0" step=".01" value="100"></div>
 <div><label for="moneyStartRound">เริ่มนับเงินตั้งแต่ไม้ที่</label><input id="moneyStartRound" type="number" min="1" step="1" value="5"></div>
-<div><label for="minimumTestRounds">ไม้ทดสอบขั้นต่ำ</label><input id="minimumTestRounds" type="number" min="1" step="1" value="4"></div>
 <div><label for="recentRounds">แสดงตารางย้อนหลัง</label><input id="recentRounds" type="number" min="1" step="1" value="20"></div>
 <div><label for="recommendRounds">สูตรแนะนำย้อนหลัง</label><input id="recommendRounds" type="number" min="1" step="1" value="20"></div>
 <div><label for="segmentStartRound">สูตรที่เลือกเริ่มใช้ตั้งแต่ไม้ที่</label><input id="segmentStartRound" type="number" min="1" step="1" value="5"></div>
@@ -149,7 +148,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
 
 <section class="card">
 <h2>5. บัญชีเงินจริงรายไม้</h2>
-<div class="help">กำไร–ขาดทุนส่วนนี้ใช้สูตรและหลักที่ล็อกไว้ในแต่ละช่วง พร้อมยอดเดิมพันจริงของแต่ละไม้ ไม่ย้อนแก้ยอดเดิมเมื่อเปลี่ยนสูตร</div>
+<div class="help">กรอกหรือแก้จำนวนเงินต่อเลขได้โดยตรงในช่อง “บาท/เลข” ของแต่ละไม้ ระบบจะจำยอดและคำนวณกำไร–ขาดทุนให้ใหม่ทันที</div>
 <div class="actual-table-wrap"><table class="wide-table">
 <thead><tr><th>ไม้</th><th>ผลก่อน</th><th>เว้น</th><th>ผลถัดไป</th><th>บาท/เลข</th><th>กำไร/ขาดทุน</th></tr></thead>
 <tbody id="actualBody"></tbody>
@@ -352,7 +351,6 @@ function calculate({scroll=false}={}){
   const payout=getPayout();
   const startingBank=Math.max(0,Number($("startingBank").value)||0);
   const moneyStart=getMoneyStart();
-  const minimumTest=Math.max(1,Math.floor(Number($("minimumTestRounds").value)||4));
   const recent=Math.max(1,Math.floor(Number($("recentRounds").value)||20));
   const recommendRounds=Math.max(1,Math.floor(Number($("recommendRounds").value)||20));
 
@@ -394,7 +392,7 @@ function calculate({scroll=false}={}){
   const totalStaked=moneyRows.reduce((sum,r)=>sum+(r.totalCost||0),0);
 
   current={
-    results,formula,position,defaultStake,payout,startingBank,moneyStart,minimumTest,recent,recommendRounds,
+    results,formula,position,defaultStake,payout,startingBank,moneyStart,recent,recommendRounds,
     selectedStats,unitStats,tensStats,actualRows,moneyRows,skippedRows,actualWins,actualLosses,actualNet,totalStaked
   };
   saveSettings();
@@ -429,9 +427,7 @@ function render(){
   $("selectedWinRate").textContent=`${percent(c.selectedStats.wins,c.selectedStats.rounds)} (${c.selectedStats.wins}/${c.selectedStats.rounds})`;
 
   const completedWarmup=Math.min(c.results.length-1,Math.max(0,c.moneyStart-1));
-  $("minimumNotice").textContent=completedWarmup>=c.minimumTest
-    ? `มีช่วงทดสอบ ${completedWarmup} ไม้ ครบขั้นต่ำ ${c.minimumTest} ไม้แล้ว เริ่มบัญชีเงินจริงที่ไม้ ${c.moneyStart}`
-    : `มีช่วงทดสอบ ${completedWarmup} ไม้ ยังขาด ${c.minimumTest-completedWarmup} ไม้ถึงขั้นต่ำ ${c.minimumTest} ไม้`;
+  $("minimumNotice").textContent=`มีช่วงทดสอบ ${completedWarmup} ไม้ และเริ่มบัญชีเงินจริงที่ไม้ ${c.moneyStart}`;
 
   renderSegments();
   renderActualTable();
@@ -486,7 +482,7 @@ function renderActualTable(){
 
     const stakeCell=row.status==="test"
       ? '<span class="help">—</span>'
-      : `<input class="stake-input" data-round="${row.round}" type="number" min="0" step="1" value="${row.stake}">`;
+      : `<input class="stake-input" data-round="${row.round}" type="number" inputmode="decimal" min="0" step="1" value="${row.stake}" aria-label="จำนวนเงินต่อเลข ไม้ ${row.round}">`;
     const profit=row.status==="test"?0:row.profit;
     const profitClass=row.status==="test"?"help":row.hit?"profit":"loss";
 
@@ -501,6 +497,9 @@ function renderActualTable(){
   }).join("");
 
   document.querySelectorAll(".stake-input").forEach(input=>{
+    input.addEventListener("keydown",event=>{
+      if(event.key==="Enter")input.blur();
+    });
     input.addEventListener("change",()=>{
       const round=String(input.dataset.round);
       const entered=Math.max(0,Number(input.value)||0);
@@ -605,7 +604,6 @@ function saveSettings(){
     payout:$("payout").value,
     startingBank:$("startingBank").value,
     moneyStartRound:$("moneyStartRound").value,
-    minimumTestRounds:$("minimumTestRounds").value,
     recentRounds:$("recentRounds").value,
     recommendRounds:$("recommendRounds").value
   });
@@ -617,7 +615,7 @@ function loadSettings(){
   const positionValue=settings.position||legacy.position;
   if(formulaValue&&formulas.some(f=>f.id===formulaValue))formulaSelect.value=formulaValue;
   if(["unit","tens"].includes(positionValue))positionSelect.value=positionValue;
-  ["defaultStake","payout","startingBank","moneyStartRound","minimumTestRounds","recentRounds","recommendRounds"].forEach(id=>{
+  ["defaultStake","payout","startingBank","moneyStartRound","recentRounds","recommendRounds"].forEach(id=>{
     if(settings[id]!=null)$(id).value=settings[id];
   });
   if(settings.payout==null&&legacy.payout!=null)$("payout").value=legacy.payout;
@@ -691,7 +689,7 @@ $("moneyStartRound").addEventListener("change",()=>{
   saveSettings();
   if(current)calculate();
 });
-["defaultStake","payout","startingBank","minimumTestRounds","recentRounds","recommendRounds"].forEach(id=>{
+["defaultStake","payout","startingBank","recentRounds","recommendRounds"].forEach(id=>{
   $(id).addEventListener("change",()=>{
     saveSettings();
     if(current)calculate();
