@@ -19,6 +19,7 @@ body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSyste
 .back{display:inline-flex;margin-bottom:12px;color:#fff;text-decoration:none;font-weight:900;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);padding:8px 12px;border-radius:999px}
 .card{margin-top:14px;padding:20px;border:1px solid rgba(37,99,235,.09);border-radius:var(--radius);background:var(--card);box-shadow:var(--shadow)}
 h2{margin:0 0 16px;font-size:clamp(23px,5vw,35px)}h3{margin:0 0 10px}
+.card>h2{display:flex;align-items:center;justify-content:space-between;gap:12px}.section-toggle{flex:0 0 auto;min-height:38px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:#eef3f8;color:#344054;font-size:13px}.card.collapsed>h2{margin-bottom:0}.card.collapsed>:not(h2){display:none!important}
 label{display:block;margin-bottom:7px;font-size:14px;font-weight:900}
 input,select,textarea,button{font:inherit}
 input,select,textarea{width:100%;border:1.5px solid #bdcce0;border-radius:15px;background:#fff;color:var(--text);outline:none}
@@ -59,6 +60,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
   .wide-table .stake-input{width:48px;height:32px;padding:0 3px;font-size:12px;border-radius:8px}
   .wide-table .profit,.wide-table .loss{font-size:10.5px}
   .recommend-columns{grid-template-columns:1fr}
+  .card>h2{align-items:flex-start}.section-toggle{min-height:34px;padding:6px 10px;font-size:12px}
 }
 </style>
 </head>
@@ -202,6 +204,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
 
 const formulas=[{"id":"blue_thai","name":"สูตรเลขมงคล","map":{"0":"278","1":"348","2":"459","3":"560","4":"167","5":"278","6":"348","7":"459","8":"056","9":"167"}},{"id":"formula2","name":"สูตร 2","map":{"0":"084","1":"980","2":"896","3":"805","4":"713","5":"620","6":"528","7":"436","8":"352","9":"260"}},{"id":"green_cat","name":"สูตรแมวกวัก","map":{"0":"349","1":"045","2":"015","3":"126","4":"378","5":"348","6":"459","7":"056","8":"167","9":"278"}},{"id":"ku30","name":"สูตร KU หวยไทย 30 วิ","map":{"0":"139","1":"236","2":"139","3":"145","4":"356","5":"034","6":"016","7":"267","8":"056","9":"028"}},{"id":"to_kan_jai_v2","name":"สูตรโต้ดทันใจ V.2","betMode":"toad","toadPayout":49,"map":{"0":"19","1":"02","2":"13","3":"24","4":"35","5":"46","6":"57","7":"68","8":"79","9":"08"},"note":"สูตรโต๊ด 2 ตัว ใช้หลักที่เลือกหาเลขเว้น แล้วตรวจผล 2 หลักแบบไม่สนลำดับ"},{"id":"blue_dark","name":"สูตรเงิน","map":{"0":"456","1":"567","2":"678","3":"789","4":"069","5":"019","6":"012","7":"129","8":"234","9":"345"}},{"id":"teal","name":"สูตรเขียว","map":{"0":"157","1":"489","2":"179","3":"579","4":"359","5":"238","6":"019","7":"238","8":"359","9":"012"}},{"id":"gold","name":"สูตรทอง","map":{"0":"148","1":"589","2":"089","3":"048","4":"026","5":"346","6":"359","7":"356","8":"024","9":"678"}},{"id":"next_formula","name":"สูตรถัดมา","map":{"0":"459","1":"056","2":"167","3":"278","4":"389","5":"049","6":"015","7":"126","8":"237","9":"459"},"note":"สูตรแนะนำให้ดูย้อนหลังอย่างน้อย 4 งวด แต่หน้าสถิติจะคำนวณตามจำนวนรอบที่เลือกด้านล่าง"},{"id":"laksami","name":"สูตรลักษมีประทานพร","betMode":"toad","toadPayout":49,"preferredPosition":"unit","map":{"0":"39","1":"05","2":"15","3":"57","4":"85","5":"02","6":"26","7":"39","8":"40","9":"16"},"note":"สูตรโต๊ด 2 ตัว ใช้ได้ทุกหลัก เน้นหลักหน่วยมาเว้น แนะนำเล่นรอบเร็ว 10–12 ไม้ และไม่ทบ"},{"id":"kwak_money","name":"สูตรกวักเงิน 30 วิ","map":{"0":"239","1":"034","2":"145","3":"256","4":"367","5":"478","6":"589","7":"069","8":"017","9":"128"},"note":"แนวทางไม่ทบ เดินเงินอย่างมีสติ เน้นกำไรแล้วถอน"},{"id":"morning_flow","name":"สูตรไหลเช้านี้","map":{"0":"045","1":"015","2":"126","3":"378","4":"348","5":"459","6":"056","7":"167","8":"278","9":"346"},"note":"แนะนำให้ดูย้อนหลังอย่างน้อย 4 งวด หากหลุด 2 ไม้ให้ข้าม 2 ไม้ แนะนำเล่นเซตละ 10 ไม้ ไม่ทบ แต่หน้าสถิติจะคำนวณตามจำนวนรอบที่เลือก"},{"id":"front3_back4","name":"สูตรหน้า3หลัง4","map":{"0":"056","1":"167","2":"278","3":"389","4":"049","5":"015","6":"126","7":"237","8":"348","9":"459"},"note":"แนะนำให้ดูย้อนหลังอย่างน้อย 4 งวด หากหลุด 2 ไม้ให้ข้าม 2 ไม้ แนะนำเล่นเซตละ 10 ไม้ ไม่ทบ แต่หน้าสถิติจะคำนวณตามจำนวนรอบที่เลือก"},{"id":"rati","name":"สูตรพี่รตี","map":{"0":"456","1":"567","2":"678","3":"789","4":"890","5":"901","6":"012","7":"123","8":"234","9":"345"},"note":"ใช้ผลรอบก่อนหน้าเลือกเลขเว้น แล้วตรวจผลรอบถัดไป ใช้ได้ทั้งหลักสิบและหลักหน่วย"}];
 const $=id=>document.getElementById(id);
+const COLLAPSED_SECTIONS_KEY="thai30-real-v3-collapsed-sections";
 const formulaSelect=$("formulaSelect");
 formulas.push(
   {id:"flow_luck",name:"สูตรไหลรับโชค",recommendRounds:4,map:{"0":"146","1":"257","2":"368","3":"479","4":"058","5":"169","6":"027","7":"138","8":"249","9":"035"},note:"แนะนำให้ดูย้อนหลัง 4 งวด หลุด 2 ไม้ให้ข้าม 2 ไม้ เล่นเซตละ 10 ไม้ ไม่ทบ"},
@@ -235,6 +238,33 @@ function loadJson(key,fallback){
   }catch{return fallback}
 }
 function saveJson(key,value){localStorage.setItem(key,JSON.stringify(value))}
+function initCollapsibleSections(){
+  const collapsed=new Set(loadJson(COLLAPSED_SECTIONS_KEY,[]));
+  document.querySelectorAll("section.card").forEach(section=>{
+    const heading=section.querySelector(":scope > h2");
+    if(!heading)return;
+    const title=heading.textContent.trim();
+    const button=document.createElement("button");
+    button.type="button";
+    button.className="section-toggle";
+    const update=()=>{
+      const isCollapsed=section.classList.contains("collapsed");
+      button.textContent=isCollapsed?"แสดง":"ซ่อน";
+      button.setAttribute("aria-expanded",String(!isCollapsed));
+      button.setAttribute("aria-label",`${isCollapsed?"แสดง":"ซ่อน"} ${title}`);
+    };
+    if(collapsed.has(title))section.classList.add("collapsed");
+    update();
+    button.addEventListener("click",()=>{
+      section.classList.toggle("collapsed");
+      if(section.classList.contains("collapsed"))collapsed.add(title);
+      else collapsed.delete(title);
+      saveJson(COLLAPSED_SECTIONS_KEY,[...collapsed]);
+      update();
+    });
+    heading.appendChild(button);
+  });
+}
 function formulaById(id){return formulas.find(f=>f.id===id)||formulas[0]}
 function isToad(f){return f.betMode==="toad"}
 function parseResults(text){
@@ -760,6 +790,7 @@ historyInput.addEventListener("keydown",event=>{
 
 loadSettings();
 loadDraft();
+initCollapsibleSections();
 normalizeSegments();
 showFormulaNote();
 renderSegments();
