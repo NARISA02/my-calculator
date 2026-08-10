@@ -42,9 +42,11 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
 .stake-input{width:88px;height:42px;padding:0 8px;text-align:center;border-radius:10px}.segment-list{display:grid;gap:9px;margin-top:12px}.segment-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:14px}.segment-main{font-weight:900}.segment-sub{font-size:13px;color:var(--muted)}.mini{min-height:36px;padding:6px 10px;font-size:13px}.history-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:14px;margin-top:9px}.history-main{font-weight:900}.history-sub{font-size:13px;color:var(--muted)}
 .row-test td{background:#fff7dd}.row-actual td{background:#ecf9f0}.row-skip td{background:#eef3f8}.row-unassigned td{background:#f8fafc}.footer-note{text-align:center;color:var(--muted);font-size:13px;margin-top:16px;line-height:1.6}
 .recommend-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}.recommend-panel{padding:14px;border:1px solid var(--line);border-radius:18px}.recommend-panel.good{background:#f0faf4}.recommend-panel.low{background:#fff5f3}.recommend-panel h3{margin-bottom:4px}.recommend-panel .history-item{background:#fff}
+.history-entry-grid{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:16px;align-items:stretch}.number-pad{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;align-content:start}.number-key{min-height:58px;font-size:25px;background:#e4efff;color:#1753a6}.number-key.backspace{grid-column:span 3;background:#fff0f3;color:#be123c}.number-key.clear{grid-column:span 2;background:#e8edf5;color:#344054}
 @media(max-width:900px){.config-grid,.metric-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:650px){
-  .grid2,.grid3,.config-grid,.metric-grid,.actions{grid-template-columns:1fr}
+  .grid2,.grid3,.config-grid,.metric-grid,.actions,.history-entry-grid{grid-template-columns:1fr}
+  .number-pad{grid-template-columns:repeat(5,1fr)}
   .card{padding:12px}
   .hero{padding:22px 18px}
   .actual-table-wrap{overflow:hidden}
@@ -94,8 +96,18 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
 <div id="formulaNote" class="formula-note"></div>
 <div style="margin-top:14px">
 <label for="historyInput">ผลย้อนหลัง เรียงจากเก่าไปใหม่</label>
-<textarea id="historyInput" inputmode="numeric" placeholder="04&#10;79&#10;32&#10;47&#10;81"></textarea>
-<div class="help">พิมพ์ครบ 2 หลัก ระบบจะขึ้นบรรทัดใหม่และคำนวณอัตโนมัติทันที หรือวางเลขยาวต่อกันได้</div>
+<div class="history-entry-grid">
+  <textarea id="historyInput" inputmode="numeric" placeholder="04&#10;79&#10;32&#10;47&#10;81"></textarea>
+  <div>
+    <div class="number-pad" id="historyNumberPad" aria-label="แป้นกรอกผลย้อนหลัง">
+      <button type="button" class="number-key" data-digit="0">0</button><button type="button" class="number-key" data-digit="1">1</button><button type="button" class="number-key" data-digit="2">2</button><button type="button" class="number-key" data-digit="3">3</button><button type="button" class="number-key" data-digit="4">4</button>
+      <button type="button" class="number-key" data-digit="5">5</button><button type="button" class="number-key" data-digit="6">6</button><button type="button" class="number-key" data-digit="7">7</button><button type="button" class="number-key" data-digit="8">8</button><button type="button" class="number-key" data-digit="9">9</button>
+      <button type="button" id="historyBackspace" class="number-key backspace">⌫ ลบล่าสุด</button><button type="button" id="historyPadClear" class="number-key clear">ล้างทั้งหมด</button>
+    </div>
+    <div class="help">แตะเลข 2 ครั้งเพื่อเพิ่มผล เช่น 0 แล้ว 3 = 03 ระบบคำนวณให้อัตโนมัติ</div>
+  </div>
+</div>
+<div class="help">ยังสามารถพิมพ์หรือวางเลขในช่องด้านซ้ายได้ตามเดิม</div>
 </div>
 </section>
 
@@ -105,8 +117,7 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
 <div class="help">เลขเว้น <span id="omitCount">0</span> ตัว</div>
 <div id="omitNumber" class="omit-number">-</div>
 <div id="sourceNote" class="help"></div>
-<div style="margin-top:16px;font-weight:900"><span id="betLabel">เลขแทง</span> <span id="betCount">0</span> <span id="betUnit">ตัว</span></div>
-<div id="digitRow" class="digit-row"></div>
+
 <div class="metric-grid">
 <div class="metric"><div class="metric-label">เงินใช้ต่อไม้</div><div id="roundCost" class="metric-value"></div></div>
 <div class="metric"><div class="metric-label">ผลที่กรอกแล้ว</div><div id="playedRounds" class="metric-value"></div></div>
@@ -460,15 +471,6 @@ function render(){
   $("omitCount").textContent=omit.length;
   $("omitNumber").textContent=[...omit].join(", ");
   $("sourceNote").textContent=`ผลล่าสุด ${latest} • ใช้${c.position==="unit"?"หลักหน่วย":"หลักสิบ"} ${source} • ${c.formula.name}`;
-  $("betLabel").textContent=isToad(c.formula)?"คู่โต๊ด":"เลขแทง";
-  $("betCount").textContent=bet.length;
-  $("betUnit").textContent=isToad(c.formula)?"คู่":"ตัว";
-  $("digitRow").innerHTML=isToad(c.formula)
-    ? bet.map(pair=>`<span class="digit">${pair}</span>`).join("")
-    : [...Array(10).keys()].map(n=>{
-        const d=String(n);
-        return `<span class="digit ${omit.includes(d)?"omit":""}">${d}</span>`;
-      }).join("");
 
   $("roundCost").textContent=money(nextStake*bet.length);
   $("playedRounds").textContent=`${c.results.length-1} ไม้`;
@@ -751,6 +753,38 @@ $("moneyStartRound").addEventListener("change",()=>{
   });
 });
 $("stakeAmount").addEventListener("input",()=>{stakeEntryDirty=true});
+
+let padBuffer="";
+function refreshAfterPad(){
+  saveDraft();
+  setSuggestedSegmentRound();
+  if(parseResults(historyInput.value).length>=2)calculate();
+}
+function appendPadDigit(digit){
+  padBuffer+=digit;
+  if(padBuffer.length<2)return;
+  const result=padBuffer.slice(0,2);
+  padBuffer="";
+  const clean=historyInput.value.trim();
+  historyInput.value=clean?clean+"\n"+result:result;
+  historyInput.scrollTop=historyInput.scrollHeight;
+  refreshAfterPad();
+}
+document.querySelectorAll("#historyNumberPad [data-digit]").forEach(button=>{
+  button.addEventListener("click",()=>appendPadDigit(button.dataset.digit));
+});
+$("historyBackspace").addEventListener("click",()=>{
+  if(padBuffer){padBuffer=padBuffer.slice(0,-1);return;}
+  const results=parseResults(historyInput.value);
+  results.pop();
+  historyInput.value=results.join("\n");
+  if(results.length<2){current=null;resultSection.style.display="none";}
+  refreshAfterPad();
+});
+$("historyPadClear").addEventListener("click",()=>{
+  padBuffer="";historyInput.value="";current=null;resultSection.style.display="none";
+  $("compareSection").style.display="none";saveDraft();setSuggestedSegmentRound();
+});
 
 const enterButton = $("enterButton");
 if(enterButton){
