@@ -25,7 +25,7 @@ input,select,textarea,button{font:inherit}
 input,select,textarea{width:100%;border:1.5px solid #bdcce0;border-radius:15px;background:#fff;color:var(--text);outline:none}
 input,select{height:52px;padding:0 14px}textarea{min-height:230px;padding:14px;resize:vertical;font-size:20px;line-height:1.45}
 input:focus,select:focus,textarea:focus{border-color:var(--primary2);box-shadow:0 0 0 4px rgba(37,99,235,.11)}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.config-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.config-split{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.config-panel{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.34)}.config-panel-title{grid-column:1/-1;margin:0;color:#344054;font-size:16px}.quick-stakes{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}.quick-stake{min-height:34px;padding:6px 12px;border:1px solid #c9a94d;border-radius:999px;background:#fff8df;color:#71550c;font-size:13px}.quick-stake.skip-quick{background:#f2f4f7;color:#475467;border-color:#d0d5dd}.quick-stake.selected{background:var(--primary);color:#fff;border-color:var(--primary)}
 .actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-top:14px}
 button{min-height:48px;padding:10px 14px;border:0;border-radius:15px;cursor:pointer;font-weight:900}
 button:active{transform:scale(.985)}.primary{background:var(--primary);color:#fff}.secondary{background:#e8edf5;color:#344054}.danger{background:#fff0f3;color:#be123c}.teal{background:var(--teal);color:#fff}
@@ -43,9 +43,9 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
 .row-test td{background:#fff7dd}.row-actual td{background:#ecf9f0}.row-skip td{background:#eef3f8}.row-unassigned td{background:#f8fafc}.footer-note{text-align:center;color:var(--muted);font-size:13px;margin-top:16px;line-height:1.6}
 .recommend-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}.recommend-panel{padding:14px;border:1px solid var(--line);border-radius:18px}.recommend-panel.good{background:#f0faf4}.recommend-panel.low{background:#fff5f3}.recommend-panel h3{margin-bottom:4px}.recommend-panel .history-item{background:#fff}
 .history-entry-grid{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:16px;align-items:stretch}.number-pad{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;align-content:start}.number-key{min-height:58px;font-size:25px;background:#e4efff;color:#1753a6}.number-key.backspace{grid-column:span 3;background:#fff0f3;color:#be123c}.number-key.clear{grid-column:span 2;background:#e8edf5;color:#344054}
-@media(max-width:900px){.config-grid,.metric-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.metric-grid{grid-template-columns:1fr 1fr}.config-panel{grid-template-columns:1fr}}
 @media(max-width:650px){
-  .grid2,.grid3,.config-grid,.metric-grid,.actions,.history-entry-grid{grid-template-columns:1fr}
+  .grid2,.grid3,.config-split,.metric-grid,.actions,.history-entry-grid{grid-template-columns:1fr}
   .number-pad{grid-template-columns:repeat(5,1fr)}
   .card{padding:12px}
   .hero{padding:22px 18px}
@@ -155,15 +155,21 @@ input:focus,select:focus,textarea:focus{border-color:#c9a227;box-shadow:0 0 0 4p
 
 <section class="card">
 <h2>3. ตั้งค่าการทดสอบและเงินจริง</h2>
-<div class="config-grid">
+<div class="config-split">
+<div class="config-panel">
+<h3 class="config-panel-title">การตั้งค่าเงินจริง</h3>
 <div><label for="defaultStake">เดิมพันต่อเลขเริ่มต้น (บาท)</label><input id="defaultStake" type="number" inputmode="decimal" min="2" step="1" value="2"></div>
 <div><label for="payout">อัตราจ่ายเลขเดี่ยว</label><input id="payout" type="number" min="0" step=".01" value="9.5"></div>
 <div><label for="startingBank">เงินจริงตั้งต้น (บาท)</label><input id="startingBank" type="number" min="0" step=".01" value="100"></div>
 <div><label for="moneyStartRound">เริ่มนับเงินตั้งแต่ไม้ที่</label><input id="moneyStartRound" type="number" min="1" step="1" value="5"></div>
-<div><label for="stakeAmount">จำนวนเงินไม้ถัดไป (บาท/เลข)</label><input id="stakeAmount" type="number" inputmode="decimal" min="0" step="1" placeholder="เช่น 15"><div class="help">อ้างอิงเลข “ไม้ถัดไป” จากข้อ 2 อัตโนมัติ ใส่ 0 เพื่อข้ามไม้</div></div>
+</div>
+<div class="config-panel">
+<h3 class="config-panel-title">ไม้ถัดไปและการแสดงผล</h3>
+<div><label for="stakeAmount">จำนวนเงินไม้ถัดไป (บาท/เลข)</label><input id="stakeAmount" type="number" inputmode="decimal" min="0" step="1" placeholder="เช่น 15"><div class="quick-stakes" aria-label="ยอดเงินที่ใช้บ่อย"><button type="button" class="quick-stake" data-stake="7">7</button><button type="button" class="quick-stake" data-stake="8">8</button><button type="button" class="quick-stake" data-stake="9">9</button><button type="button" class="quick-stake" data-stake="10">10</button><button type="button" class="quick-stake" data-stake="14">14</button><button type="button" class="quick-stake" data-stake="15">15</button><button type="button" class="quick-stake" data-stake="20">20</button><button type="button" class="quick-stake skip-quick" data-stake="0">ข้าม</button></div><div class="help">แตะยอดที่ใช้บ่อย หรือกรอกเอง • ปุ่ม “ข้าม” เท่ากับเดิมพัน 0 บาท • อ้างอิง “ไม้ถัดไป” จากข้อ 2</div></div>
 <div><label for="recentRounds">แสดงตารางย้อนหลัง</label><input id="recentRounds" type="number" min="1" step="1" value="20"></div>
 <div><label for="recommendRounds">สูตรแนะนำย้อนหลัง</label><input id="recommendRounds" type="number" min="1" step="1" value="20"></div>
 <div><label for="segmentStartRound">สูตรที่เลือกเริ่มใช้ตั้งแต่ไม้ที่</label><input id="segmentStartRound" type="number" min="1" step="1" value="5"></div>
+</div>
 </div>
 <div class="notice">
 ไม้ก่อน “เริ่มนับเงิน” เป็นช่วงทดสอบเท่านั้น ไม่คิดเงินจริง ค่าเดิมพันเป็นยอดต่อเลข ขั้นต่ำเลขละ 2 บาท หรือใส่ 0 เพื่อข้ามไม้
@@ -776,6 +782,13 @@ $("moneyStartRound").addEventListener("change",()=>{
   });
 });
 $("stakeAmount").addEventListener("input",()=>{stakeEntryDirty=true});
+document.querySelectorAll(".quick-stake").forEach(button=>{
+  button.addEventListener("click",()=>{
+    $("stakeAmount").value=button.dataset.stake;
+    stakeEntryDirty=true;
+    document.querySelectorAll(".quick-stake").forEach(item=>item.classList.toggle("selected",item===button));
+  });
+});
 
 let padBuffer="";
 function refreshAfterPad(){
