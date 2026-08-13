@@ -42,10 +42,11 @@ table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:11px 8px
 .stake-input{width:88px;height:42px;padding:0 8px;text-align:center;border-radius:10px}.segment-list{display:grid;gap:9px;margin-top:12px}.segment-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:14px}.segment-main{font-weight:900}.segment-sub{font-size:13px;color:var(--muted)}.mini{min-height:36px;padding:6px 10px;font-size:13px}.history-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:14px;margin-top:9px}.history-main{font-weight:900}.history-sub{font-size:13px;color:var(--muted)}
 .row-test td{background:#fff7dd}.row-actual td{background:#ecf9f0}.row-skip td{background:#eef3f8}.row-unassigned td{background:#f8fafc}.footer-note{text-align:center;color:var(--muted);font-size:13px;margin-top:16px;line-height:1.6}
 .recommend-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}.recommend-panel{padding:14px;border:1px solid var(--line);border-radius:18px}.recommend-panel.good{background:#f0faf4}.recommend-panel.low{background:#fff5f3}.recommend-panel h3{margin-bottom:4px}.recommend-panel .history-item{background:#fff}
-.history-entry-grid{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:16px;align-items:stretch}.number-pad{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;align-content:start}.number-key{min-height:58px;font-size:25px;background:#e4efff;color:#1753a6}.number-key.backspace{grid-column:span 3;background:#fff0f3;color:#be123c}.number-key.clear{grid-column:span 2;background:#e8edf5;color:#344054}
+.history-entry-grid{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:16px;align-items:stretch}.pad-preview{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:#fff8df}.pad-preview-label{font-size:13px;color:var(--muted);font-weight:900}.pad-preview-number{font-size:28px;font-weight:1000;letter-spacing:5px;color:#71550c}.number-pad{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;align-content:start}.number-key{min-height:58px;font-size:25px;background:#e4efff;color:#1753a6}.number-key.confirm{grid-column:span 2;background:#eaf8f0;color:#087a45}.number-key.confirm:disabled{opacity:.45;cursor:not-allowed}.number-key.backspace{grid-column:span 3;background:#fff0f3;color:#be123c}.number-key.clear{grid-column:span 5;background:#e8edf5;color:#344054}
+.primary-panels{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:14px;align-items:start}.primary-panels>.card{margin-top:14px}.primary-panels .history-entry-grid{grid-template-columns:1fr}.primary-panels .metric-grid{grid-template-columns:1fr 1fr}.primary-panels textarea{min-height:190px}
 @media(max-width:900px){.metric-grid{grid-template-columns:1fr 1fr}.config-panel{grid-template-columns:1fr}}
 @media(max-width:650px){
-  .grid2,.grid3,.config-split,.metric-grid,.actions,.history-entry-grid{grid-template-columns:1fr}
+  .grid2,.grid3,.config-split,.metric-grid,.actions,.history-entry-grid,.primary-panels{grid-template-columns:1fr}
   .number-pad{grid-template-columns:repeat(5,1fr)}
   .card{padding:12px}
   .hero{padding:22px 18px}
@@ -81,6 +82,9 @@ input:focus,select:focus,textarea:focus{border-color:#c9a227;box-shadow:0 0 0 4p
 .number-key:active{background:linear-gradient(145deg,#d4af37,#f3df8a);color:#211c10}
 .metric{background:linear-gradient(145deg,#f8f6ef,#e7e8e9);border:1px solid #e1ddd1}
 .badge.formula{background:#f7e9b6;color:#71550c}
+.view-mode-bar{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin:12px 0 0;padding:10px;border:1px solid rgba(179,135,40,.2);border-radius:18px;background:rgba(255,253,250,.82);box-shadow:var(--shadow)}.view-mode-label{font-size:13px;font-weight:900;color:var(--muted);margin-right:3px}.view-mode-button{min-height:38px;padding:7px 14px;border:1px solid #d6c78d;border-radius:999px;background:#f4f1e7;color:#5d5542;font-size:13px}.view-mode-button.selected{background:linear-gradient(135deg,#9b761d,#d4af37);color:#fff;border-color:#a98222}
+body[data-view="mobile"] .primary-panels,body[data-view="mobile"] .config-split,body[data-view="mobile"] .recommend-columns,body[data-view="mobile"] .metric-grid{grid-template-columns:1fr!important}
+body[data-view="tablet"] .primary-panels{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)!important}body[data-view="tablet"] .config-split,body[data-view="tablet"] .recommend-columns,body[data-view="tablet"] .metric-grid{grid-template-columns:1fr 1fr!important}body[data-view="tablet"] .primary-panels .history-entry-grid{grid-template-columns:1fr!important}
 
 </style>
 <style>.recommend-box .digit-row{display:none!important}</style>
@@ -92,7 +96,9 @@ input:focus,select:focus,textarea:focus{border-color:#c9a227;box-shadow:0 0 0 4p
 <h1>⏱️ ห้องรวม 20 สูตร หวยไทย 30 วิ</h1>
 <p>แยกการทดสอบสูตรออกจากเงินจริง เปลี่ยนสูตรกลางทางได้ และบันทึกยอดเดิมพันจริงของแต่ละไม้</p>
 </section>
+<div class="view-mode-bar" role="group" aria-label="รูปแบบการแสดงผล"><span class="view-mode-label">รูปแบบหน้าจอ</span><button type="button" class="view-mode-button" data-view="auto">อัตโนมัติ</button><button type="button" class="view-mode-button" data-view="mobile">มือถือ</button><button type="button" class="view-mode-button" data-view="tablet">แท็บเล็ต</button></div>
 
+<div class="primary-panels">
 <section class="card">
 <h2>1. สูตรและผลย้อนหลัง</h2>
 <div class="grid2">
@@ -120,12 +126,13 @@ input:focus,select:focus,textarea:focus{border-color:#c9a227;box-shadow:0 0 0 4p
 <div class="history-entry-grid">
   <textarea id="historyInput" inputmode="numeric" placeholder="04&#10;79&#10;32&#10;47&#10;81"></textarea>
   <div>
+    <div class="pad-preview"><div><div class="pad-preview-label">เลขที่กำลังกรอก</div><div id="padPreviewNumber" class="pad-preview-number">__</div></div><button type="button" id="historyPadConfirm" class="number-key confirm" disabled>เพิ่มเลข</button></div>
     <div class="number-pad" id="historyNumberPad" aria-label="แป้นกรอกผลย้อนหลัง">
       <button type="button" class="number-key" data-digit="0">0</button><button type="button" class="number-key" data-digit="1">1</button><button type="button" class="number-key" data-digit="2">2</button><button type="button" class="number-key" data-digit="3">3</button><button type="button" class="number-key" data-digit="4">4</button>
       <button type="button" class="number-key" data-digit="5">5</button><button type="button" class="number-key" data-digit="6">6</button><button type="button" class="number-key" data-digit="7">7</button><button type="button" class="number-key" data-digit="8">8</button><button type="button" class="number-key" data-digit="9">9</button>
-      <button type="button" id="historyBackspace" class="number-key backspace">⌫ ลบล่าสุด</button><button type="button" id="historyPadClear" class="number-key clear">ล้างทั้งหมด</button>
+      <button type="button" id="historyBackspace" class="number-key backspace">⌫ ลบ</button><button type="button" id="historyPadClear" class="number-key clear">ล้างทั้งหมด</button>
     </div>
-    <div class="help">แตะเลข 2 ครั้งเพื่อเพิ่มผล เช่น 0 แล้ว 3 = 03 ระบบคำนวณให้อัตโนมัติ</div>
+    <div class="help">แตะเลข 2 ตัว ตรวจตัวอย่างด้านบน แล้วกด “เพิ่มเลข” เพื่อป้องกันเลขเบิ้ล</div>
   </div>
 </div>
 <div class="help">ยังสามารถพิมพ์หรือวางเลขในช่องด้านซ้ายได้ตามเดิม</div>
@@ -152,6 +159,7 @@ input:focus,select:focus,textarea:focus{border-color:#c9a227;box-shadow:0 0 0 4p
 <div style="overflow:auto"><table><thead><tr><th>หลัก</th><th>ถูก/ทดสอบ</th><th>อัตราชนะ</th><th>กำไรจำลอง</th><th>คำแนะนำ</th></tr></thead><tbody id="compareBody"></tbody></table></div>
 </div>
 </section>
+</div>
 
 <section class="card">
 <h2>3. ตั้งค่าการทดสอบและเงินจริง</h2>
@@ -243,6 +251,7 @@ input:focus,select:focus,textarea:focus{border-color:#c9a227;box-shadow:0 0 0 4p
 const formulas=[{"id":"blue_thai","name":"สูตรเลขมงคล","map":{"0":"278","1":"348","2":"459","3":"560","4":"167","5":"278","6":"348","7":"459","8":"056","9":"167"}},{"id":"formula2","name":"สูตร 2","map":{"0":"084","1":"980","2":"896","3":"805","4":"713","5":"620","6":"528","7":"436","8":"352","9":"260"}},{"id":"green_cat","name":"สูตรแมวกวัก","map":{"0":"349","1":"045","2":"015","3":"126","4":"378","5":"348","6":"459","7":"056","8":"167","9":"278"}},{"id":"ku30","name":"สูตร KU หวยไทย 30 วิ","map":{"0":"139","1":"236","2":"139","3":"145","4":"356","5":"034","6":"016","7":"267","8":"056","9":"028"}},{"id":"to_kan_jai_v2","name":"สูตรโต้ดทันใจ V.2","betMode":"toad","toadPayout":49,"map":{"0":"19","1":"02","2":"13","3":"24","4":"35","5":"46","6":"57","7":"68","8":"79","9":"08"},"note":"สูตรโต๊ด 2 ตัว ใช้หลักที่เลือกหาเลขเว้น แล้วตรวจผล 2 หลักแบบไม่สนลำดับ"},{"id":"blue_dark","name":"สูตรเงิน","map":{"0":"456","1":"567","2":"678","3":"789","4":"069","5":"019","6":"012","7":"129","8":"234","9":"345"}},{"id":"teal","name":"สูตรเขียว","map":{"0":"157","1":"489","2":"179","3":"579","4":"359","5":"238","6":"019","7":"238","8":"359","9":"012"}},{"id":"gold","name":"สูตรทอง","map":{"0":"148","1":"589","2":"089","3":"048","4":"026","5":"346","6":"359","7":"356","8":"024","9":"678"}},{"id":"next_formula","name":"สูตรถัดมา","map":{"0":"459","1":"056","2":"167","3":"278","4":"389","5":"049","6":"015","7":"126","8":"237","9":"459"},"note":"สูตรแนะนำให้ดูย้อนหลังอย่างน้อย 4 งวด แต่หน้าสถิติจะคำนวณตามจำนวนรอบที่เลือกด้านล่าง"},{"id":"laksami","name":"สูตรลักษมีประทานพร","betMode":"toad","toadPayout":49,"preferredPosition":"unit","map":{"0":"39","1":"05","2":"15","3":"57","4":"85","5":"02","6":"26","7":"39","8":"40","9":"16"},"note":"สูตรโต๊ด 2 ตัว ใช้ได้ทุกหลัก เน้นหลักหน่วยมาเว้น แนะนำเล่นรอบเร็ว 10–12 ไม้ และไม่ทบ"},{"id":"kwak_money","name":"สูตรกวักเงิน 30 วิ","map":{"0":"239","1":"034","2":"145","3":"256","4":"367","5":"478","6":"589","7":"069","8":"017","9":"128"},"note":"แนวทางไม่ทบ เดินเงินอย่างมีสติ เน้นกำไรแล้วถอน"},{"id":"morning_flow","name":"สูตรไหลเช้านี้","map":{"0":"045","1":"015","2":"126","3":"378","4":"348","5":"459","6":"056","7":"167","8":"278","9":"346"},"note":"แนะนำให้ดูย้อนหลังอย่างน้อย 4 งวด หากหลุด 2 ไม้ให้ข้าม 2 ไม้ แนะนำเล่นเซตละ 10 ไม้ ไม่ทบ แต่หน้าสถิติจะคำนวณตามจำนวนรอบที่เลือก"},{"id":"front3_back4","name":"สูตรหน้า3หลัง4","map":{"0":"056","1":"167","2":"278","3":"389","4":"049","5":"015","6":"126","7":"237","8":"348","9":"459"},"note":"แนะนำให้ดูย้อนหลังอย่างน้อย 4 งวด หากหลุด 2 ไม้ให้ข้าม 2 ไม้ แนะนำเล่นเซตละ 10 ไม้ ไม่ทบ แต่หน้าสถิติจะคำนวณตามจำนวนรอบที่เลือก"},{"id":"rati","name":"สูตร หน้า 3 หลัง 3 พี่อลิน","map":{"0":"456","1":"567","2":"678","3":"789","4":"890","5":"901","6":"012","7":"123","8":"234","9":"345"},"note":"ใช้ผลรอบก่อนหน้าเลือกเลขเว้น แล้วตรวจผลรอบถัดไป ใช้ได้ทั้งหลักสิบและหลักหน่วย"}];
 const $=id=>document.getElementById(id);
 const COLLAPSED_SECTIONS_KEY="thai30-real-v3-collapsed-sections";
+const VIEW_MODE_KEY="thai30-real-v3-view-mode";
 const formulaSelect=$("formulaSelect");
 formulas.push(
   {id:"flow_luck",name:"สูตรไหลรับโชค",recommendRounds:4,map:{"0":"146","1":"257","2":"368","3":"479","4":"058","5":"169","6":"027","7":"138","8":"249","9":"035"},note:"แนะนำให้ดูย้อนหลัง 4 งวด หลุด 2 ไม้ให้ข้าม 2 ไม้ เล่นเซตละ 10 ไม้ ไม่ทบ"},
@@ -278,6 +287,16 @@ function loadJson(key,fallback){
   }catch{return fallback}
 }
 function saveJson(key,value){localStorage.setItem(key,JSON.stringify(value))}
+function setViewMode(mode){
+  const selected=["mobile","tablet"].includes(mode)?mode:"auto";
+  document.body.dataset.view=selected;
+  document.querySelectorAll(".view-mode-button").forEach(button=>button.classList.toggle("selected",button.dataset.view===selected));
+  localStorage.setItem(VIEW_MODE_KEY,selected);
+}
+function initViewMode(){
+  setViewMode(localStorage.getItem(VIEW_MODE_KEY)||"auto");
+  document.querySelectorAll(".view-mode-button").forEach(button=>button.addEventListener("click",()=>setViewMode(button.dataset.view)));
+}
 function initCollapsibleSections(){
   const collapsed=new Set(loadJson(COLLAPSED_SECTIONS_KEY,[]));
   document.querySelectorAll("section.card").forEach(section=>{
@@ -791,26 +810,36 @@ document.querySelectorAll(".quick-stake").forEach(button=>{
 });
 
 let padBuffer="";
+function renderPadPreview(){
+  $("padPreviewNumber").textContent=(padBuffer+"__").slice(0,2);
+  $("historyPadConfirm").disabled=padBuffer.length!==2;
+}
 function refreshAfterPad(){
   saveDraft();
   setSuggestedSegmentRound();
   if(parseResults(historyInput.value).length>=2)calculate();
 }
 function appendPadDigit(digit){
+  if(padBuffer.length>=2)return;
   padBuffer+=digit;
-  if(padBuffer.length<2)return;
-  const result=padBuffer.slice(0,2);
+  renderPadPreview();
+}
+function confirmPadResult(){
+  if(padBuffer.length!==2)return;
+  const result=padBuffer;
   padBuffer="";
   const clean=historyInput.value.trim();
   historyInput.value=clean?clean+"\n"+result:result;
   historyInput.scrollTop=historyInput.scrollHeight;
+  renderPadPreview();
   refreshAfterPad();
 }
 document.querySelectorAll("#historyNumberPad [data-digit]").forEach(button=>{
   button.addEventListener("click",()=>appendPadDigit(button.dataset.digit));
 });
+$("historyPadConfirm").addEventListener("click",confirmPadResult);
 $("historyBackspace").addEventListener("click",()=>{
-  if(padBuffer){padBuffer=padBuffer.slice(0,-1);return;}
+  if(padBuffer){padBuffer=padBuffer.slice(0,-1);renderPadPreview();return;}
   const results=parseResults(historyInput.value);
   results.pop();
   historyInput.value=results.join("\n");
@@ -819,7 +848,7 @@ $("historyBackspace").addEventListener("click",()=>{
 });
 $("historyPadClear").addEventListener("click",()=>{
   padBuffer="";historyInput.value="";current=null;resultSection.style.display="none";
-  $("compareSection").style.display="none";saveDraft();setSuggestedSegmentRound();
+  renderPadPreview();$("compareSection").style.display="none";saveDraft();setSuggestedSegmentRound();
 });
 
 const enterButton = $("enterButton");
@@ -860,6 +889,7 @@ historyInput.addEventListener("keydown",event=>{
 
 loadSettings();
 loadDraft();
+initViewMode();
 initCollapsibleSections();
 normalizeSegments();
 showFormulaNote();
