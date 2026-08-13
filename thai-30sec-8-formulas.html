@@ -86,6 +86,39 @@ input:focus,select:focus,textarea:focus{border-color:#c9a227;box-shadow:0 0 0 4p
 body[data-view="mobile"] .primary-panels,body[data-view="mobile"] .config-split,body[data-view="mobile"] .recommend-columns,body[data-view="mobile"] .metric-grid{grid-template-columns:1fr!important}
 body[data-view="tablet"] .primary-panels{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)!important}body[data-view="tablet"] .config-split,body[data-view="tablet"] .recommend-columns,body[data-view="tablet"] .metric-grid{grid-template-columns:1fr 1fr!important}body[data-view="tablet"] .primary-panels .history-entry-grid{grid-template-columns:1fr!important}
 
+
+/* Final two-column Gold × Silver UI */
+:root{--text:#332a19;--muted:#7b7366;--line:#e4dccb;--card:#fffdf9;--primary:#c69a21;--primary2:#e4c55c;--shadow:0 10px 28px rgba(106,83,30,.08)}
+body{font-size:15px;background:linear-gradient(180deg,#fffdf8 0%,#f5f2eb 100%)}
+.wrap{width:min(1280px,100%);padding:14px 14px 72px}
+.hero{padding:18px 20px;border-radius:24px;background:linear-gradient(135deg,#8f6b16 0%,#d8b443 48%,#f4e8b4 72%,#c7cbd0 100%);box-shadow:0 8px 24px rgba(124,96,25,.14)}
+.hero h1{font-size:clamp(24px,4.4vw,38px)}
+.card{border:1px solid rgba(190,151,43,.22);border-radius:22px;padding:16px;background:rgba(255,253,249,.98)}
+h2{font-size:clamp(22px,3.2vw,31px);color:#3a2d16}.subhead{font-size:clamp(18px,2.4vw,23px);margin-bottom:12px}
+.workspace-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+.workspace-col{display:grid;gap:14px}.workspace-col>.card{margin-top:14px}
+.main-card{min-height:0}.settings-card{margin-top:0!important}
+.main-card .grid2{grid-template-columns:1fr 1fr}.main-card .history-entry-grid{grid-template-columns:minmax(0,1fr) minmax(290px,.9fr);gap:14px}
+.main-card textarea{min-height:250px;font-size:18px;line-height:1.45;background:#fff;border-color:#ddd3bf}
+.pad-preview{margin-bottom:8px;padding:9px 11px;background:linear-gradient(135deg,#fff9e6,#f8f1d8);border-color:#ead59a}
+.pad-preview-number{font-size:24px}.number-pad{gap:6px}.number-key{min-width:0;min-height:42px;padding:5px 7px;border-radius:12px;font-size:19px;background:linear-gradient(145deg,#f8f9fa,#dfe2e6);color:#3b3f45;border:1px solid #d2d5da;box-shadow:0 3px 8px rgba(78,82,88,.08),inset 0 1px 0 #fff}
+.number-key:hover{transform:translateY(-1px)}.number-key:active{background:linear-gradient(145deg,#f4df8a,#c99c25);color:#3d2c0b}.number-key.confirm{background:linear-gradient(135deg,#d7b13a,#f1dc87);color:#4a3508;font-size:15px}.number-key.backspace{background:linear-gradient(145deg,#fff4f2,#f6ded9);font-size:15px}.number-key.clear{background:linear-gradient(145deg,#f0f2f4,#d9dde1);font-size:15px}
+.recommend-box{min-height:330px;background:linear-gradient(135deg,#fffaf0,#f7f5f0 56%,#eef0f2);border-color:#e7d7a7}.omit-number{font-size:clamp(38px,8vw,58px);color:#7d5b0d}
+.metric-grid{grid-template-columns:1fr 1fr!important}.metric{min-height:105px;border-radius:17px;background:linear-gradient(145deg,#fbfaf6,#eceeef)}
+.config-panel.solo{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0;border:0;background:transparent}.config-panel.solo .span2{grid-column:1/-1}.right-settings .quick-stakes{gap:6px}.quick-stake{min-height:38px;padding:7px 13px;background:#fffaf0}.quick-stake.selected{background:linear-gradient(135deg,#b78a1d,#d9b544)}
+input,select,textarea{font-size:15px}input,select{height:48px;border-radius:13px}
+.action-card{margin-top:14px}.compact-notice{margin-top:12px}.action-row{grid-template-columns:repeat(5,1fr)}.action-row button{min-height:52px;border-radius:14px}.settings-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.settings-actions button{width:100%;min-height:48px;padding:8px 10px;border-radius:13px;font-size:13px}.settings-actions .primary,.settings-actions .teal,.settings-actions .secondary,.settings-actions .danger{display:flex;align-items:center;justify-content:center}.primary{background:linear-gradient(135deg,#b88b1b,#dfbd4f)}.teal{background:linear-gradient(135deg,#aeb4ba,#d5d9dd);color:#2f3134}
+.guide-card{padding:13px}.guide-card>h2{margin-bottom:10px;font-size:clamp(20px,2.7vw,27px)}.guide-card .recommend-box{min-height:0;padding:13px;border-radius:16px}.guide-card .omit-number{font-size:clamp(32px,6vw,46px);line-height:1.05}.guide-card .help{font-size:11.5px;line-height:1.45;margin-top:4px}.guide-card .metric-grid{gap:7px;margin-top:10px}.guide-card .metric{min-height:76px;padding:10px;border-radius:13px}.guide-card .metric-label{font-size:11px}.guide-card .metric-value{margin-top:4px;font-size:clamp(17px,3vw,24px);line-height:1.15}.guide-card .notice{margin-top:9px;padding:9px 11px;font-size:12px;line-height:1.45}.guide-card #compareSection{margin-top:12px!important}.guide-card #compareSection h3{font-size:16px;margin-bottom:5px}.guide-card #compareSection table{margin-top:5px;font-size:12px}.guide-card #compareSection th,.guide-card #compareSection td{padding:7px 5px}
+.summary-card{padding:12px}.summary-card>h2{margin-bottom:9px;font-size:clamp(19px,2.6vw,26px)}.summary-card .metric-grid{grid-template-columns:repeat(4,1fr)!important;gap:7px;margin-top:0}.summary-card .metric{min-height:70px;padding:9px 10px;border-radius:12px}.summary-card .metric-label{font-size:10.5px;line-height:1.25}.summary-card .metric-value{margin-top:4px;font-size:clamp(16px,2.5vw,22px);line-height:1.15}.summary-card .metric-value.green,.summary-card .metric-value.red{font-size:clamp(16px,2.5vw,22px)}
+.recommendation-card{padding:12px}.recommendation-card>h2{margin-bottom:6px;font-size:clamp(19px,2.6vw,26px)}.recommendation-card>.help{font-size:11px;line-height:1.4;margin-top:0}.recommendation-card>#recommendSummary{margin-top:8px;padding:8px 10px;border-radius:11px;font-size:11.5px;line-height:1.4}.recommendation-card .recommend-columns{gap:8px;margin-top:8px}.recommendation-card .recommend-panel{padding:9px;border-radius:12px}.recommendation-card .recommend-panel h3{font-size:14px;line-height:1.25;margin-bottom:2px}.recommendation-card .recommend-panel>.help{font-size:10.5px;line-height:1.3;margin-top:2px}.recommendation-card .history-item{margin-top:6px;padding:7px 8px;border-radius:10px;gap:7px}.recommendation-card .history-main{font-size:12px;line-height:1.25}.recommendation-card .history-sub{font-size:10px;line-height:1.3}.recommendation-card .history-item>.profit,.recommendation-card .history-item>.loss{font-size:11px;white-space:nowrap}
+.money-settings{padding:12px}.money-settings>.subhead{margin-bottom:8px;font-size:clamp(16px,2vw,20px)}.money-settings .config-panel.solo{gap:8px}.money-settings label{margin-bottom:4px;font-size:11.5px}.money-settings input{height:40px;padding:0 11px;border-radius:11px;font-size:13px}.money-settings .recent-setting{margin-top:8px}.action-help{margin-top:9px;padding:7px 9px;border:1px solid #ead89d;border-radius:10px;background:#fffaf0;color:#71550c;font-size:10.5px;line-height:1.4}
+.main-card #formulaNote{margin-top:8px;padding:7px 9px;border-radius:10px;font-size:10.5px;line-height:1.4;font-weight:600}
+.formula-history-card{padding:10px 12px}.formula-history-card>h2{margin-bottom:4px;font-size:clamp(15px,1.9vw,19px)}.formula-history-card>.help{margin-top:0;font-size:10px;line-height:1.35}.formula-history-card .segment-list{gap:5px;margin-top:7px}.formula-history-card .segment-item{padding:6px 8px;border-radius:9px}.formula-history-card .segment-main{font-size:11px}.formula-history-card .segment-sub{font-size:9.5px}.formula-history-card .mini{min-height:28px;padding:4px 7px;font-size:10px;border-radius:8px}
+.actual-card{padding:12px}.actual-card>h2{margin-bottom:5px;font-size:clamp(19px,2.6vw,26px)}.actual-card>.help{margin-top:0;font-size:10.5px;line-height:1.4}.actual-card .wide-table{margin-top:7px}.actual-card .wide-table th,.actual-card .wide-table td{height:38px;padding:5px 6px;font-size:11px!important;line-height:1.2}.actual-card .wide-table th{font-weight:900}.actual-card .wide-table .profit,.actual-card .wide-table .loss{font-size:11px!important}.actual-card .stake-input{width:62px;height:30px;padding:0 5px;border-radius:8px;font-size:11px!important}
+.session-history-card{padding:12px}.session-history-card>h2{margin-bottom:6px;font-size:clamp(17px,2.3vw,23px)}.session-history-card .history-item{margin-top:5px;padding:7px 9px;border-radius:10px}.session-history-card .history-main{font-size:11.5px}.session-history-card .history-sub{font-size:9.5px;line-height:1.35}.session-history-card .history-item>.profit,.session-history-card .history-item>.loss{font-size:11px}.session-history-card .actions{gap:7px;margin-top:8px}.session-history-card .actions button{min-height:38px;padding:6px 9px;border-radius:10px;font-size:11px}
+@media(max-width:900px){.workspace-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.workspace-col>.card{margin-top:12px}.action-row{grid-template-columns:repeat(5,1fr)}.main-card .history-entry-grid{grid-template-columns:minmax(0,1fr) minmax(220px,.8fr)}}
+@media(max-width:650px){.workspace-grid,.main-card .history-entry-grid,.config-panel.solo{grid-template-columns:1fr}.action-row{grid-template-columns:1fr}.main-card textarea{min-height:190px}.number-key{min-height:40px;padding:4px 6px;font-size:18px}.number-key.confirm,.number-key.backspace,.number-key.clear{font-size:14px}.metric-grid{grid-template-columns:1fr 1fr!important}.summary-card .metric-grid{grid-template-columns:1fr 1fr!important}.summary-card .metric{min-height:64px;padding:8px}.summary-card .metric-value{font-size:17px}.view-mode-bar{display:none}}
+
 </style>
 <style>.recommend-box .digit-row{display:none!important}</style>
 </head>
@@ -98,8 +131,9 @@ body[data-view="tablet"] .primary-panels{grid-template-columns:minmax(0,1.05fr) 
 </section>
 <div class="view-mode-bar" role="group" aria-label="รูปแบบการแสดงผล"><span class="view-mode-label">รูปแบบหน้าจอ</span><button type="button" class="view-mode-button" data-view="auto">อัตโนมัติ</button><button type="button" class="view-mode-button" data-view="mobile">มือถือ</button><button type="button" class="view-mode-button" data-view="tablet">แท็บเล็ต</button></div>
 
-<div class="primary-panels">
-<section class="card">
+<div class="workspace-grid">
+<div class="workspace-col">
+<section class="card main-card">
 <h2>1. สูตรและผลย้อนหลัง</h2>
 <div class="grid2">
 <div><label for="formulaSelect">สูตรที่กำลังดู/จะใช้ต่อ</label><select id="formulaSelect"><option value="blue_thai">สูตรเลขมงคล</option>
@@ -126,20 +160,40 @@ body[data-view="tablet"] .primary-panels{grid-template-columns:minmax(0,1.05fr) 
 <div class="history-entry-grid">
   <textarea id="historyInput" inputmode="numeric" placeholder="04&#10;79&#10;32&#10;47&#10;81"></textarea>
   <div>
-    <div class="pad-preview"><div><div class="pad-preview-label">เลขที่กำลังกรอก</div><div id="padPreviewNumber" class="pad-preview-number">__</div></div><button type="button" id="historyPadConfirm" class="number-key confirm" disabled>เพิ่มเลข</button></div>
+    <div class="pad-preview"><div><div class="pad-preview-label">เลขที่กำลังกรอก • ครบ 2 ตัวบันทึกอัตโนมัติ</div><div id="padPreviewNumber" class="pad-preview-number">__</div></div></div>
     <div class="number-pad" id="historyNumberPad" aria-label="แป้นกรอกผลย้อนหลัง">
       <button type="button" class="number-key" data-digit="0">0</button><button type="button" class="number-key" data-digit="1">1</button><button type="button" class="number-key" data-digit="2">2</button><button type="button" class="number-key" data-digit="3">3</button><button type="button" class="number-key" data-digit="4">4</button>
       <button type="button" class="number-key" data-digit="5">5</button><button type="button" class="number-key" data-digit="6">6</button><button type="button" class="number-key" data-digit="7">7</button><button type="button" class="number-key" data-digit="8">8</button><button type="button" class="number-key" data-digit="9">9</button>
       <button type="button" id="historyBackspace" class="number-key backspace">⌫ ลบ</button><button type="button" id="historyPadClear" class="number-key clear">ล้างทั้งหมด</button>
     </div>
-    <div class="help">แตะเลข 2 ตัว ตรวจตัวอย่างด้านบน แล้วกด “เพิ่มเลข” เพื่อป้องกันเลขเบิ้ล</div>
+    <div class="help">แตะครบ 2 ตัว ระบบบันทึกและคำนวณอัตโนมัติ พร้อมหน่วงการแตะสั้น ๆ เพื่อป้องกันเลขเบิ้ล</div>
   </div>
 </div>
 <div class="help">ยังสามารถพิมพ์หรือวางเลขในช่องด้านซ้ายได้ตามเดิม</div>
 </div>
 </section>
 
-<section class="card">
+<section class="card settings-card money-settings">
+<h2 class="subhead">⚙️ การตั้งค่าเงินจริง</h2>
+<div class="config-panel solo">
+<div><label for="defaultStake">เดิมพันต่อเลขเริ่มต้น (บาท)</label><input id="defaultStake" type="number" inputmode="decimal" min="2" step="1" value="2"></div>
+<div><label for="payout">อัตราจ่ายเลขเดี่ยว</label><input id="payout" type="number" min="0" step=".01" value="9.5"></div>
+<div><label for="startingBank">เงินจริงตั้งต้น (บาท)</label><input id="startingBank" type="number" min="0" step=".01" value="100"></div>
+<div><label for="moneyStartRound">เริ่มนับเงินตั้งแต่ไม้ที่</label><input id="moneyStartRound" type="number" min="1" step="1" value="5"></div>
+<div><label for="recommendRounds">สูตรแนะนำย้อนหลัง</label><input id="recommendRounds" type="number" min="1" step="1" value="20"></div>
+<div><label for="segmentStartRound">สูตรที่เลือกเริ่มใช้ตั้งแต่ไม้ที่</label><input id="segmentStartRound" type="number" min="1" step="1" value="5"></div>
+</div>
+<div class="recent-setting"><label for="recentRounds">แสดงตารางย้อนหลัง</label><input id="recentRounds" type="number" min="1" step="1" value="20"></div>
+</section>
+<section class="card formula-history-card">
+<h2>4. ประวัติการเปลี่ยนสูตรเงินจริง</h2>
+<div class="help">สูตรใหม่มีผลตั้งแต่ไม้ที่ระบุ และไม่ย้อนแก้สูตรเดิม</div>
+<div id="segmentList" class="segment-list"></div>
+</section>
+</div>
+
+<div class="workspace-col">
+<section class="card main-card guide-card">
 <h2>2. แนวทางสูตรที่กำลังเลือก</h2>
 <div class="recommend-box">
 <div class="help">เลขเว้น <span id="omitCount">0</span> ตัว</div>
@@ -159,49 +213,28 @@ body[data-view="tablet"] .primary-panels{grid-template-columns:minmax(0,1.05fr) 
 <div style="overflow:auto"><table><thead><tr><th>หลัก</th><th>ถูก/ทดสอบ</th><th>อัตราชนะ</th><th>กำไรจำลอง</th><th>คำแนะนำ</th></tr></thead><tbody id="compareBody"></tbody></table></div>
 </div>
 </section>
-</div>
 
-<section class="card">
-<h2>3. ตั้งค่าการทดสอบและเงินจริง</h2>
-<div class="config-split">
-<div class="config-panel">
-<h3 class="config-panel-title">การตั้งค่าเงินจริง</h3>
-<div><label for="defaultStake">เดิมพันต่อเลขเริ่มต้น (บาท)</label><input id="defaultStake" type="number" inputmode="decimal" min="2" step="1" value="2"></div>
-<div><label for="payout">อัตราจ่ายเลขเดี่ยว</label><input id="payout" type="number" min="0" step=".01" value="9.5"></div>
-<div><label for="startingBank">เงินจริงตั้งต้น (บาท)</label><input id="startingBank" type="number" min="0" step=".01" value="100"></div>
-<div><label for="moneyStartRound">เริ่มนับเงินตั้งแต่ไม้ที่</label><input id="moneyStartRound" type="number" min="1" step="1" value="5"></div>
-</div>
-<div class="config-panel">
-<h3 class="config-panel-title">ไม้ถัดไปและการแสดงผล</h3>
-<div><label for="stakeAmount">จำนวนเงินไม้ถัดไป (บาท/เลข)</label><input id="stakeAmount" type="number" inputmode="decimal" min="0" step="1" placeholder="เช่น 15"><div class="quick-stakes" aria-label="ยอดเงินที่ใช้บ่อย"><button type="button" class="quick-stake" data-stake="7">7</button><button type="button" class="quick-stake" data-stake="8">8</button><button type="button" class="quick-stake" data-stake="9">9</button><button type="button" class="quick-stake" data-stake="10">10</button><button type="button" class="quick-stake" data-stake="14">14</button><button type="button" class="quick-stake" data-stake="15">15</button><button type="button" class="quick-stake" data-stake="20">20</button><button type="button" class="quick-stake skip-quick" data-stake="0">ข้าม</button></div><div class="help">แตะยอดที่ใช้บ่อย หรือกรอกเอง • ปุ่ม “ข้าม” เท่ากับเดิมพัน 0 บาท • อ้างอิง “ไม้ถัดไป” จากข้อ 2</div></div>
-<div><label for="recentRounds">แสดงตารางย้อนหลัง</label><input id="recentRounds" type="number" min="1" step="1" value="20"></div>
-<div><label for="recommendRounds">สูตรแนะนำย้อนหลัง</label><input id="recommendRounds" type="number" min="1" step="1" value="20"></div>
-<div><label for="segmentStartRound">สูตรที่เลือกเริ่มใช้ตั้งแต่ไม้ที่</label><input id="segmentStartRound" type="number" min="1" step="1" value="5"></div>
-</div>
-</div>
-<div class="notice">
-ไม้ก่อน “เริ่มนับเงิน” เป็นช่วงทดสอบเท่านั้น ไม่คิดเงินจริง ค่าเดิมพันเป็นยอดต่อเลข ขั้นต่ำเลขละ 2 บาท หรือใส่ 0 เพื่อข้ามไม้
-</div>
-<div class="actions">
+<section class="card settings-card">
+<h2 class="subhead">📊 ไม้ถัดไปและการแสดงผล</h2>
+<div class="config-panel solo right-settings">
+<div class="span2"><label for="stakeAmount">จำนวนเงินไม้ถัดไป (บาท/เลข)</label><input id="stakeAmount" type="number" inputmode="decimal" min="0" step="1" placeholder="เช่น 15"><div class="quick-stakes" aria-label="ยอดเงินที่ใช้บ่อย"><button type="button" class="quick-stake" data-stake="7">7</button><button type="button" class="quick-stake" data-stake="8">8</button><button type="button" class="quick-stake" data-stake="9">9</button><button type="button" class="quick-stake" data-stake="10">10</button><button type="button" class="quick-stake" data-stake="14">14</button><button type="button" class="quick-stake" data-stake="15">15</button><button type="button" class="quick-stake" data-stake="20">20</button><button type="button" class="quick-stake skip-quick" data-stake="0">ข้าม</button></div><div class="help">แตะยอดที่ใช้บ่อย หรือกรอกเอง • ปุ่ม “ข้าม” เท่ากับเดิมพัน 0 บาท</div></div>
+<div class="settings-actions span2">
 <button id="calculate" class="primary">คำนวณทั้งหมด</button>
-<button id="lockFormula" class="teal">ล็อกสูตรนี้ตั้งแต่ไม้ที่กำหนด</button>
-<button id="sample" class="secondary">ข้อมูลตัวอย่าง</button>
+<button id="lockFormula" class="teal">ล็อกสูตร</button>
 <button id="clearResults" class="secondary">ล้างผลย้อนหลัง</button>
-<button id="resetActual" class="danger">รีเซ็ตบัญชีเงินจริง</button>
+<button id="resetActual" class="danger">รีเซ็ตบัญชี</button>
 </div>
-<div id="error" class="error"></div>
+<div class="action-help span2">ไม้ก่อน “เริ่มนับเงิน” เป็นช่วงทดสอบ ไม่คิดเงินจริง • เดิมพันขั้นต่ำเลขละ 2 บาท • ใส่ 0 เพื่อข้ามไม้</div>
+<div id="error" class="error span2"></div>
+</div>
 </section>
-
-<section class="card">
-<h2>4. ประวัติการเปลี่ยนสูตรเงินจริง</h2>
-<div class="help">สูตรที่ล็อกไว้จะไม่ถูกคำนวณย้อนหลังใหม่เมื่อแพทเปลี่ยนเมนูสูตร สูตรใหม่มีผลตั้งแต่ไม้ที่ระบุเท่านั้น</div>
-<div id="segmentList" class="segment-list"></div>
-</section>
+</div>
+</div>
 
 <section id="resultSection" class="result-section">
 
 
-<section class="card">
+<section class="card actual-card">
 <h2>5. บัญชีเงินจริงรายไม้</h2>
 <div class="help">กรอกหรือแก้จำนวนเงินต่อเลขได้โดยตรงในช่อง “บาท/เลข” ของแต่ละไม้ ระบบจะจำยอดและคำนวณกำไร–ขาดทุนให้ใหม่ทันที</div>
 <div class="actual-table-wrap"><table class="wide-table">
@@ -210,7 +243,7 @@ body[data-view="tablet"] .primary-panels{grid-template-columns:minmax(0,1.05fr) 
 </table></div>
 </section>
 
-<section class="card">
+<section class="card summary-card">
 <h2>6. สรุปเงินจริง</h2>
 <div class="metric-grid">
 <div class="metric"><div class="metric-label">ไม้ทดสอบ</div><div id="warmupCount" class="metric-value"></div></div>
@@ -224,7 +257,7 @@ body[data-view="tablet"] .primary-panels{grid-template-columns:minmax(0,1.05fr) 
 </div>
 </section>
 
-<section class="card">
+<section class="card recommendation-card">
 <h2>7. สูตรแนะนำ</h2>
 <div class="help">เทียบทั้ง 20 สูตรและทั้งสองหลักตามจำนวนรอบย้อนหลังที่เลือก ส่วนนี้เป็นสถิติ ไม่แก้บัญชีเงินจริง</div>
 <div id="recommendSummary" class="notice"></div>
@@ -235,7 +268,7 @@ body[data-view="tablet"] .primary-panels{grid-template-columns:minmax(0,1.05fr) 
 </section>
 </section>
 
-<section class="card">
+<section class="card session-history-card">
 <h2>ประวัติสรุปการเล่น 10 ครั้งล่าสุด</h2>
 <div id="calculationHistory"></div>
 <div class="actions"><button id="saveSession" class="secondary">บันทึกสรุปครั้งนี้</button><button id="clearHistory" class="danger">ล้างประวัติ</button></div>
@@ -761,10 +794,6 @@ formulaSelect.addEventListener("change",showFormulaNote);
 positionSelect.addEventListener("change",saveSettings);
 $("calculate").addEventListener("click",()=>calculate({scroll:true}));
 $("lockFormula").addEventListener("click",lockSelectedFormula);
-$("sample").addEventListener("click",()=>{
-  historyInput.value=["04","79","32","47","81","16","21","85","75","53","58","29","38","67","10","44","92","05","73","26"].join("\n");
-  setSuggestedSegmentRound();
-});
 $("clearResults").addEventListener("click",()=>{
   historyInput.value="";
   current=null;
@@ -810,9 +839,9 @@ document.querySelectorAll(".quick-stake").forEach(button=>{
 });
 
 let padBuffer="";
+let padLockedUntil=0;
 function renderPadPreview(){
   $("padPreviewNumber").textContent=(padBuffer+"__").slice(0,2);
-  $("historyPadConfirm").disabled=padBuffer.length!==2;
 }
 function refreshAfterPad(){
   saveDraft();
@@ -820,9 +849,11 @@ function refreshAfterPad(){
   if(parseResults(historyInput.value).length>=2)calculate();
 }
 function appendPadDigit(digit){
+  if(Date.now()<padLockedUntil)return;
   if(padBuffer.length>=2)return;
   padBuffer+=digit;
   renderPadPreview();
+  if(padBuffer.length===2)confirmPadResult();
 }
 function confirmPadResult(){
   if(padBuffer.length!==2)return;
@@ -831,13 +862,13 @@ function confirmPadResult(){
   const clean=historyInput.value.trim();
   historyInput.value=clean?clean+"\n"+result:result;
   historyInput.scrollTop=historyInput.scrollHeight;
+  padLockedUntil=Date.now()+350;
   renderPadPreview();
   refreshAfterPad();
 }
 document.querySelectorAll("#historyNumberPad [data-digit]").forEach(button=>{
   button.addEventListener("click",()=>appendPadDigit(button.dataset.digit));
 });
-$("historyPadConfirm").addEventListener("click",confirmPadResult);
 $("historyBackspace").addEventListener("click",()=>{
   if(padBuffer){padBuffer=padBuffer.slice(0,-1);renderPadPreview();return;}
   const results=parseResults(historyInput.value);
