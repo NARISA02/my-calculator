@@ -121,6 +121,16 @@ input,select,textarea{font-size:15px}input,select{height:48px;border-radius:13px
 
 </style>
 <style>.recommend-box .digit-row{display:none!important}</style>
+<style>
+.room-card{margin-top:14px;padding:14px 16px;border:1px solid rgba(179,135,40,.28);border-radius:20px;background:linear-gradient(135deg,#fffaf0,#f4f5f6);box-shadow:var(--shadow)}
+.room-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.room-head h2{margin:0;font-size:clamp(18px,2.5vw,24px)}
+.room-status{display:inline-flex;align-items:center;gap:7px;min-height:32px;padding:5px 10px;border-radius:999px;background:#eef1f4;color:#59616b;font-size:12px;font-weight:900}.room-status::before{content:"";width:8px;height:8px;border-radius:50%;background:#98a2b3}.room-status.online{background:#eaf8f0;color:#12653b}.room-status.online::before{background:#16a34a}.room-status.viewer{background:#edf2ff;color:#3154a4}.room-status.viewer::before{background:#4f78dd}.room-status.error{display:inline-flex;margin:0;background:#fff1f2;color:#9f1239}.room-status.error::before{background:#e11d48}
+.room-setup{display:grid;grid-template-columns:auto minmax(180px,250px) auto;gap:9px;align-items:end;margin-top:12px}.room-setup label{margin-bottom:4px;font-size:12px}.room-setup input{height:44px;text-transform:uppercase;letter-spacing:3px;font-weight:1000;text-align:center}.room-setup button{min-height:44px;padding:8px 14px;border-radius:13px}
+.room-active{display:none;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding:11px 12px;border:1px solid #e3d6a8;border-radius:15px;background:rgba(255,255,255,.74)}.room-active.show{display:flex}.room-code-wrap{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.room-code{font-size:24px;font-weight:1000;letter-spacing:4px;color:#71550c}.room-actions{display:flex;flex-wrap:wrap;gap:7px}.room-actions button{min-height:38px;padding:6px 10px;border-radius:10px;font-size:12px}
+.viewer-notice{display:none;margin-top:10px;padding:9px 11px;border-radius:12px;background:#edf2ff;color:#3154a4;font-size:12px;font-weight:800}.viewer-notice.show{display:block}
+body[data-room-role="viewer"] .owner-control:disabled,body[data-room-role="viewer"] .stake-input:disabled{cursor:not-allowed;opacity:.62;background:#f2f4f7}
+@media(max-width:650px){.room-head{align-items:flex-start;flex-direction:column}.room-setup{grid-template-columns:1fr}.room-setup button{width:100%}.room-active.show{align-items:flex-start;flex-direction:column}.room-actions{width:100%}.room-actions button{flex:1}}
+</style>
 </head>
 <body>
 <main class="wrap">
@@ -128,6 +138,20 @@ input,select,textarea{font-size:15px}input,select{height:48px;border-radius:13px
 <a class="back" href="index.html">← กลับหน้าหลัก</a>
 <h1>⏱️ ห้องรวม 20 สูตร หวยไทย 30 วิ</h1>
 <p>แยกการทดสอบสูตรออกจากเงินจริง เปลี่ยนสูตรกลางทางได้ และบันทึกยอดเดิมพันจริงของแต่ละไม้</p>
+</section>
+<section class="room-card" aria-labelledby="roomTitle">
+  <div class="room-head"><h2 id="roomTitle">🔗 ห้องออนไลน์แบบเรียลไทม์</h2><span id="roomStatus" class="room-status">กำลังเชื่อมต่อ</span></div>
+  <div id="roomSetup" class="room-setup">
+    <button id="createRoom" type="button" class="primary">สร้างห้องใหม่</button>
+    <div><label for="joinRoomCode">รหัสห้อง 6 ตัว</label><input id="joinRoomCode" type="text" inputmode="text" maxlength="6" autocomplete="off" placeholder="เช่น A7K9Q2"></div>
+    <button id="joinRoom" type="button" class="secondary">เข้าห้องเพื่อดู</button>
+  </div>
+  <div id="roomActive" class="room-active">
+    <div><div class="help" style="margin:0">รหัสห้อง</div><div class="room-code-wrap"><span id="activeRoomCode" class="room-code">------</span><span id="roomRoleText" class="badge">-</span></div></div>
+    <div class="room-actions"><button id="copyRoomCode" type="button" class="secondary">คัดลอกรหัส</button><button id="copyRoomLink" type="button" class="secondary">คัดลอกลิงก์</button><button id="leaveRoom" type="button" class="danger">ออกจากห้อง</button></div>
+  </div>
+  <div id="viewerNotice" class="viewer-notice">โหมดผู้ชม: ข้อมูลจะอัปเดตตามเจ้าของห้อง และไม่สามารถแก้ไขจากเครื่องนี้ได้</div>
+  <div id="roomMessage" class="help">สร้างห้องเพื่อเป็นผู้ควบคุม หรือกรอกรหัสเพื่อดูข้อมูลของเจ้าของห้อง</div>
 </section>
 <div class="view-mode-bar" role="group" aria-label="รูปแบบการแสดงผล"><span class="view-mode-label">รูปแบบหน้าจอ</span><button type="button" class="view-mode-button" data-view="auto">อัตโนมัติ</button><button type="button" class="view-mode-button" data-view="mobile">มือถือ</button><button type="button" class="view-mode-button" data-view="tablet">แท็บเล็ต</button></div>
 
@@ -307,11 +331,13 @@ const KEYS={
   draft:"thai30-real-v3-draft",
   history:"thai30-real-v3-history"
 };
+const ROOM_SYNC_KEYS=new Set(Object.values(KEYS));
 
 let current=null;
 let segments=loadJson(KEYS.segments,[]);
 let stakeOverrides=loadJson(KEYS.stakes,{});
 let stakeEntryDirty=false;
+let applyingRoomState=false;
 
 function loadJson(key,fallback){
   try{
@@ -319,7 +345,10 @@ function loadJson(key,fallback){
     return value===null?fallback:value;
   }catch{return fallback}
 }
-function saveJson(key,value){localStorage.setItem(key,JSON.stringify(value))}
+function saveJson(key,value){
+  localStorage.setItem(key,JSON.stringify(value));
+  if(!applyingRoomState&&ROOM_SYNC_KEYS.has(key))window.dispatchEvent(new Event("thai30:statechange"));
+}
 function setViewMode(mode){
   const selected=["mobile","tablet"].includes(mode)?mode:"auto";
   document.body.dataset.view=selected;
@@ -790,7 +819,78 @@ function renderHistory(){
     : '<div class="help">ยังไม่มีประวัติสรุป</div>';
 }
 
-formulaSelect.addEventListener("change",showFormulaNote);
+function exportRoomState(){
+  return{
+    schemaVersion:1,
+    history:historyInput.value,
+    settings:{
+      formula:formulaSelect.value,
+      position:positionSelect.value,
+      defaultStake:$("defaultStake").value,
+      payout:$("payout").value,
+      startingBank:$("startingBank").value,
+      moneyStartRound:$("moneyStartRound").value,
+      recentRounds:$("recentRounds").value,
+      recommendRounds:$("recommendRounds").value
+    },
+    segments:JSON.parse(JSON.stringify(segments)),
+    stakeOverrides:JSON.parse(JSON.stringify(stakeOverrides)),
+    calculationHistory:loadJson(KEYS.history,[]).slice(0,10)
+  };
+}
+
+function applyRoomState(state){
+  if(!state||Number(state.schemaVersion)!==1)return false;
+  applyingRoomState=true;
+  try{
+    const settings=state.settings&&typeof state.settings==="object"?state.settings:{};
+    if(formulas.some(formula=>formula.id===settings.formula))formulaSelect.value=settings.formula;
+    if(["unit","tens"].includes(settings.position))positionSelect.value=settings.position;
+    ["defaultStake","payout","startingBank","moneyStartRound","recentRounds","recommendRounds"].forEach(id=>{
+      if(settings[id]!=null&&String(settings[id]).length<=30)$(id).value=String(settings[id]);
+    });
+    historyInput.value=typeof state.history==="string"?state.history.slice(0,50000):"";
+    segments=Array.isArray(state.segments)?state.segments.slice(0,200):[];
+    stakeOverrides=state.stakeOverrides&&typeof state.stakeOverrides==="object"&&!Array.isArray(state.stakeOverrides)?state.stakeOverrides:{};
+    saveJson(KEYS.settings,settings);
+    saveJson(KEYS.draft,{history:historyInput.value});
+    saveJson(KEYS.segments,segments);
+    saveJson(KEYS.stakes,stakeOverrides);
+    saveJson(KEYS.history,Array.isArray(state.calculationHistory)?state.calculationHistory.slice(0,10):[]);
+    normalizeSegments();
+    showFormulaNote();
+    renderSegments();
+    renderHistory();
+    setSuggestedSegmentRound();
+    if(parseResults(historyInput.value).length>=2)calculate();
+    else{
+      current=null;
+      resultSection.style.display="none";
+      $("compareSection").style.display="none";
+    }
+    return true;
+  }finally{
+    applyingRoomState=false;
+  }
+}
+
+function setRoomRole(role){
+  const viewer=role==="viewer";
+  document.body.dataset.roomRole=viewer?"viewer":role==="owner"?"owner":"local";
+  const selectors=[
+    "#formulaSelect","#positionSelect","#historyInput","#historyNumberPad button",
+    "#defaultStake","#payout","#startingBank","#moneyStartRound","#recommendRounds","#segmentStartRound","#recentRounds","#stakeAmount",
+    "#calculate","#lockFormula","#clearResults","#resetActual",".quick-stake",".delete-segment",".stake-input","#saveSession","#clearHistory"
+  ];
+  document.querySelectorAll(selectors.join(",")).forEach(control=>{
+    control.disabled=viewer;
+    control.classList.toggle("owner-control",viewer);
+  });
+}
+
+window.thai30RoomBridge={exportState:exportRoomState,applyState:applyRoomState,setRole:setRoomRole};
+
+formulaSelect.addEventListener("change",()=>{showFormulaNote();saveSettings()});
 positionSelect.addEventListener("change",saveSettings);
 $("calculate").addEventListener("click",()=>calculate({scroll:true}));
 $("lockFormula").addEventListener("click",lockSelectedFormula);
@@ -928,6 +1028,194 @@ renderSegments();
 renderHistory();
 setSuggestedSegmentRound();
 if(parseResults(historyInput.value).length>=2)calculate();
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.min.js"></script>
+<script>
+(() => {
+"use strict";
+
+const SUPABASE_URL="https://rqfujuraitlprbupuyah.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_9M96DkfPDsdlees5TFsciQ_22GO1C_6";
+const roomStatus=document.getElementById("roomStatus");
+const roomMessage=document.getElementById("roomMessage");
+const roomSetup=document.getElementById("roomSetup");
+const roomActive=document.getElementById("roomActive");
+const viewerNotice=document.getElementById("viewerNotice");
+const joinRoomCode=document.getElementById("joinRoomCode");
+const bridge=window.thai30RoomBridge;
+let client=null;
+let user=null;
+let activeRoom=null;
+let roomRole="local";
+let roomChannel=null;
+let publishTimer=null;
+let publishing=false;
+let publishAgain=false;
+
+function setStatus(text,kind=""){
+  roomStatus.textContent=text;
+  roomStatus.className="room-status"+(kind?" "+kind:"");
+}
+function setMessage(text){roomMessage.textContent=text}
+function explainError(error){
+  const message=String(error?.message||error||"");
+  if(/Anonymous sign-ins are disabled/i.test(message))return "กรุณาเปิด Anonymous Sign-Ins ที่ Authentication → Sign In / Providers ใน Supabase";
+  if(/ROOM_NOT_FOUND/i.test(message))return "ไม่พบรหัสห้องนี้ หรือห้องหมดอายุแล้ว";
+  if(/Failed to fetch|NetworkError/i.test(message))return "เชื่อมต่อ Supabase ไม่สำเร็จ กรุณาตรวจอินเทอร์เน็ตแล้วลองใหม่";
+  return message||"เกิดข้อผิดพลาด กรุณาลองใหม่";
+}
+function normalizeCode(value){return String(value||"").toUpperCase().replace(/[^A-HJ-NP-Z2-9]/g,"").slice(0,6)}
+function newRoomCode(){
+  const alphabet="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const bytes=new Uint8Array(6);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes,byte=>alphabet[byte%alphabet.length]).join("");
+}
+function roomUrl(code){
+  const url=new URL(location.href);
+  url.searchParams.set("room",code);
+  return url.toString();
+}
+async function copyText(value,success){
+  try{
+    await navigator.clipboard.writeText(value);
+  }catch{
+    const area=document.createElement("textarea");
+    area.value=value;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();document.execCommand("copy");area.remove();
+  }
+  setMessage(success);
+}
+async function ensureUser(){
+  if(user)return user;
+  const sessionResult=await client.auth.getSession();
+  if(sessionResult.error)throw sessionResult.error;
+  if(sessionResult.data.session){user=sessionResult.data.session.user;return user}
+  const signInResult=await client.auth.signInAnonymously();
+  if(signInResult.error)throw signInResult.error;
+  user=signInResult.data.user;
+  return user;
+}
+async function unsubscribe(){
+  if(roomChannel&&client)await client.removeChannel(roomChannel);
+  roomChannel=null;
+}
+function showActiveRoom(room,role){
+  activeRoom=room;
+  roomRole=role;
+  roomSetup.style.display="none";
+  roomActive.classList.add("show");
+  viewerNotice.classList.toggle("show",role==="viewer");
+  document.getElementById("activeRoomCode").textContent=room.room_code;
+  document.getElementById("roomRoleText").textContent=role==="owner"?"เจ้าของห้อง":"ผู้ชม";
+  bridge.setRole(role);
+  setStatus(role==="owner"?"ออนไลน์ • เจ้าของ":"ออนไลน์ • ผู้ชม",role==="owner"?"online":"viewer");
+  setMessage(role==="owner"?"ส่งรหัสหรือลิงก์นี้ให้ผู้ชม ข้อมูลจะซิงก์อัตโนมัติ":"เชื่อมต่อแล้ว กำลังติดตามข้อมูลจากเจ้าของห้อง");
+  const url=new URL(location.href);url.searchParams.set("room",room.room_code);history.replaceState(null,"",url);
+}
+async function subscribeToRoom(){
+  await unsubscribe();
+  roomChannel=client.channel(`thai30-room-${activeRoom.id}-${user.id}`)
+    .on("postgres_changes",{event:"UPDATE",schema:"public",table:"rooms",filter:`id=eq.${activeRoom.id}`},payload=>{
+      const incoming=payload.new;
+      if(!incoming||Number(incoming.version)<=Number(activeRoom.version||0))return;
+      activeRoom={...activeRoom,...incoming};
+      if(roomRole==="viewer"){
+        bridge.applyState(incoming.state);
+        bridge.setRole("viewer");
+        setMessage(`อัปเดตล่าสุด ${new Date(incoming.updated_at).toLocaleTimeString("th-TH")}`);
+      }
+    })
+    .subscribe(status=>{
+      if(status==="CHANNEL_ERROR")setStatus("Realtime ขัดข้อง","error");
+      if(status==="SUBSCRIBED")setStatus(roomRole==="owner"?"ออนไลน์ • เจ้าของ":"ออนไลน์ • ผู้ชม",roomRole==="owner"?"online":"viewer");
+    });
+}
+async function activateRoom(room,role){
+  showActiveRoom(room,role);
+  if(role==="viewer")bridge.applyState(room.state);
+  bridge.setRole(role);
+  await subscribeToRoom();
+}
+async function createRoom(){
+  try{
+    setStatus("กำลังสร้างห้อง");
+    await ensureUser();
+    const state=bridge.exportState();
+    let lastError=null;
+    for(let attempt=0;attempt<5;attempt++){
+      const code=newRoomCode();
+      const result=await client.from("rooms").insert({room_code:code,owner_id:user.id,state}).select("id,room_code,owner_id,state,version,updated_at,expires_at").single();
+      if(!result.error){await activateRoom(result.data,"owner");return}
+      lastError=result.error;
+      if(result.error.code!=="23505")break;
+    }
+    throw lastError;
+  }catch(error){setStatus("สร้างห้องไม่สำเร็จ","error");setMessage(explainError(error))}
+}
+async function joinRoom(value){
+  const code=normalizeCode(value);
+  joinRoomCode.value=code;
+  if(code.length!==6){setStatus("รหัสไม่ครบ","error");setMessage("กรุณากรอกรหัสห้องให้ครบ 6 ตัว");return}
+  try{
+    setStatus("กำลังเข้าห้อง");
+    await ensureUser();
+    const joined=await client.rpc("join_room",{p_room_code:code});
+    if(joined.error)throw joined.error;
+    const result=await client.from("rooms").select("id,room_code,owner_id,state,version,updated_at,expires_at").eq("id",joined.data).single();
+    if(result.error)throw result.error;
+    await activateRoom(result.data,result.data.owner_id===user.id?"owner":"viewer");
+  }catch(error){setStatus("เข้าห้องไม่สำเร็จ","error");setMessage(explainError(error))}
+}
+async function publishState(){
+  if(roomRole!=="owner"||!activeRoom)return;
+  if(publishing){publishAgain=true;return}
+  publishing=true;
+  try{
+    const result=await client.from("rooms").update({state:bridge.exportState()}).eq("id",activeRoom.id).select("version,updated_at").single();
+    if(result.error)throw result.error;
+    activeRoom={...activeRoom,...result.data};
+    setMessage(`ซิงก์แล้ว ${new Date(result.data.updated_at).toLocaleTimeString("th-TH")}`);
+  }catch(error){setStatus("ซิงก์ไม่สำเร็จ","error");setMessage(explainError(error))}
+  finally{
+    publishing=false;
+    if(publishAgain){publishAgain=false;publishState()}
+  }
+}
+function queuePublish(){
+  if(roomRole!=="owner"||!activeRoom)return;
+  clearTimeout(publishTimer);
+  publishTimer=setTimeout(publishState,300);
+}
+async function leaveRoom(){
+  clearTimeout(publishTimer);
+  await unsubscribe();
+  activeRoom=null;roomRole="local";
+  roomSetup.style.display="grid";roomActive.classList.remove("show");viewerNotice.classList.remove("show");
+  bridge.setRole("local");setStatus("พร้อมใช้งาน");setMessage("ออกจากห้องแล้ว ข้อมูลบนหน้านี้ยังอยู่ในเครื่อง");
+  const url=new URL(location.href);url.searchParams.delete("room");history.replaceState(null,"",url);
+}
+async function initialize(){
+  if(!window.supabase||!bridge){setStatus("โหลดระบบห้องไม่สำเร็จ","error");setMessage("ไม่พบไลบรารี Supabase กรุณารีเฟรชหน้าเว็บ");return}
+  client=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+  try{
+    await ensureUser();
+    setStatus("พร้อมใช้งาน","online");
+    const code=normalizeCode(new URL(location.href).searchParams.get("room"));
+    if(code){joinRoomCode.value=code;await joinRoom(code)}
+  }catch(error){setStatus("ยังไม่พร้อม","error");setMessage(explainError(error))}
+}
+
+joinRoomCode.addEventListener("input",()=>{joinRoomCode.value=normalizeCode(joinRoomCode.value)});
+joinRoomCode.addEventListener("keydown",event=>{if(event.key==="Enter")joinRoom(joinRoomCode.value)});
+document.getElementById("createRoom").addEventListener("click",createRoom);
+document.getElementById("joinRoom").addEventListener("click",()=>joinRoom(joinRoomCode.value));
+document.getElementById("copyRoomCode").addEventListener("click",()=>copyText(activeRoom?.room_code||"","คัดลอกรหัสห้องแล้ว"));
+document.getElementById("copyRoomLink").addEventListener("click",()=>copyText(roomUrl(activeRoom?.room_code||""),"คัดลอกลิงก์ห้องแล้ว"));
+document.getElementById("leaveRoom").addEventListener("click",leaveRoom);
+window.addEventListener("thai30:statechange",queuePublish);
+window.addEventListener("beforeunload",()=>{if(roomChannel)client.removeChannel(roomChannel)});
+initialize();
 })();
 </script>
 </body>
