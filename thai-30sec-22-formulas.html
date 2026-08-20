@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>กำลังเปิดห้องรวม 22 สูตร...</title>
+<title>กำลังเปิดห้องรวม 23 สูตร...</title>
 </head>
 <body>
-<div style="font-family:system-ui;padding:24px;text-align:center">กำลังโหลดห้องรวม 22 สูตร...</div>
+<div style="font-family:system-ui;padding:24px;text-align:center">กำลังโหลดห้องรวม 23 สูตร...</div>
 <script>
 (async()=>{
   const res=await fetch('thai-30sec-8-formulas.html?base=21');
   let html=await res.text();
   html=html
-    .replaceAll('ห้องรวม 21 สูตร','ห้องรวม 22 สูตร')
-    .replaceAll('รวม 21 สูตร','รวม 22 สูตร')
-    .replaceAll('ทั้ง 21 สูตร','ทั้ง 22 สูตร');
+    .replaceAll('ห้องรวม 21 สูตร','ห้องรวม 23 สูตร')
+    .replaceAll('รวม 21 สูตร','รวม 23 สูตร')
+    .replaceAll('ทั้ง 21 สูตร','ทั้ง 23 สูตร');
 
-  const inject=`\n  formulas.push({id:"kuman_whisper",name:"สูตรกุมารกระซิบ (ปรางค์แนะนำ)",preferredPosition:"tens",map:{"0":"136","1":"356","2":"145","3":"248","4":"579","5":"037","6":"147","7":"056","8":"145","9":"256"},note:"ห้อง KU หวยไทย 1 นาที • ปักล่าง หลักสิบ • ใช้กับเค้าเลขที่ออกเบิ้ล • หลุด 2 ไม้ ข้าม 2 ไม้ • ยังไม่เข้าให้เปลี่ยนหลัก/เปลี่ยนห้อง • แนะนำ 1 เซต 10 ไม้ กำไรแล้วถอน"});\n  formulaSelect.add(new Option("สูตรกุมารกระซิบ (ปรางค์แนะนำ)","kuman_whisper"));\n`;
+  const inject=`\n  formulas.push({id:"kuman_whisper",name:"สูตรกุมารกระซิบ (ปรางค์แนะนำ)",preferredPosition:"tens",map:{"0":"136","1":"356","2":"145","3":"248","4":"579","5":"037","6":"147","7":"056","8":"145","9":"256"},note:"ห้อง KU หวยไทย 1 นาที • ปักล่าง หลักสิบ • ใช้กับเค้าเลขที่ออกเบิ้ล • หลุด 2 ไม้ ข้าม 2 ไม้ • ยังไม่เข้าให้เปลี่ยนหลัก/เปลี่ยนห้อง • แนะนำ 1 เซต 10 ไม้ กำไรแล้วถอน"});\n  formulaSelect.add(new Option("สูตรกุมารกระซิบ (ปรางค์แนะนำ)","kuman_whisper"));\n  formulas.push({id:"opposite_3_3",name:"สูตรตรงข้าม 3-3",preferredPosition:"unit",map:{"0":"901","1":"012","2":"123","3":"234","4":"345","5":"456","6":"567","7":"678","8":"789","9":"890"},note:"ห้อง KU หวยไทย 30 วิ • ใช้ได้ทั้งหลักหน่วยและหลักสิบ • เทียบสถิติย้อนหลัง 4 งวดก่อนเล่น • หลุด 2 ไม้ ข้าม 2 ไม้ • ยังไม่เข้าให้เปลี่ยนหลัก/เปลี่ยนห้อง • แนะนำเล่นเซตละ 10 ไม้ กำไรแล้วถอน • ไปแบบไม่ทบ"});\n  formulaSelect.add(new Option("สูตรตรงข้าม 3-3","opposite_3_3"));\n`;
 
   const marker='const positionSelect=$("positionSelect");';
   if(!html.includes(marker)) throw new Error('ไม่พบจุดแทรกสูตรในไฟล์หลัก');
