@@ -83,7 +83,7 @@ border-collapse:collapse;
 min-width:650px}th,td{padding:6px 4px;
 border-bottom:1px solid #eee;
 text-align:center;
-font-size:11px}th:first-child,td:first-child{text-align:left}.good,.profit{color:#087a45;
+font-size:11px}th:first-child,td:first-child{text-align:left}#roundBody tr.round-win td{background:#e8f8ef}#roundBody tr.round-loss td{background:#fdeceb}#roundBody tr.round-win:hover td{background:#d9f2e4}#roundBody tr.round-loss:hover td{background:#fbdcda}.good,.profit{color:#087a45;
 font-weight:900}.bad,.loss{color:#c43122;
 font-weight:900}.recs{display:grid;
 grid-template-columns:1fr 1fr;
@@ -184,7 +184,6 @@ color:#746f66}.hidden{display:none!important}@media(max-width:800px){.grid,.mone
 <th>เลขเว้น</th>
 <th>ผลถัดไป</th>
 <th>ออกหลักนี้</th>
-<th>ผล</th>
 <th>เงินลง</th>
 <th>กำไร/ขาดทุน</th>
 <th>สะสม</th>
@@ -261,14 +260,13 @@ net+=profit;
 d.push({i,prev,next,src,o,actual,hit,c,profit,net})}return{win,n:d.length,rate:d.length?win/d.length:0,net,cost,d}}function baht(n){return (+n||0).toFixed(2)}function render(){let rs=rows(),f=formulas.find(x=>x.id===formula.value)||formulas[0],p=+position.value,last=rs.at(-1);
 omit.textContent=last?(f.map[last[p]]||'').split('').join(' '):'-';
 let r=stats(rs,f,p),limit=+$('roundLimit').value,shown=limit?r.d.slice(-limit):r.d;
-roundBody.innerHTML=shown.map(x=>`<tr>
+roundBody.innerHTML=shown.map(x=>`<tr class="${x.hit?'round-win':'round-loss'}">
 <td>${x.i}</td>
 <td>${x.prev}</td>
 <td>${x.src}</td>
 <td>${x.o}</td>
 <td>${x.next}</td>
 <td>${x.actual}</td>
-<td class="${x.hit?'profit':'loss'}">${x.hit?'ถูก':'ผิด'}</td>
 <td>${baht(x.c)}</td>
 <td class="${x.profit>=0?'profit':'loss'}">${baht(x.profit)}</td>
 <td class="${x.net>=0?'profit':'loss'}">${baht(x.net)}</td>
