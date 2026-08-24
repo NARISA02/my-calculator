@@ -17,13 +17,17 @@
     .replaceAll('ทั้ง 21 สูตร','ทั้ง 24 สูตร');
 
   // ซ่อนส่วน "ห้องออนไลน์แบบเรียลไทม์" แต่คง element ไว้เพื่อไม่ให้สคริปต์เดิมเสีย
-  html=html.replace('</head>','<style>.room-card{display:none!important}</style></head>');
+  html=html.replace('</head>','<style>.room-card{display:none!important}.real-money-quick{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}.real-money-quick button{min-height:34px;padding:6px 12px;border:1px solid #c9a94d;border-radius:999px;background:#fff8df;color:#71550c;font-size:13px;font-weight:900}</style></head>');
 
   const inject=`\n  formulas.push({id:"kuman_whisper",name:"สูตรกุมารกระซิบ (ปรางค์แนะนำ)",preferredPosition:"tens",map:{"0":"136","1":"356","2":"145","3":"248","4":"579","5":"037","6":"147","7":"056","8":"145","9":"256"},note:"ห้อง KU หวยไทย 1 นาที • ปักล่าง หลักสิบ • ใช้กับเค้าเลขที่ออกเบิ้ล • หลุด 2 ไม้ ข้าม 2 ไม้ • ยังไม่เข้าให้เปลี่ยนหลัก/เปลี่ยนห้อง • แนะนำ 1 เซต 10 ไม้ กำไรแล้วถอน"});\n  formulaSelect.add(new Option("สูตรกุมารกระซิบ (ปรางค์แนะนำ)","kuman_whisper"));\n  formulas.push({id:"opposite_3_3",name:"สูตรตรงข้าม 3-3",preferredPosition:"unit",map:{"0":"901","1":"012","2":"123","3":"234","4":"345","5":"456","6":"567","7":"678","8":"789","9":"890"},note:"ห้อง KU หวยไทย 30 วิ • ใช้ได้ทั้งหลักหน่วยและหลักสิบ • เทียบสถิติย้อนหลัง 4 งวดก่อนเล่น • หลุด 2 ไม้ ข้าม 2 ไม้ • ยังไม่เข้าให้เปลี่ยนหลัก/เปลี่ยนห้อง • แนะนำเล่นเซตละ 10 ไม้ กำไรแล้วถอน • ไปแบบไม่ทบ"});\n  formulaSelect.add(new Option("สูตรตรงข้าม 3-3","opposite_3_3"));\n  formulas.push({id:"still_breathing",name:"สูตร ที่ยังมีลมหายใจ",map:{"0":"679","1":"078","2":"189","3":"029","4":"013","5":"124","6":"235","7":"346","8":"457","9":"568"},note:"ดูเค้าเลขก่อนเลือกหลักเล่น • ดูถ้วยรางวัล หาหลักที่เลขไม่ค่อยซ้ำกัน • หากสูตรเข้าเกิน 3 งวดค่อยกดตาม • แนะนำแบ่งเล่นเป็นเซต • หลุด 2 ไม้ติดให้ข้าม 2 ไม้"});\n  formulaSelect.add(new Option("สูตร ที่ยังมีลมหายใจ","still_breathing"));\n`;
 
   const marker='const positionSelect=$("positionSelect");';
   if(!html.includes(marker)) throw new Error('ไม่พบจุดแทรกสูตรในไฟล์หลัก');
   html=html.replace(marker,inject+marker);
+
+  // เพิ่มปุ่มเงินจริง 25 / 30 / 35 / 40 / 50 ใต้ช่อง "เงินจริงตั้งต้น (บาท)"
+  const quickMoneyScript=`<script>\n(function(){\n  function addQuickMoney(){\n    const labels=[...document.querySelectorAll('label')];\n    const label=labels.find(x=>x.textContent.replace(/\\s+/g,'').includes('เงินจริงตั้งต้น(บาท)'));\n    if(!label)return false;\n    const box=label.parentElement;\n    if(!box || box.querySelector('.real-money-quick'))return true;\n    const input=box.querySelector('input');\n    if(!input)return false;\n    const wrap=document.createElement('div');\n    wrap.className='real-money-quick';\n    [25,30,35,40,50].forEach(v=>{\n      const b=document.createElement('button');\n      b.type='button'; b.textContent=String(v);\n      b.addEventListener('click',()=>{input.value=v;input.dispatchEvent(new Event('input',{bubbles:true}));input.dispatchEvent(new Event('change',{bubbles:true}));});\n      wrap.appendChild(b);\n    });\n    input.insertAdjacentElement('afterend',wrap);\n    return true;\n  }\n  if(!addQuickMoney()){let n=0;const t=setInterval(()=>{n++;if(addQuickMoney()||n>30)clearInterval(t)},150);}\n})();\n<\\/script>`;
+  html=html.replace('</body>',quickMoneyScript+'</body>');
 
   document.open();
   document.write(html);
