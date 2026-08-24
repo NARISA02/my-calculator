@@ -30,7 +30,7 @@ margin-bottom:10px}.headTools{display:flex;align-items:center;gap:6px}.headTools
 border-radius:20px;
 padding:5px 10px;
 background:#eee;
-font-weight:800}.row2{display:grid;
+font-weight:800}.view-mode-bar{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:7px;margin:10px 0 0}.view-mode-bar span{font-size:11px;font-weight:800}.view-mode-button{padding:6px 11px;border:1px solid #c9a94d;border-radius:999px;background:#fff9e7;color:#71550c}.view-mode-button.selected{background:#b38728;color:#fff}body[data-view="mobile"] .wrap{max-width:560px}body[data-view="mobile"] .grid{grid-template-columns:1fr}body[data-view="tablet"] .wrap{max-width:1180px}body[data-view="tablet"] .grid{grid-template-columns:1fr 1fr}body[data-view="tablet"] .wide{grid-column:1/-1}.row2{display:grid;
 grid-template-columns:1fr 1fr;
 gap:8px}label{display:block;
 font-size:11px;
@@ -103,6 +103,7 @@ color:#746f66}.hidden{display:none!important}@media(max-width:800px){.grid,.mone
 <h1>🃏 ไพ่เร็ว สูตรคำนวน</h1>
 <div>24 สูตร • 5 หลัก หมื่น / พัน / ร้อย / สิบ / หน่วย</div>
 </section>
+<div class="view-mode-bar" role="group" aria-label="รูปแบบการแสดงผล"><span>รูปแบบหน้าจอ</span><button type="button" class="view-mode-button" data-view="auto">อัตโนมัติ</button><button type="button" class="view-mode-button" data-view="mobile">มือถือ</button><button type="button" class="view-mode-button" data-view="tablet">แท็บเล็ต</button></div>
 <div class="grid">
 <section class="card wide">
 <div class="head">
@@ -239,7 +240,7 @@ color:#746f66}.hidden{display:none!important}@media(max-width:800px){.grid,.mone
 </main>
 <script>const formulas=[['สูตรเลขมงคล',['278','348','459','560','167','278','348','459','056','167']],['สูตร 2',['084','980','896','805','713','620','528','436','352','260']],['สูตรแมวกวัก',['349','045','015','126','378','348','459','056','167','278']],['สูตร KU หวยไทย 30 วิ',['139','236','139','145','356','034','016','267','056','028']],['สูตรโต้ดทันใจ V.2',['19','02','13','24','35','46','57','68','79','08']],['สูตรเงิน',['456','567','678','789','069','019','012','129','234','345']],['สูตรเขียว',['157','489','179','579','359','238','019','238','359','012']],['สูตรทอง',['148','589','089','048','026','346','359','356','024','678']],['สูตรถัดมา',['459','056','167','278','389','049','015','126','237','459']],['สูตรลักษมีประทานพร',['39','05','15','57','85','02','26','39','40','16']],['สูตรกวักเงิน 30 วิ',['239','034','145','256','367','478','589','069','017','128']],['สูตรไหลเช้านี้',['045','015','126','378','348','459','056','167','278','346']],['สูตรหน้า3หลัง4',['056','167','278','389','049','015','126','237','348','459']],['สูตร หน้า 3 หลัง 3 พี่อลิน',['456','567','678','789','890','901','012','123','234','345']],['สูตรไหลรับโชค',['146','257','368','479','058','169','027','138','249','035']],['สูตรเอไองง',['278','238','059','156','267','238','389','059','156','267']],['สูตรไกล',['189','029','013','124','235','346','457','568','379','078']],['สูตรล้อม',['078','189','259','356','467','235','346','047','018','129']],['สูตร พระพิฆเนศ VIP',['236','294','486','168','475','289','318','754','137','946']],['สูตร หน้า 2 หลัง 4 พี่อลิน',['567','678','789','890','901','013','123','234','345','456']],['สูตร หน้า 4 หลัง 2 พี่อลิน',['345','456','567','678','789','890','901','012','123','234']],['สูตรกุมารกระซิบ (ปรางค์แนะนำ)',['136','356','145','248','579','037','147','056','145','256']],['สูตรตรงข้าม 3-3',['901','012','123','234','345','456','567','678','789','890']],['สูตร ที่ยังมีลมหายใจ',['679','078','189','029','013','124','235','346','457','568']]].map((x,i)=>({id:'f'+i,name:x[0],map:Object.fromEntries(x[1].map((v,n)=>[n,v]))}));
 const $=id=>document.getElementById(id),formula=$('formula'),position=$('position'),historyField=$('history'),keypad=$('keypad'),preview=$('preview'),omit=$('omit'),stake=$('stake'),payout=$('payout'),roundBody=$('roundBody'),recommendGood=$('recommendGood'),recommendLow=$('recommendLow'),positionsBody=$('positionsBody');
-const names=['หลักหมื่น','หลักพัน','หลักร้อย','หลักสิบ','หลักหน่วย'];
+const names=['หลักหมื่น','หลักพัน','หลักร้อย','หลักสิบ','หลักหน่วย'];const VIEW_MODE_KEY='fast-formula:view-mode';function setViewMode(mode){const selected=['mobile','tablet'].includes(mode)?mode:'auto';document.body.dataset.view=selected;document.querySelectorAll('.view-mode-button').forEach(button=>button.classList.toggle('selected',button.dataset.view===selected));localStorage.setItem(VIEW_MODE_KEY,selected)}
 let buffer='';
 formulas.forEach(f=>formula.add(new Option(f.name,f.id)));
 for(let i=0;
@@ -322,7 +323,7 @@ render()});
 document.querySelectorAll('.toggle').forEach((b,i)=>b.onclick=()=>{let body=b.closest('.card').querySelector('.body');
 body.classList.toggle('hidden');
 b.textContent=body.classList.contains('hidden')?'แสดง':'ซ่อน'});
-historyField.value=localStorage.getItem('fast-formula:history')||'';
+document.querySelectorAll('.view-mode-button').forEach(button=>button.onclick=()=>setViewMode(button.dataset.view));setViewMode(localStorage.getItem(VIEW_MODE_KEY)||'auto');historyField.value=localStorage.getItem('fast-formula:history')||'';
 paint();
 render();
 </script>
