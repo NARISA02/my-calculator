@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>กำลังเปิด ไพ่เร็ว สูตรคำนวน...</title>
+</head>
+<body>
+<div style="font-family:system-ui;padding:24px;text-align:center">กำลังโหลด ไพ่เร็ว สูตรคำนวน...</div>
+<script>
+(async()=>{
+  const res=await fetch('fast-card-formulas.html?base=22');
+  let html=await res.text();
+  html=html
+    .replace("['สูตรโต้ดทันใจ V.2',['19','02','13','24','35','46','57','68','79','08']],",'')
+    .replace("['สูตรลักษมีประทานพร',['39','05','15','57','85','02','26','39','40','16']],",'')
+    .replace('24 สูตร • 5 หลัก','22 สูตร • 5 หลัก');
+  document.open();
+  document.write(html);
+  document.close();
+})().catch(err=>{
+  document.body.innerHTML='<div style="font-family:system-ui;padding:24px;color:#b42318">เปิดห้องไม่สำเร็จ: '+err.message+'</div>';
+});
+</script>
+</body>
+</html>
