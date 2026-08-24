@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#b38728">
+<title>ไพ่เร็ว สูตรคำนวน</title>
+<style>
+:root{--gold:#b38728;--gold2:#e1c45d;--cream:#fffaf0;--silver:#e8ebef;--ink:#332b1f;--muted:#746f66;--line:#e6dbc0;--green:#087a45;--red:#c43122;--shadow:0 12px 28px rgba(80,65,30,.10)}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI","Noto Sans Thai",sans-serif;background:linear-gradient(180deg,#fffdf8,#f1efe9);color:var(--ink)}.wrap{max-width:1180px;margin:auto;padding:18px 14px 70px}.hero{padding:22px;border-radius:24px;background:linear-gradient(135deg,#9b761d,#d4af37 52%,#f5e7a5 72%,#bcc1c7);box-shadow:var(--shadow)}.hero h1{margin:0;font-size:clamp(28px,5vw,42px)}.hero p{margin:7px 0 0}.back{display:inline-block;margin-bottom:10px;color:#2b2415;font-weight:800;text-decoration:none;background:#ffffff88;padding:7px 11px;border-radius:999px}.grid{display:grid;grid-template-columns:1.05fr .95fr;gap:14px;align-items:start}.card{margin-top:14px;padding:18px;border:1px solid #eadfca;border-radius:20px;background:#fffdf9;box-shadow:var(--shadow)}h2{margin:0 0 14px;font-size:24px}label{font-size:13px;font-weight:800;display:block;margin-bottom:6px}select,input,textarea{width:100%;border:1px solid #cfd4da;border-radius:12px;background:#fff;padding:10px;font:inherit}textarea{min-height:250px;font-size:17px;line-height:1.5}.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.historyPad{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:12px}.pad{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.pad button{min-height:48px;border:1px solid #d2d5d8;border-radius:12px;background:linear-gradient(#fff,#eceff2);font-size:21px;font-weight:900;color:#373a3e}.pad button:active{background:linear-gradient(#f7e6a0,#d4aa31)}button{border:0;border-radius:12px;padding:10px 12px;font-weight:800;cursor:pointer}.btnGold{background:linear-gradient(135deg,#9b761d,#d4af37);color:#fff}.btnSilver{background:linear-gradient(135deg,#eef0f2,#cfd4d9);color:#333}.btnDanger{background:#fff0f3;color:#b4234a}.padActions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.preview{margin:0 0 8px;padding:10px;border:1px solid #ead69a;border-radius:12px;background:#fff7dd;text-align:center}.preview b{display:block;font-size:24px;letter-spacing:4px}.note{font-size:13px;color:var(--muted);line-height:1.55}.call{padding:15px;border:1px solid #ead69a;border-radius:16px;background:linear-gradient(135deg,#fff9e7,#f4f2ec)}.omit{font-size:42px;font-weight:1000;letter-spacing:4px;color:#8a6508}.digits{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.digit{width:40px;height:40px;display:grid;place-items:center;border-radius:11px;background:#eceff2;font-weight:900}.digit.cut{background:#fff0e8;color:#b23b2b;text-decoration:line-through}.stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.pill{padding:12px;border-radius:14px;background:linear-gradient(145deg,#faf8f0,#e9eaec);border:1px solid #e1ddd3}.pill b{display:block;margin-top:5px;font-size:20px}.good{color:var(--green)}.bad{color:var(--red)}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{padding:8px 6px;border-bottom:1px solid #ece8df;text-align:center;font-size:13px}th:first-child,td:first-child{text-align:left}.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#f6e8b2;color:#6f5410;font-weight:800;font-size:12px}.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px}.wide{grid-column:1/-1}@media(max-width:800px){.grid{grid-template-columns:1fr}.historyPad{grid-template-columns:1fr}.row2,.stats{grid-template-columns:1fr 1fr}}@media(max-width:520px){.row2,.stats,.actions{grid-template-columns:1fr}.pad{grid-template-columns:repeat(5,1fr)}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<section class="hero"><a class="back" href="index.html">← กลับหน้าหลัก</a><h1>🃏 ไพ่เร็ว สูตรคำนวน</h1><p>ใช้แนวทาง 24 สูตรกับผลไพ่เร็ว 5 หลัก: หมื่น / พัน / ร้อย / สิบ / หน่วย</p></section>
+<div class="grid">
+<section class="card"><h2>1. สูตรและผลย้อนหลัง</h2>
+<div class="row2"><div><label>สูตรที่กำลังดู</label><select id="formula"></select></div><div><label>ปักหลัก</label><select id="position"><option value="0">หลักหมื่น</option><option value="1">หลักพัน</option><option value="2">หลักร้อย</option><option value="3">หลักสิบ</option><option value="4" selected>หลักหน่วย</option></select></div></div>
+<div class="historyPad" style="margin-top:12px"><div><label>ผลย้อนหลัง เรียงจากเก่าไปใหม่</label><textarea id="history" placeholder="23740&#10;25394&#10;46824"></textarea></div><div><div class="preview"><span class="note">เลขที่กำลังกรอก</span><b id="preview">— — — — —</b></div><div id="keypad" class="pad"></div><div class="padActions"><button id="backspace" class="btnDanger">⌫ ลบ</button><button id="clearAll" class="btnSilver">ล้างทั้งหมด</button></div><div class="note" style="margin-top:8px">แตะครบ 5 หลัก ระบบเพิ่มผลให้อัตโนมัติ</div></div></div>
+<div class="actions"><button id="calculate" class="btnGold">คำนวณทั้งหมด</button><button id="sample" class="btnSilver">ข้อมูลตัวอย่าง</button><button id="clearHistory" class="btnDanger">ล้างผลย้อนหลัง</button></div></section>
+<section class="card"><h2>2. แนวทางสูตรที่เลือก</h2><div class="call"><div class="note">ใช้เลขจากผลล่าสุดในหลักที่ปัก เป็นตัวตั้งของสูตร</div><div id="sourceText" style="margin-top:8px;font-weight:800">-</div><div class="note" style="margin-top:12px">เลขเว้น</div><div id="omit" class="omit">-</div><div id="digits" class="digits"></div><div id="formulaNote" class="note" style="margin-top:10px"></div></div>
+<div class="stats"><div class="pill">ผลที่กรอกแล้ว<b id="rounds">0</b></div><div class="pill">ย้อนหลังที่ใช้เทียบ<b id="testRounds">0</b></div><div class="pill">อัตราเข้าหลักที่เลือก<b id="selectedRate">-</b></div><div class="pill">สูตรนี้อันดับ<b id="selectedRank">-</b></div></div></section>
+<section class="card wide"><h2>3. เทียบ 24 สูตรในหลักที่เลือก</h2><div class="note">แต่ละไม้ใช้ผลก่อนหน้าเพื่อหาเลขเว้น แล้วตรวจเลขของผลถัดไปในหลักเดียวกัน</div><div style="overflow:auto"><table><thead><tr><th>สูตร</th><th>ถูก/ทดสอบ</th><th>อัตราเข้า</th><th>เลขเว้นรอบนี้</th><th>สถานะ</th></tr></thead><tbody id="compareBody"></tbody></table></div></section>
+<section class="card wide"><h2>4. เทียบ 5 หลักของสูตรที่เลือก</h2><div style="overflow:auto"><table><thead><tr><th>หลัก</th><th>ถูก/ทดสอบ</th><th>อัตราเข้า</th><th>คำแนะนำ</th></tr></thead><tbody id="positionsBody"></tbody></table></div></section>
+</div>
+<p class="note" style="text-align:center;margin-top:16px">สถิติย้อนหลังไม่รับประกันผลในอนาคต ใช้เพื่อช่วยเปรียบเทียบแนวทางเท่านั้น</p>
+</main>
+<script>
+const formulas=[
+{id:'blue_thai',name:'สูตรเลขมงคล',map:{0:'278',1:'348',2:'459',3:'560',4:'167',5:'278',6:'348',7:'459',8:'056',9:'167'}},
+{id:'formula2',name:'สูตร 2',map:{0:'084',1:'980',2:'896',3:'805',4:'713',5:'620',6:'528',7:'436',8:'352',9:'260'}},
+{id:'green_cat',name:'สูตรแมวกวัก',map:{0:'349',1:'045',2:'015',3:'126',4:'378',5:'348',6:'459',7:'056',8:'167',9:'278'}},
+{id:'ku30',name:'สูตร KU หวยไทย 30 วิ',map:{0:'139',1:'236',2:'139',3:'145',4:'356',5:'034',6:'016',7:'267',8:'056',9:'028'}},
+{id:'to_kan_jai_v2',name:'สูตรโต้ดทันใจ V.2',map:{0:'19',1:'02',2:'13',3:'24',4:'35',5:'46',6:'57',7:'68',8:'79',9:'08'},note:'สูตรเดิมเว้น 2 ตัว จึงเหลือเลขให้เลือก 8 ตัว'},
+{id:'blue_dark',name:'สูตรเงิน',map:{0:'456',1:'567',2:'678',3:'789',4:'069',5:'019',6:'012',7:'129',8:'234',9:'345'}},
+{id:'teal',name:'สูตรเขียว',map:{0:'157',1:'489',2:'179',3:'579',4:'359',5:'238',6:'019',7:'238',8:'359',9:'012'}},
+{id:'gold',name:'สูตรทอง',map:{0:'148',1:'589',2:'089',3:'048',4:'026',5:'346',6:'359',7:'356',8:'024',9:'678'}},
+{id:'next_formula',name:'สูตรถัดมา',map:{0:'459',1:'056',2:'167',3:'278',4:'389',5:'049',6:'015',7:'126',8:'237',9:'459'}},
+{id:'laksami',name:'สูตรลักษมีประทานพร',map:{0:'39',1:'05',2:'15',3:'57',4:'85',5:'02',6:'26',7:'39',8:'40',9:'16'},note:'สูตรเดิมเว้น 2 ตัว จึงเหลือเลขให้เลือก 8 ตัว'},
+{id:'kwak_money',name:'สูตรกวักเงิน 30 วิ',map:{0:'239',1:'034',2:'145',3:'256',4:'367',5:'478',6:'589',7:'069',8:'017',9:'128'}},
+{id:'morning_flow',name:'สูตรไหลเช้านี้',map:{0:'045',1:'015',2:'126',3:'378',4:'348',5:'459',6:'056',7:'167',8:'278',9:'346'}},
+{id:'front3_back4',name:'สูตรหน้า3หลัง4',map:{0:'056',1:'167',2:'278',3:'389',4:'049',5:'015',6:'126',7:'237',8:'348',9:'459'}},
+{id:'rati',name:'สูตร หน้า 3 หลัง 3 พี่อลิน',map:{0:'456',1:'567',2:'678',3:'789',4:'890',5:'901',6:'012',7:'123',8:'234',9:'345'}},
+{id:'flow_luck',name:'สูตรไหลรับโชค',map:{0:'146',1:'257',2:'368',3:'479',4:'058',5:'169',6:'027',7:'138',8:'249',9:'035'}},
+{id:'ai_ngong',name:'สูตรเอไองง',map:{0:'278',1:'238',2:'059',3:'156',4:'267',5:'238',6:'389',7:'059',8:'156',9:'267'}},
+{id:'klai',name:'สูตรไกล',map:{0:'189',1:'029',2:'013',3:'124',4:'235',5:'346',6:'457',7:'568',8:'379',9:'078'}},
+{id:'lom',name:'สูตรล้อม',map:{0:'078',1:'189',2:'259',3:'356',4:'467',5:'235',6:'346',7:'047',8:'018',9:'129'}},
+{id:'ganesha_vip',name:'สูตร พระพิฆเนศ VIP',map:{0:'236',1:'294',2:'486',3:'168',4:'475',5:'289',6:'318',7:'754',8:'137',9:'946'}},
+{id:'alin_front2_back4',name:'สูตร หน้า 2 หลัง 4 พี่อลิน',map:{0:'567',1:'678',2:'789',3:'890',4:'901',5:'013',6:'123',7:'234',8:'345',9:'456'}},
+{id:'alin_front4_back2',name:'สูตร หน้า 4 หลัง 2 พี่อลิน',map:{0:'345',1:'456',2:'567',3:'678',4:'789',5:'890',6:'901',7:'012',8:'123',9:'234'}},
+{id:'kuman_whisper',name:'สูตรกุมารกระซิบ (ปรางค์แนะนำ)',map:{0:'136',1:'356',2:'145',3:'248',4:'579',5:'037',6:'147',7:'056',8:'145',9:'256'}},
+{id:'opposite_3_3',name:'สูตรตรงข้าม 3-3',map:{0:'901',1:'012',2:'123',3:'234',4:'345',5:'456',6:'567',7:'678',8:'789',9:'890'}},
+{id:'still_breathing',name:'สูตร ที่ยังมีลมหายใจ',map:{0:'679',1:'078',2:'189',3:'029',4:'013',5:'124',6:'235',7:'346',8:'457',9:'568'}}
+];
+const names=['หลักหมื่น','หลักพัน','หลักร้อย','หลักสิบ','หลักหน่วย'];
+const $=id=>document.getElementById(id);let buffer='';
+formulas.forEach(f=>formula.add(new Option(f.name,f.id)));
+for(let i=0;i<10;i++){const b=document.createElement('button');b.type='button';b.textContent=i;b.dataset.n=i;keypad.appendChild(b)}
+function parse(){const rows=[];history.value.trim().split(/\n+/).filter(Boolean).forEach((line,i)=>{const m=line.match(/\d{5}/);if(!m)throw Error('บรรทัด '+(i+1)+' ไม่พบเลข 5 หลัก');rows.push(m[0])});return rows}
+function fById(id){return formulas.find(x=>x.id===id)||formulas[0]}
+function rateFor(rows,f,pos){let win=0,n=0;for(let i=1;i<rows.length;i++){const src=rows[i-1][pos],omit=f.map[src]||'',actual=rows[i][pos];n++;if(!omit.includes(actual))win++}return{win,n,rate:n?win/n:0}}
+function allowed(omit){return [...Array(10).keys()].map(String).filter(x=>!omit.includes(x))}
+function render(){try{const rows=parse(),f=fById(formula.value),pos=+position.value,last=rows.at(-1);rounds.textContent=rows.length;testRounds.textContent=Math.max(0,rows.length-1);if(last){const src=last[pos],o=f.map[src]||'';sourceText.textContent='ผลล่าสุด '+last+' • '+names[pos]+' = '+src;omit.textContent=o.split('').join(' ');digits.innerHTML=[...Array(10).keys()].map(i=>'<span class="digit '+(o.includes(String(i))?'cut':'')+'">'+i+'</span>').join('');formulaNote.textContent=f.note||'เว้น '+o.length+' ตัว แล้วใช้เลขที่เหลือเป็นแนวทางรอบถัดไป'}else{sourceText.textContent='-';omit.textContent='-';digits.innerHTML='';formulaNote.textContent=''}const ranked=formulas.map(x=>({...x,...rateFor(rows,x,pos)})).sort((a,b)=>b.rate-a.rate||b.win-a.win);const selected=ranked.find(x=>x.id===f.id);selectedRate.textContent=selected&&selected.n?(selected.rate*100).toFixed(1)+'% ('+selected.win+'/'+selected.n+')':'-';selectedRank.textContent=selected?((ranked.indexOf(selected)+1)+' / '+ranked.length):'-';compareBody.innerHTML=ranked.map((x,i)=>{const o=last?(x.map[last[pos]]||''):'-';return '<tr><td><span class="badge">'+(i+1)+'</span> '+x.name+'</td><td>'+x.win+'/'+x.n+'</td><td class="'+(x.rate>=.75?'good':x.n?'bad':'')+'">'+(x.n?(x.rate*100).toFixed(1)+'%':'-')+'</td><td>'+o+'</td><td>'+(x.n?(x.rate>=.75?'น่าเฝ้าดู':'สถิติต่ำกว่า 75%'):'ข้อมูลไม่พอ')+'</td></tr>'}).join('');positionsBody.innerHTML=names.map((name,p)=>{const r=rateFor(rows,f,p);return '<tr><td>'+name+'</td><td>'+r.win+'/'+r.n+'</td><td class="'+(r.rate>=.75?'good':r.n?'bad':'')+'">'+(r.n?(r.rate*100).toFixed(1)+'%':'-')+'</td><td>'+(r.n?(r.rate>=.75?'เด่นกว่าช่วงนี้':'ดูต่อก่อน'):'ข้อมูลไม่พอ')+'</td></tr>'}).join('');localStorage.setItem('fast-formula:history',history.value);localStorage.setItem('fast-formula:formula',formula.value);localStorage.setItem('fast-formula:position',position.value)}catch(e){alert(e.message)}}
+function paint(){preview.textContent=buffer?buffer.padEnd(5,'—').split('').join(' '):'— — — — —'}
+keypad.onclick=e=>{const b=e.target.closest('[data-n]');if(!b||buffer.length>=5)return;buffer+=b.dataset.n;paint();if(buffer.length===5){const v=history.value.trim();history.value=v?v+'\n'+buffer:buffer;buffer='';paint();render()}};
+backspace.onclick=()=>{buffer=buffer.slice(0,-1);paint()};clearAll.onclick=()=>{buffer='';history.value='';paint();render()};calculate.onclick=render;clearHistory.onclick=()=>{history.value='';render()};sample.onclick=()=>{history.value='23740\n25394\n46824\n21725\n21965\n45743\n44925\n79777\n46451\n80810';render()};formula.onchange=render;position.onchange=render;history.oninput=()=>{clearTimeout(window.__t);window.__t=setTimeout(render,120)};
+history.value=localStorage.getItem('fast-formula:history')||'23740\n25394\n46824\n21725\n21965\n45743\n44925\n79777';formula.value=localStorage.getItem('fast-formula:formula')||formulas[0].id;position.value=localStorage.getItem('fast-formula:position')||'4';paint();render();
+</script>
+</body>
+</html>
