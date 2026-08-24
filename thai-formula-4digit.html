@@ -2,7 +2,7 @@
 (async()=>{
   const response=await fetch('thai-30sec-8-formulas.html?base=thai4');
   let html=await response.text();
-  html=html.replaceAll('ห้องรวม 21 สูตร','ห้องรวม 24 สูตร • 4 หลัก').replaceAll('รวม 21 สูตร','รวม 24 สูตร • 4 หลัก').replaceAll('ทั้ง 21 สูตร','ทั้ง 24 สูตร').replaceAll('และทั้งสองหลัก','และทั้ง 4 หลัก').replaceAll('ทั้งสองหลัก','ทั้ง 4 หลัก').replaceAll('ผล 2 หลัก','ผล 4 หลัก').replaceAll('thai30-real','thai4-real').replaceAll('thai30:','thai4:');
+  html=html.replaceAll('ห้องรวม 21 สูตร','ห้องคำนวณหวยไทยสูตร').replaceAll('รวม 21 สูตร','24 สูตร • 4 หลัก').replaceAll('ทั้ง 21 สูตร','ทั้ง 24 สูตร').replaceAll('และทั้งสองหลัก','และทั้ง 4 หลัก').replaceAll('ทั้งสองหลัก','ทั้ง 4 หลัก').replaceAll('ผล 2 หลัก','ผล 4 หลัก').replaceAll('thai30-real','thai4-real').replaceAll('thai30:','thai4:');
   html=html.replace('<div><label for="positionSelect">ปักหลัก</label><select id="positionSelect"><option value="unit">หลักหน่วย</option><option value="tens">หลักสิบ</option></select></div>','<div><label for="positionSelect">ปักหลัก</label><select id="positionSelect"><option value="thousands">หลักพัน</option><option value="hundreds">หลักร้อย</option><option value="tens">หลักสิบ</option><option value="unit">หลักหน่วย</option></select></div>');
   html=html.replace('placeholder="04&#10;79&#10;32&#10;47&#10;81"','placeholder="2374&#10;2539&#10;4682&#10;2172&#10;2196"').replace('เลขที่กำลังกรอก • ครบ 2 ตัวบันทึกอัตโนมัติ','เลขที่กำลังกรอก • ครบ 4 ตัวบันทึกอัตโนมัติ').replace('<div id="padPreviewNumber" class="pad-preview-number">__</div>','<div id="padPreviewNumber" class="pad-preview-number">____</div>').replace('แตะครบ 2 ตัว ระบบบันทึกและคำนวณอัตโนมัติ','แตะครบ 4 ตัว ระบบบันทึกและคำนวณอัตโนมัติ');
   const extraFormulas=`
