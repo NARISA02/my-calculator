@@ -9,12 +9,39 @@
 <div style="font-family:system-ui;padding:24px;text-align:center">กำลังโหลด ไพ่เร็ว สูตรคำนวน...</div>
 <script>
 (async()=>{
-  const res=await fetch('fast-card-formulas.html?base=22');
+  const res=await fetch('fast-card-formulas.html?base=23');
   let html=await res.text();
   html=html
     .replace("['สูตรโต้ดทันใจ V.2',['19','02','13','24','35','46','57','68','79','08']],",'')
     .replace("['สูตรลักษมีประทานพร',['39','05','15','57','85','02','26','39','40','16']],",'')
     .replace('24 สูตร • 5 หลัก','22 สูตร • 5 หลัก');
+
+  const keypadStyle=`<style>
+  #keypad{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:7px!important}
+  #keypad button{font-size:21px!important;font-weight:1000!important;min-height:50px!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent}
+  #history{font-size:18px!important;line-height:1.55!important}
+  #preview{font-size:21px!important;letter-spacing:4px!important}
+  select,input{font-size:16px!important}
+  @media(max-width:520px){#keypad button{font-size:22px!important;min-height:52px!important}#history{font-size:19px!important}}
+  </style>`;
+  html=html.replace('</head>',keypadStyle+'</head>');
+
+  const keypadScript=`<script>
+  (function(){
+    function fixPad(){
+      const pad=document.getElementById('keypad');
+      if(!pad)return false;
+      const digits=[...pad.children].filter(el=>/^[0-9]$/.test(el.textContent.trim()));
+      if(digits.length<10)return false;
+      const byNum=Object.fromEntries(digits.map(el=>[el.textContent.trim(),el]));
+      ['1','2','3','4','5','6','7','8','9','0'].forEach(n=>byNum[n]&&pad.appendChild(byNum[n]));
+      return true;
+    }
+    if(!fixPad()){let tries=0;const t=setInterval(()=>{tries++;if(fixPad()||tries>30)clearInterval(t)},100);}
+  })();
+  <\/script>`;
+  html=html.replace('</body>',keypadScript+'</body>');
+
   document.open();
   document.write(html);
   document.close();
