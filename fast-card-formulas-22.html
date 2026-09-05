@@ -9,12 +9,13 @@
 <div style="font-family:system-ui;padding:24px;text-align:center">กำลังโหลด ไพ่เร็ว สูตรคำนวน...</div>
 <script>
 (async()=>{
-  const res=await fetch('fast-card-formulas.html?base=23');
+  const res=await fetch('fast-card-formulas.html?base=24');
   let html=await res.text();
   html=html
     .replace("['สูตรโต้ดทันใจ V.2',['19','02','13','24','35','46','57','68','79','08']],",'')
     .replace("['สูตรลักษมีประทานพร',['39','05','15','57','85','02','26','39','40','16']],",'')
-    .replace('24 สูตร • 5 หลัก','22 สูตร • 5 หลัก');
+    .replace("['สูตร ที่ยังมีลมหายใจ',['679','078','189','029','013','124','235','346','457','568']]].map((x,i)=>", "['สูตร ที่ยังมีลมหายใจ',['679','078','189','029','013','124','235','346','457','568']],['สูตรงบน้อย มะปรางค์',['278','348','459','560','167','278','348','459','056','278']]].map((x,i)=>")
+    .replace('24 สูตร • 5 หลัก','23 สูตร • 5 หลัก');
 
   const keypadStyle=`<style>
   #keypad{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:7px!important}
