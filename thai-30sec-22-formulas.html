@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>กำลังเปิดห้องรวม 25 สูตร...</title>
+<title>กำลังเปิดห้องรวม 26 สูตร...</title>
 </head>
 <body>
-<div style="font-family:system-ui;padding:24px;text-align:center">กำลังโหลดห้องรวม 25 สูตร...</div>
+<div style="font-family:system-ui;padding:24px;text-align:center">กำลังโหลดห้องรวม 26 สูตร...</div>
 <script>
 (async()=>{
   const res=await fetch('thai-30sec-8-formulas.html?base=24');
   let html=await res.text();
   html=html
-    .replaceAll('ห้องรวม 21 สูตร','ห้องรวม 25 สูตร')
-    .replaceAll('รวม 21 สูตร','รวม 25 สูตร')
-    .replaceAll('ทั้ง 21 สูตร','ทั้ง 25 สูตร');
+    .replaceAll('ห้องรวม 21 สูตร','ห้องรวม 26 สูตร')
+    .replaceAll('รวม 21 สูตร','รวม 26 สูตร')
+    .replaceAll('ทั้ง 21 สูตร','ทั้ง 26 สูตร');
 
   html=html.replace('</head>','<style>.room-card{display:none!important}.real-money-quick{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}.real-money-quick button{min-height:34px;padding:6px 12px;border:1px solid #c9a94d;border-radius:999px;background:#fff8df;color:#71550c;font-size:13px;font-weight:900}.number-key{font-size:20px!important;min-height:48px!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent}.pad-preview-number{font-size:23px!important}.history-entry-grid textarea{font-size:18px!important;line-height:1.5!important}select,input{font-size:15px!important}@media(max-width:650px){.number-key{font-size:20px!important;min-height:48px!important}.pad-preview-number{font-size:23px!important}.history-entry-grid textarea{font-size:18px!important}}</style></head>');
 
