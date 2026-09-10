@@ -1,34 +1,7 @@
-<!doctype html>
-<html lang="th">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>กำลังเปิดห้องรวม 26 สูตร...</title>
-</head>
-<body>
-<div style="font-family:system-ui;padding:24px;text-align:center">กำลังโหลดห้องรวม 26 สูตร...</div>
-<script>
-(async()=>{
-  const res=await fetch('thai-30sec-8-formulas.html?base=24');
-  let html=await res.text();
-  html=html
-    .replaceAll('ห้องรวม 21 สูตร','ห้องรวม 26 สูตร')
-    .replaceAll('รวม 21 สูตร','รวม 26 สูตร')
-    .replaceAll('ทั้ง 21 สูตร','ทั้ง 26 สูตร');
-
-  html=html.replace('</head>','<style>.room-card{display:none!important}.real-money-quick{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}.real-money-quick button{min-height:34px;padding:6px 12px;border:1px solid #c9a94d;border-radius:999px;background:#fff8df;color:#71550c;font-size:13px;font-weight:900}.number-key{font-size:20px!important;min-height:48px!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent}.pad-preview-number{font-size:23px!important}.history-entry-grid textarea{font-size:18px!important;line-height:1.5!important}select,input{font-size:15px!important}@media(max-width:650px){.number-key{font-size:20px!important;min-height:48px!important}.pad-preview-number{font-size:23px!important}.history-entry-grid textarea{font-size:18px!important}}</style></head>');
-
-  const inject=`\n  formulas.push({id:"kuman_whisper",name:"สูตรกุมารกระซิบ (ปรางค์แนะนำ)",preferredPosition:"tens",map:{"0":"136","1":"356","2":"145","3":"248","4":"579","5":"037","6":"147","7":"056","8":"145","9":"256"},note:"ห้อง KU หวยไทย 1 นาที • ปักล่าง หลักสิบ • ใช้กับเค้าเลขที่ออกเบิ้ล • หลุด 2 ไม้ ข้าม 2 ไม้ • ยังไม่เข้าให้เปลี่ยนหลัก/เปลี่ยนห้อง • แนะนำ 1 เซต 10 ไม้ กำไรแล้วถอน"});\n  formulaSelect.add(new Option("สูตรกุมารกระซิบ (ปรางค์แนะนำ)","kuman_whisper"));\n  formulas.push({id:"opposite_3_3",name:"สูตรตรงข้าม 3-3",preferredPosition:"unit",map:{"0":"901","1":"012","2":"123","3":"234","4":"345","5":"456","6":"567","7":"678","8":"789","9":"890"},note:"ห้อง KU หวยไทย 30 วิ • ใช้ได้ทั้งหลักหน่วยและหลักสิบ • เทียบสถิติย้อนหลัง 4 งวดก่อนเล่น • หลุด 2 ไม้ ข้าม 2 ไม้ • ยังไม่เข้าให้เปลี่ยนหลัก/เปลี่ยนห้อง • แนะนำเล่นเซตละ 10 ไม้ กำไรแล้วถอน • ไปแบบไม่ทบ"});\n  formulaSelect.add(new Option("สูตรตรงข้าม 3-3","opposite_3_3"));\n  formulas.push({id:"still_breathing",name:"สูตร ที่ยังมีลมหายใจ",map:{"0":"679","1":"078","2":"189","3":"029","4":"013","5":"124","6":"235","7":"346","8":"457","9":"568"},note:"ดูเค้าเลขก่อนเลือกหลักเล่น • ดูถ้วยรางวัล หาหลักที่เลขไม่ค่อยซ้ำกัน • หากสูตรเข้าเกิน 3 งวดค่อยกดตาม • แนะนำแบ่งเล่นเป็นเซต • หลุด 2 ไม้ติดให้ข้าม 2 ไม้"});\n  formulaSelect.add(new Option("สูตร ที่ยังมีลมหายใจ","still_breathing"));\n  formulas.push({id:"low_budget_maprang",name:"สูตรงบน้อย มะปรางค์",map:{"0":"278","1":"348","2":"459","3":"560","4":"167","5":"278","6":"348","7":"459","8":"056","9":"278"},note:"สูตรงบน้อย มะปรางค์"});\n  formulaSelect.add(new Option("สูตรงบน้อย มะปรางค์","low_budget_maprang"));\n`;
-
-  const marker='const positionSelect=$("positionSelect");';
-  if(!html.includes(marker)) throw new Error('ไม่พบจุดแทรกสูตรในไฟล์หลัก');
-  html=html.replace(marker,inject+marker);
-
-  const quickMoneyScript=`<script>\n(function(){\n  function addQuickMoney(){\n    const labels=[...document.querySelectorAll('label')];\n    const label=labels.find(x=>x.textContent.replace(/\\s+/g,'').includes('เงินจริงตั้งต้น(บาท)'));\n    if(!label)return false;\n    const box=label.parentElement;\n    if(!box || box.querySelector('.real-money-quick'))return true;\n    const input=box.querySelector('input');\n    if(!input)return false;\n    const wrap=document.createElement('div');\n    wrap.className='real-money-quick';\n    [25,30,35,40,50].forEach(v=>{const b=document.createElement('button');b.type='button';b.textContent=String(v);b.addEventListener('click',()=>{input.value=v;input.dispatchEvent(new Event('input',{bubbles:true}));input.dispatchEvent(new Event('change',{bubbles:true}));});wrap.appendChild(b);});\n    input.insertAdjacentElement('afterend',wrap);return true;\n  }\n  function fixPad(){\n    const pad=document.querySelector('.number-pad');if(!pad)return false;\n    const digits=[...pad.children].filter(el=>/^[0-9]$/.test(el.textContent.trim()));if(digits.length<10)return false;\n    const map=Object.fromEntries(digits.map(el=>[el.textContent.trim(),el]));['1','2','3','4','5','6','7','8','9','0'].forEach(n=>map[n]&&pad.insertBefore(map[n],pad.querySelector('.confirm,.backspace,.clear')));return true;\n  }\n  let n=0;const t=setInterval(()=>{n++;const a=addQuickMoney(),b=fixPad();if((a&&b)||n>40)clearInterval(t)},100);\n})();\n<\\/script>`;
-  html=html.replace('</body>',quickMoneyScript+'</body>');
-
-  document.open();document.write(html);document.close();
-})().catch(err=>{document.body.innerHTML='<div style="font-family:system-ui;padding:24px;color:#b42318">เปิดห้องไม่สำเร็จ: '+err.message+'</div>';});
-</script>
-</body>
-</html>
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>กำลังเปิดห้องรวม 26 สูตร...</title></head><body><div style="font-family:system-ui;padding:24px;text-align:center">กำลังโหลดห้องรวม 26 สูตร...</div><script>(async()=>{const res=await fetch('thai-30sec-8-formulas.html?base=26');let html=await res.text();html=html.replaceAll('ห้องรวม 21 สูตร','ห้องรวม 26 สูตร').replaceAll('รวม 21 สูตร','รวม 26 สูตร').replaceAll('ทั้ง 21 สูตร','ทั้ง 26 สูตร');html=html.replace('</head>','<style>.room-card{display:none!important}.number-key{font-size:20px!important;min-height:48px!important;touch-action:manipulation!important}.history-entry-grid textarea{font-size:18px!important}</style></head>');const inject=`
+formulas.push({id:"kuman_whisper",name:"สูตรกุมารกระซิบ (ปรางค์แนะนำ)",preferredPosition:"tens",map:{"0":"136","1":"356","2":"145","3":"248","4":"579","5":"037","6":"147","7":"056","8":"145","9":"256"}});formulaSelect.add(new Option("สูตรกุมารกระซิบ (ปรางค์แนะนำ)","kuman_whisper"));
+formulas.push({id:"opposite_3_3",name:"สูตรตรงข้าม 3-3",preferredPosition:"unit",map:{"0":"901","1":"012","2":"123","3":"234","4":"345","5":"456","6":"567","7":"678","8":"789","9":"890"}});formulaSelect.add(new Option("สูตรตรงข้าม 3-3","opposite_3_3"));
+formulas.push({id:"still_breathing",name:"สูตร ที่ยังมีลมหายใจ",map:{"0":"679","1":"078","2":"189","3":"029","4":"013","5":"124","6":"235","7":"346","8":"457","9":"568"}});formulaSelect.add(new Option("สูตร ที่ยังมีลมหายใจ","still_breathing"));
+formulas.push({id:"low_budget_maprang",name:"สูตรงบน้อย มะปรางค์",map:{"0":"278","1":"348","2":"459","3":"560","4":"167","5":"278","6":"348","7":"459","8":"056","9":"278"}});formulaSelect.add(new Option("สูตรงบน้อย มะปรางค์","low_budget_maprang"));
+formulas.push({id:"flow_now",name:"สูตรไหลตอนนี้",recommendRounds:4,map:{"0":"139","1":"340","2":"135","3":"246","4":"573","5":"684","6":"579","7":"068","8":"197","9":"802"},note:"เทียบสถิติย้อนหลัง 4 งวดก่อนเล่น • ใช้ได้ทั้งหลักหน่วยและหลักสิบ • หลุด 2 ไม้ ข้าม 2 ไม้ • ถ้ายังไม่เข้าให้เปลี่ยนหลัก/เปลี่ยนห้อง • แนะนำเล่นเซตละ 10 ไม้ • ไม่ทบ • กำไรแล้วถอน"});formulaSelect.add(new Option("สูตรไหลตอนนี้","flow_now"));
+`;const marker='const positionSelect=$("positionSelect");';if(!html.includes(marker))throw new Error('ไม่พบจุดแทรกสูตรในไฟล์หลัก');html=html.replace(marker,inject+marker);document.open();document.write(html);document.close()})().catch(err=>{document.body.innerHTML='<div style="font-family:system-ui;padding:24px;color:#b42318">เปิดห้องไม่สำเร็จ: '+err.message+'</div>'});</script></body></html>
