@@ -934,8 +934,15 @@ $("stakeAmount").addEventListener("input",()=>{stakeEntryDirty=true});
 document.querySelectorAll(".quick-stake").forEach(button=>{
   button.addEventListener("click",()=>{
     $("stakeAmount").value=button.dataset.stake;
-    stakeEntryDirty=true;
+    const targetRound=currentNextRound();
+    const entered=Math.max(0,Number(button.dataset.stake)||0);
+    if(targetRound>=getMoneyStart()){
+      stakeOverrides[String(targetRound)]=entered===0?0:Math.max(2,entered);
+      saveJson(KEYS.stakes,stakeOverrides);
+    }
+    stakeEntryDirty=false;
     document.querySelectorAll(".quick-stake").forEach(item=>item.classList.toggle("selected",item===button));
+    if(current)calculate();
   });
 });
 
