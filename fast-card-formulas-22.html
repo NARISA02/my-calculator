@@ -25,7 +25,7 @@
   select,input{font-size:16px!important}
   @media(max-width:520px){#keypad button{font-size:22px!important;min-height:52px!important}#history{font-size:19px!important}}
   </style>`;
-  html=html.replace('</head>',keypadStyle+'</head>');
+  html=html.replace('</head>',"<style id=\"global-readable-font\">\nbody{font-family:\"Noto Sans Thai\",\"Leelawadee UI\",Tahoma,sans-serif!important}\n@media(max-width:900px){\nbody{font-size:20px!important;line-height:1.55!important}\nh1{font-size:31px!important;line-height:1.3!important}\nh2,.subhead{font-size:26px!important;line-height:1.35!important}\nh3{font-size:22px!important;line-height:1.4!important}\nlabel,input,select,button,textarea{font-family:inherit!important;font-size:20px!important}\ntable,table *{font-family:inherit!important;font-size:19px!important}\nth,td{font-size:19px!important;line-height:1.5!important;padding-top:12px!important;padding-bottom:12px!important}\n.help,.note,.action-help,.footer-note{font-size:17px!important;line-height:1.5!important}\n.metric-label{font-size:17px!important}.metric-value{font-size:22px!important}\n.recommend-name{font-size:19px!important}.recommend-meta,.badge{font-size:16px!important}\n.number-key,.pad button,#keypad button{font-size:22px!important;min-height:50px!important}\n}\n</style></head>");html=html.replace('</head>',keypadStyle+'</head>');
 
   const keypadScript=`<script>
   (function(){
