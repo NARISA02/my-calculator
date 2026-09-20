@@ -122,11 +122,23 @@ input,select,textarea{font-size:15px}input,select{height:48px;border-radius:13px
 
 /* Readability boost: formula calculator rooms */
 @media (max-width: 900px){
-  body{font-size:17px}
-  input,select,button,textarea{font-size:17px}
-  table{font-size:16px}
-  th,td{font-size:16px}
-  .help,.action-help,.footer-note{font-size:15px}
+  body{
+    font-family:"Noto Sans Thai","Leelawadee UI",Tahoma,sans-serif;
+    font-size:19px;
+    line-height:1.55;
+  }
+  h1{font-size:30px;line-height:1.3}
+  h2,.subhead{font-size:25px;line-height:1.35}
+  h3{font-size:21px;line-height:1.4}
+  label,input,select,button,textarea{font-family:inherit;font-size:19px}
+  table{font-family:inherit;font-size:18px}
+  th,td{font-size:18px;line-height:1.45;padding-top:11px;padding-bottom:11px}
+  .help,.action-help,.footer-note{font-size:16px;line-height:1.5}
+  .metric-label{font-size:16px}
+  .metric-value{font-size:21px}
+  .recommend-panel,.recommend-panel *{font-family:inherit}
+  .recommend-panel .help{font-size:16px}
+  #recommendGoodList,#recommendLowList{font-size:18px}
 }
 </style>
 <style>.recommend-box .digit-row{display:none!important}</style>
