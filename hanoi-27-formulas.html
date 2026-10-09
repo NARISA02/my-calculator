@@ -37,6 +37,31 @@ th,td{font-size:19px!important;line-height:1.5!important;padding-top:12px!import
   html=html.replace('<input id="defaultStake" type="number" inputmode="decimal" min="2" step="1" value="2">','<input id="defaultStake" type="number" inputmode="decimal" min="0" step="1" value="20">').replace('<input id="payout" type="number" min="0" step=".01" value="9.5">','<input id="payout" type="number" min="0" step=".01" value="9.9">');
   html=html.replace('</head>','<style id="hanoi-compact">body{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Noto Sans Thai",sans-serif!important}@media(max-width:900px){body{font-size:16px!important;line-height:1.4!important}h1{font-size:25px!important}h2,.subhead{font-size:22px!important}h3{font-size:18px!important}label,input,select,button,textarea{font-size:16px!important}table,table *{font-size:15px!important}th,td{font-size:15px!important;padding:8px 5px!important;line-height:1.35!important}.note,.help,.action-help,.footer-note{font-size:14px!important}}</style></head>');
   html=html.replace('</head>','<style>.room-card{display:none!important}.number-key{font-size:20px!important;min-height:47px!important;padding:7px 8px!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent}.number-key.backspace,.number-key.clear,.number-key.confirm{font-size:17px!important;min-height:44px!important}.pad-preview{padding:8px 10px!important}.pad-preview-label{font-size:12px!important}.pad-preview-number{font-size:23px!important;letter-spacing:4px!important}.history-entry-grid textarea{font-size:18px!important;line-height:1.45!important;min-height:185px!important}select,input{font-size:15px!important}@media(max-width:650px){.number-key{font-size:20px!important;min-height:48px!important}.number-key.backspace,.number-key.clear,.number-key.confirm{font-size:17px!important;min-height:44px!important}.pad-preview-number{font-size:23px!important}.history-entry-grid textarea{font-size:18px!important;min-height:180px!important}}</style></head>');
+  // Hanoi-only safer keypad controls: small single-digit delete, separate undo result, confirmed clear.
+  html=html.replace('<button type="button" id="historyBackspace" class="number-key backspace">⌫ ลบ</button><button type="button" id="historyPadClear" class="number-key clear">ล้างทั้งหมด</button>','<button type="button" id="historyBackspace" class="number-key backspace">⌫ ลบ 1 ตัว</button><button type="button" id="hanoiUndoLast" class="number-key">ลบผลล่าสุด</button><button type="button" id="historyPadClear" class="number-key clear">ล้างทั้งหมด</button>');
+  html=html.replace('  const results=parseResults(historyInput.value);\n  results.pop();\n  historyInput.value=results.join("\\n");\n  if(results.length<2){current=null;resultSection.style.display="none";}\n  refreshAfterPad();','  // Only delete a digit being typed; completed results use the dedicated undo button.\n  historyInput.focus();');
+  html=html.replace('  padBuffer="";historyInput.value="";current=null;resultSection.style.display="none";','  if(!window.confirm("ยืนยันล้างผลย้อนหลังทั้งหมดในห้องหวยฮานอย?\\nการล้างนี้ย้อนกลับไม่ได้"))return;\n  padBuffer="";historyInput.value="";current=null;resultSection.style.display="none";');
+  const hanoiKeypadScript=`<script>(function(){
+    function setup(){
+      const undo=document.getElementById('hanoiUndoLast'),pad=document.getElementById('historyNumberPad'),input=document.getElementById('historyInput');
+      if(!undo||!pad||!input)return;
+      undo.addEventListener('click',()=>{
+        const results=input.value.match(/\\d{4}/g)||[];
+        if(!results.length)return;
+        if(!window.confirm('ยืนยันลบผลล่าสุด '+results.at(-1)+' ?'))return;
+        results.pop();
+        input.value=results.join('\\n');
+        input.dispatchEvent(new Event('input',{bubbles:true}));
+        const calculate=document.getElementById('calculate');
+        if(results.length>=2&&calculate)calculate.click();
+        else {const result=document.getElementById('resultSection');if(result)result.style.display='none';}
+      });
+    }
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
+  })();<\/script>`;
+  html=html.replace('</head>','<style id="hanoi-safe-keypad">#historyNumberPad #historyBackspace{font-size:12px!important;min-height:30px!important;padding:3px 5px!important;max-width:95px!important;justify-self:center!important;opacity:.88}#historyNumberPad #hanoiUndoLast,#historyNumberPad #historyPadClear{font-size:14px!important;min-height:42px!important;padding:7px 6px!important}#historyNumberPad #historyPadClear{background:#fff0ef!important;color:#9f2020!important}</style></head>');
+  html=html.replace('</body>',hanoiKeypadScript+'</body>');
+
   const padScript=`<script>(function(){function fixPad(){const pad=document.querySelector('.number-pad');if(!pad)return false;const digits=[...pad.children].filter(el=>/^[0-9]$/.test(el.textContent.trim()));if(digits.length<10)return false;const map=Object.fromEntries(digits.map(el=>[el.textContent.trim(),el]));const anchor=pad.querySelector('.confirm,.backspace,.clear');['1','2','3','4','5','6','7','8','9','0'].forEach(n=>map[n]&&pad.insertBefore(map[n],anchor));return true}if(!fixPad()){let n=0;const t=setInterval(()=>{n++;if(fixPad()||n>30)clearInterval(t)},100)}})();<\/script>`;
   html=html.replace('</body>',padScript+'</body>');
 
