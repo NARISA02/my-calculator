@@ -58,7 +58,7 @@ th,td{font-size:19px!important;line-height:1.5!important;padding-top:12px!import
         if(help)help.textContent='แสดงผลก่อนหน้า เลขเว้น ผลถัดไป และกำไรขาดทุนตามสูตรที่ล็อกไว้ในแต่ละช่วง • สูตรที่ตัดหรือเปลี่ยนตรวจได้จากคอลัมน์สูตร';
         const head=actual.querySelector('thead tr');
         if(head)head.insertAdjacentHTML('beforeend','<th>สูตร / หลัก</th>');
-        if(summary)summary.insertAdjacentElement('afterend',actual);
+        if(result)result.appendChild(actual);
       }
       main.appendChild(money);
       const update=()=>{
@@ -76,7 +76,7 @@ th,td{font-size:19px!important;line-height:1.5!important;padding-top:12px!import
       update();
     }
     if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',arrange);else arrange();
-  })();<\\/script>`;
+  })();<\/script>`;
   html=html.replace('</body>',hanoiLayoutScript+'</body>');
 document.open();document.write(html);document.close();
 })().catch(error=>{document.body.innerHTML='<div style="font-family:system-ui;padding:24px;color:#b42318">เปิดห้องไม่สำเร็จ: '+error.message+'</div>'});
