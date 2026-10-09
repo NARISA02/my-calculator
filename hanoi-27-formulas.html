@@ -38,6 +38,46 @@ th,td{font-size:19px!important;line-height:1.5!important;padding-top:12px!import
   html=html.replace('</head>','<style id="hanoi-compact">body{font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Noto Sans Thai",sans-serif!important}@media(max-width:900px){body{font-size:16px!important;line-height:1.4!important}h1{font-size:25px!important}h2,.subhead{font-size:22px!important}h3{font-size:18px!important}label,input,select,button,textarea{font-size:16px!important}table,table *{font-size:15px!important}th,td{font-size:15px!important;padding:8px 5px!important;line-height:1.35!important}.note,.help,.action-help,.footer-note{font-size:14px!important}}</style></head>');
   html=html.replace('</head>','<style>.room-card{display:none!important}.number-key{font-size:20px!important;min-height:47px!important;padding:7px 8px!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent}.number-key.backspace,.number-key.clear,.number-key.confirm{font-size:17px!important;min-height:44px!important}.pad-preview{padding:8px 10px!important}.pad-preview-label{font-size:12px!important}.pad-preview-number{font-size:23px!important;letter-spacing:4px!important}.history-entry-grid textarea{font-size:18px!important;line-height:1.45!important;min-height:185px!important}select,input{font-size:15px!important}@media(max-width:650px){.number-key{font-size:20px!important;min-height:48px!important}.number-key.backspace,.number-key.clear,.number-key.confirm{font-size:17px!important;min-height:44px!important}.pad-preview-number{font-size:23px!important}.history-entry-grid textarea{font-size:18px!important;min-height:180px!important}}</style></head>');
   const padScript=`<script>(function(){function fixPad(){const pad=document.querySelector('.number-pad');if(!pad)return false;const digits=[...pad.children].filter(el=>/^[0-9]$/.test(el.textContent.trim()));if(digits.length<10)return false;const map=Object.fromEntries(digits.map(el=>[el.textContent.trim(),el]));const anchor=pad.querySelector('.confirm,.backspace,.clear');['1','2','3','4','5','6','7','8','9','0'].forEach(n=>map[n]&&pad.insertBefore(map[n],anchor));return true}if(!fixPad()){let n=0;const t=setInterval(()=>{n++;if(fixPad()||n>30)clearInterval(t)},100)}})();<\/script>`;
-  html=html.replace('</body>',padScript+'</body>');document.open();document.write(html);document.close();
+  html=html.replace('</body>',padScript+'</body>');
+
+  // Arrange Hanoi-only sections after the calculator has been assembled.
+  const hanoiLayoutScript=`<script>(function(){
+    function arrange(){
+      const guide=document.querySelector('.guide-card');
+      const history=document.querySelector('.formula-history-card');
+      const money=document.querySelector('.money-settings');
+      const main=document.querySelector('main');
+      if(!guide||!history||!money||!main)return;
+      guide.insertAdjacentElement('afterend',history);
+      const result=document.querySelector('#resultSection');
+      const summary=result&&result.querySelector('.summary-card');
+      const actual=result&&result.querySelector('.actual-card');
+      if(actual){
+        actual.querySelector('h2').textContent='2. ตารางเดินทุกไม้ — สูตรที่ใช้จริง';
+        const help=actual.querySelector('.help');
+        if(help)help.textContent='แสดงผลก่อนหน้า เลขเว้น ผลถัดไป และกำไรขาดทุนตามสูตรที่ล็อกไว้ในแต่ละช่วง • สูตรที่ตัดหรือเปลี่ยนตรวจได้จากคอลัมน์สูตร';
+        const head=actual.querySelector('thead tr');
+        if(head)head.insertAdjacentHTML('beforeend','<th>สูตร / หลัก</th>');
+        if(summary)summary.insertAdjacentElement('afterend',actual);
+      }
+      main.appendChild(money);
+      const update=()=>{
+        const body=document.querySelector('#actualBody');
+        if(!body)return;
+        const segments=[...document.querySelectorAll('#segmentList .segment-main')].map(x=>x.textContent.trim());
+        [...body.rows].forEach(row=>{
+          if(row.cells.length>6)return;
+          const round=Number((row.cells[0]?.textContent||'').match(/\\d+/)?.[0]||0);
+          const applicable=segments.filter(s=>Number(s.match(/ไม้\\s*(\\d+)/)?.[1]||0)<=round).at(-1);
+          row.insertCell(-1).textContent=applicable||'ยังไม่ล็อกสูตร';
+        });
+      };
+      new MutationObserver(update).observe(document.querySelector('#actualBody'),{childList:true});
+      update();
+    }
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',arrange);else arrange();
+  })();<\\/script>`;
+  html=html.replace('</body>',hanoiLayoutScript+'</body>');
+document.open();document.write(html);document.close();
 })().catch(error=>{document.body.innerHTML='<div style="font-family:system-ui;padding:24px;color:#b42318">เปิดห้องไม่สำเร็จ: '+error.message+'</div>'});
 </script></body></html>
