@@ -104,56 +104,49 @@ th,td{font-size:19px!important;line-height:1.5!important;padding-top:12px!import
   })();<\/script>`;
   html=html.replace('</body>',hanoiLayoutScript+'</body>');
 
-  const hanoiWalkScript=`<script>(function(){
+  const hanoiWalkScript=\`<script>(function(){
     function init(){
       const settings=document.querySelector('.right-settings')?.closest('section.card');
-      if(!settings)return;
-      if(document.querySelector('#hanoiWalkCard'))return;
+      if(!settings||document.querySelector('#hanoiWalkCard'))return;
       const section=document.createElement('section');
       section.className='card wide';section.id='hanoiWalkCard';
-      section.innerHTML='<div class="hanoi-walk-head"><h2>2. ตารางเดินทุกไม้ — สูตรที่เลือก</h2><div class="hanoi-walk-tools"><label for="hanoiWalkLimit">แสดง</label><select id="hanoiWalkLimit"><option value="5">5 ไม้</option><option value="10" selected>10 ไม้</option><option value="20">20 ไม้</option><option value="30">30 ไม้</option><option value="0">ทั้งหมด</option></select><button id="hanoiWalkToggle" type="button">ซ่อน</button></div></div><div id="hanoiWalkContent" class="hanoi-walk-scroll"><table><thead><tr><th>ไม้</th><th>ผลก่อน</th><th>ตัวตั้ง</th><th>เลขเว้น</th><th>ผลถัดไป</th><th>ออกหลักนี้</th><th>เงินลง</th><th>กำไร/ขาดทุน</th><th>สะสม</th></tr></thead><tbody id="hanoiWalkBody"></tbody></table></div><div id="hanoiWalkStatus" class="help">กรอกผลย้อนหลังแล้วกดคำนวณเพื่อดูตาราง</div>';
+      section.innerHTML='<div class="hanoi-walk-head"><h2>2. ตารางเดินทุกไม้ — สูตรที่เลือก</h2><div class="hanoi-walk-tools"><label for="hanoiSimStake">จำลอง บาท/เลข</label><input id="hanoiSimStake" type="number" min="0" step="1" inputmode="decimal" value="20" aria-label="เงินจำลองต่อเลข"><label for="hanoiWalkLimit">แสดง</label><select id="hanoiWalkLimit"><option value="5">5 ไม้</option><option value="10" selected>10 ไม้</option><option value="20">20 ไม้</option><option value="30">30 ไม้</option><option value="0">ทั้งหมด</option></select><button id="hanoiWalkToggle" type="button">ซ่อน</button></div></div><div class="help">คำนวณจำลองเท่านั้น ไม่ใช่เงินเดิมพันจริง และไม่เปลี่ยนบัญชีเงินจริง</div><div id="hanoiWalkContent" class="hanoi-walk-scroll"><table><thead><tr><th>ไม้</th><th>ตัวตั้ง</th><th>เลขเว้น</th><th>ออกหลักนี้</th><th>กำไร/ขาดทุน</th><th>สะสม</th></tr></thead><tbody id="hanoiWalkBody"></tbody></table></div><div id="hanoiWalkStatus" class="help">กรอกผลย้อนหลังแล้วกดคำนวณเพื่อดูตาราง</div>';
       settings.insertAdjacentElement('afterend',section);
-      const limit=section.querySelector('#hanoiWalkLimit'),body=section.querySelector('#hanoiWalkBody');
+      const limit=section.querySelector('#hanoiWalkLimit'),stakeInput=section.querySelector('#hanoiSimStake'),body=section.querySelector('#hanoiWalkBody');
+      const fmt=n=>n.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
+      const safe=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       const render=()=>{
-        const source=document.querySelector('#actualBody');
-        if(!source)return;
-        const rows=[...source.rows];
-        const count=Number(limit.value),shown=count?rows.slice(-count):rows;
+        const source=document.querySelector('#actualBody');if(!source)return;
+        const stake=Math.max(0,Number(stakeInput.value)||0);
+        const payout=Math.max(0,Number(document.querySelector('#payout')?.value)||9.9);
         let cumulative=0;
-        const all=rows.map(row=>{
+        const all=[...source.rows].map(row=>{
           const cells=row.cells;
-          const moneyText=cells[5]?.textContent||'0';
-          const amount=Number(moneyText.replace(/[^0-9.\\-]/g,''))||0;
-          cumulative+=amount;
-          return {row,net:cumulative,amount};
+          const from=(cells[1]?.textContent||'').split('→').at(-1).trim();
+          const actual=(cells[3]?.textContent||'').split('→').at(-1).trim();
+          const omit=(cells[2]?.textContent||'').trim();
+          const digits=[...new Set(omit.match(/[0-9]/g)||[])];
+          const valid=/^[0-9]$/.test(from)&&/^[0-9]$/.test(actual)&&digits.length>0;
+          const hit=valid&&!digits.includes(actual);
+          const profit=valid?(hit?stake*payout-stake*(10-digits.length):-stake*(10-digits.length)):0;
+          cumulative+=profit;
+          return {round:cells[0]?.textContent||'',from,actual,omit,valid,profit,net:cumulative};
         });
-        const selected=count?all.slice(-count):all;
-        body.innerHTML=selected.map(({row,net,amount})=>{
-          const cells=row.cells;
-          const before=cells[1]?.textContent.trim()||'-';
-          const after=cells[3]?.textContent.trim()||'-';
-          const from=before.split('→').at(-1).trim();
-          const to=after.split('→').at(-1).trim();
-          const bet=Number(cells[4]?.querySelector('input')?.value||0);
-          const omit=cells[2]?.textContent.trim()||'-';
-          const countBet=omit==='-'?0:10-new Set(omit.replace(/[^0-9]/g,'').split('')).size;
-          const invested=bet*countBet;
-          const fmt=n=>n.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
-          const safe=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-          return '<tr class="'+(amount>0?'hanoi-win':amount<0?'hanoi-loss':'')+'"><td>'+safe(cells[0]?.textContent||'')+'</td><td>'+safe(before.split('→')[0].trim())+'</td><td>'+safe(from)+'</td><td>'+safe(omit)+'</td><td>'+safe(after.split('→')[0].trim())+'</td><td>'+safe(to)+'</td><td>'+fmt(invested)+'</td><td>'+fmt(amount)+'</td><td>'+fmt(net)+'</td></tr>';
-        }).join('');
-        section.querySelector('#hanoiWalkStatus').textContent=rows.length?'แสดง '+selected.length+' จาก '+rows.length+' ไม้ • สะสมคำนวณจากไม้แรก':'ยังไม่มีข้อมูลเดินไม้';
+        const count=Number(limit.value),shown=count?all.slice(-count):all;
+        body.innerHTML=shown.map(x=>'<tr class="'+(!x.valid?'':x.profit>=0?'hanoi-win':'hanoi-loss')+'"><td>'+safe(x.round)+'</td><td>'+safe(x.from||'-')+'</td><td>'+safe(x.omit||'-')+'</td><td>'+safe(x.actual||'-')+'</td><td>'+ (x.valid?fmt(x.profit):'—')+'</td><td>'+fmt(x.net)+'</td></tr>').join('');
+        section.querySelector('#hanoiWalkStatus').textContent='แสดง '+shown.length+' จาก '+all.length+' ไม้ • จำลอง '+fmt(stake)+' บาท/เลข • ไม่รวมไม้ที่ยังไม่มีสูตร';
       };
       limit.addEventListener('change',render);
+      stakeInput.addEventListener('input',render);
+      document.querySelector('#payout')?.addEventListener('input',render);
       section.querySelector('#hanoiWalkToggle').addEventListener('click',e=>{const area=section.querySelector('#hanoiWalkContent');area.hidden=!area.hidden;e.currentTarget.textContent=area.hidden?'แสดง':'ซ่อน';});
       const original=document.querySelector('#actualBody');
-      if(original)new MutationObserver(render).observe(original,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['value']});
-      document.addEventListener('change',e=>{if(e.target.matches('.stake-input'))queueMicrotask(render);});
+      if(original)new MutationObserver(render).observe(original,{childList:true});
       render();
     }
     if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
-  })();<\/script>`;
-  html=html.replace('</head>','<style id="hanoi-walk-css">#hanoiWalkCard{margin-top:14px}#hanoiWalkCard .hanoi-walk-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}#hanoiWalkCard h2{margin:0;font-size:21px}#hanoiWalkCard .hanoi-walk-tools{display:flex;align-items:center;gap:8px}#hanoiWalkCard .hanoi-walk-scroll{overflow-x:auto}#hanoiWalkCard table{width:100%;min-width:760px;border-collapse:collapse}#hanoiWalkCard th,#hanoiWalkCard td{padding:9px 7px;border-bottom:1px solid #dce4ef;text-align:center;white-space:nowrap}#hanoiWalkCard .hanoi-win{background:#f0fff6}#hanoiWalkCard .hanoi-loss{background:#fff3f1}#hanoiWalkCard #hanoiWalkStatus{margin-top:10px}#hanoiWalkCard [hidden]{display:none!important}</style></head>');
+  })();<\\/script>\`;
+  html=html.replace('</head>','<style id="hanoi-walk-css">#hanoiWalkCard{margin-top:14px}#hanoiWalkCard .hanoi-walk-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}#hanoiWalkCard h2{margin:0;font-size:21px}#hanoiWalkCard .hanoi-walk-tools{display:flex;align-items:center;gap:8px}#hanoiWalkCard .hanoi-walk-scroll{overflow-x:auto}#hanoiWalkCard table{width:100%;min-width:420px;border-collapse:collapse}#hanoiSimStake{width:65px!important;min-width:0!important;padding:5px!important;text-align:center}#hanoiWalkLimit{width:78px!important;min-width:0!important;padding:5px!important}#hanoiWalkCard .hanoi-walk-tools label{font-size:12px!important}#hanoiWalkCard th,#hanoiWalkCard td{padding:9px 7px;border-bottom:1px solid #dce4ef;text-align:center;white-space:nowrap}#hanoiWalkCard .hanoi-win{background:#f0fff6}#hanoiWalkCard .hanoi-loss{background:#fff3f1}#hanoiWalkCard #hanoiWalkStatus{margin-top:10px}#hanoiWalkCard [hidden]{display:none!important}</style></head>');
   html=html.replace('</body>',hanoiWalkScript+'</body>');
 
 document.open();document.write(html);document.close();
