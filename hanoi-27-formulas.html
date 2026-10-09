@@ -104,7 +104,7 @@ th,td{font-size:19px!important;line-height:1.5!important;padding-top:12px!import
   })();<\/script>`;
   html=html.replace('</body>',hanoiLayoutScript+'</body>');
 
-  const hanoiWalkScript=\`<script>(function(){
+  const hanoiWalkScript=`<script>(function(){
     function init(){
       const settings=document.querySelector('.right-settings')?.closest('section.card');
       if(!settings||document.querySelector('#hanoiWalkCard'))return;
@@ -145,7 +145,7 @@ th,td{font-size:19px!important;line-height:1.5!important;padding-top:12px!import
       render();
     }
     if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
-  })();<\\/script>\`;
+  })();<\/script>`;
   html=html.replace('</head>','<style id="hanoi-walk-css">#hanoiWalkCard{margin-top:14px}#hanoiWalkCard .hanoi-walk-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}#hanoiWalkCard h2{margin:0;font-size:21px}#hanoiWalkCard .hanoi-walk-tools{display:flex;align-items:center;gap:8px}#hanoiWalkCard .hanoi-walk-scroll{overflow-x:auto}#hanoiWalkCard table{width:100%;min-width:420px;border-collapse:collapse}#hanoiSimStake{width:65px!important;min-width:0!important;padding:5px!important;text-align:center}#hanoiWalkLimit{width:78px!important;min-width:0!important;padding:5px!important}#hanoiWalkCard .hanoi-walk-tools label{font-size:12px!important}#hanoiWalkCard th,#hanoiWalkCard td{padding:9px 7px;border-bottom:1px solid #dce4ef;text-align:center;white-space:nowrap}#hanoiWalkCard .hanoi-win{background:#f0fff6}#hanoiWalkCard .hanoi-loss{background:#fff3f1}#hanoiWalkCard #hanoiWalkStatus{margin-top:10px}#hanoiWalkCard [hidden]{display:none!important}</style></head>');
   html=html.replace('</body>',hanoiWalkScript+'</body>');
 
