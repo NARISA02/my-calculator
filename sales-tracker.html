@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#123b35">
+<title>โปรแกรมคำนวณยอดขายรายวัน</title>
+<style>
+:root{--green:#123b35;--accent:#16805d;--orange:#c27824;--bg:#f4f7f5;--card:#fff;--text:#172521;--muted:#687772;--border:#dce5e0}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;line-height:1.5}
+main{max-width:760px;margin:auto;padding:16px;display:grid;gap:16px}.hero{background:var(--green);color:white;padding:22px;border-radius:20px}.hero h1{font-size:1.45rem;margin:0 0 4px}.hero p{margin:0;color:#d8eae4}.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 2px 8px #123b3508}
+h2{font-size:1.1rem;margin:0 0 14px}h3{font-size:1rem;margin:0 0 8px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.metric{border:1px solid var(--border);border-radius:13px;padding:13px;min-width:0}.metric .label,.muted{font-size:.86rem;color:var(--muted)}.value{font-size:clamp(1.15rem,5vw,1.6rem);font-weight:750;overflow-wrap:anywhere}.green{color:var(--accent)}.orange{color:var(--orange)}label{display:block;font-size:.9rem;font-weight:650;margin-bottom:5px}input{width:100%;padding:12px;border:1px solid #cbd7d1;border-radius:10px;font:inherit;background:#fff;color:var(--text)}input:focus{outline:2px solid #16805d55;border-color:var(--accent)}.field{margin-bottom:12px}.btn{border:0;border-radius:10px;padding:12px 14px;font:inherit;font-weight:700;cursor:pointer;background:var(--accent);color:white}.btn.secondary{background:#edf3ef;color:var(--green);border:1px solid var(--border)}.btn.danger{background:#fff0ee;color:#a42d20;border:1px solid #f1c5bf}.btnrow{display:flex;gap:8px;flex-wrap:wrap}.btnrow .btn{flex:1}.progress{height:9px;background:#e7eeea;border-radius:99px;overflow:hidden;margin:10px 0}.progress div{height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .2s}.summary{background:#f0f5f1;border-radius:13px;padding:14px;margin-top:12px}.summary .value{font-size:1.4rem}.records{display:grid;gap:9px;margin-top:12px}.record{border:1px solid var(--border);border-radius:12px;padding:12px;display:flex;gap:10px;align-items:center;justify-content:space-between}.record-info{min-width:0}.record-info strong{display:block;font-size:1.05rem}.record-info small{display:block;color:var(--muted);overflow-wrap:anywhere}.record-actions{display:flex;gap:6px;flex-shrink:0}.record-actions button{font-size:.8rem;padding:7px 9px}.empty{color:var(--muted);text-align:center;padding:20px}.note{font-size:.82rem;color:var(--muted);margin:8px 0 0}.section-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.section-head h2{margin:0 0 12px}
+@media(max-width:420px){main{padding:10px}.card{padding:13px}.record{align-items:flex-start}.record-actions{flex-direction:column}.grid{gap:8px}}
+</style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <h1>📊 โปรแกรมคำนวณยอดขาย</h1>
+    <p>บันทึกยอดรายวัน · ติดตามเป้ารายเดือน · คำนวณอัตโนมัติ</p>
+    <p id="monthHeading" style="margin-top:12px;font-weight:700;color:#fff"></p>
+  </header>
+  <section class="card">
+    <h2>ตั้งค่าเป้าหมาย</h2>
+    <div class="field"><label for="monthGoal">เป้าหมายยอดขายรายเดือน (บาท)</label><input id="monthGoal" type="number" min="0" step="0.01" value="500000"></div>
+    <div class="field"><label for="dayGoal">เป้าหมายยอดขายรายวัน (บาท)</label><input id="dayGoal" type="number" min="0" step="0.01" value="20000"></div>
+    <p class="note">เปลี่ยนเป้าหมายได้ทุกเมื่อ ระบบจะคำนวณใหม่ทันที</p>
+  </section>
+  <section class="card">
+    <h2>ภาพรวมยอดขายประจำวัน</h2>
+    <div class="field"><label for="overviewDate">เลือกวันที่ต้องการดูภาพรวม</label><input id="overviewDate" type="date"></div>
+    <div class="grid">
+      <div class="metric"><div class="label">ยอดขายวันนี้</div><div class="value green" id="overviewDayTotal">0 บาท</div></div>
+      <div class="metric"><div class="label">ทำได้จากเป้ารายวัน</div><div class="value" id="overviewDayPct">0%</div></div>
+      <div class="metric"><div class="label">ยอดที่ยังขาด</div><div class="value orange" id="overviewDayRemaining">20,000 บาท</div></div>
+      <div class="metric"><div class="label">เปอร์เซ็นต์ที่ขาด</div><div class="value orange" id="overviewDayGapPct">100%</div></div>
+    </div>
+    <div class="progress"><div id="overviewDayProgressBar"></div></div>
+  </section>
+  <section>
+    <h2>ภาพรวมยอดขายประจำเดือน</h2>
+    <div class="grid">
+      <div class="metric"><div class="label">ยอดขายสะสม</div><div class="value green" id="monthTotal">0 บาท</div></div>
+      <div class="metric"><div class="label">ทำได้แล้ว</div><div class="value" id="monthPct">0%</div></div>
+      <div class="metric"><div class="label">ยอดเงินที่ยังขาด</div><div class="value orange" id="monthRemaining">500,000 บาท</div></div>
+      <div class="metric"><div class="label">เปอร์เซ็นต์ที่ขาด</div><div class="value orange" id="monthGapPct">100%</div></div>
+    </div>
+    <div class="card" style="margin-top:10px">
+      <div class="section-head"><strong>ความคืบหน้าเป้ารายเดือน</strong><strong id="progressText">0%</strong></div>
+      <div class="progress"><div id="progressBar"></div></div>
+      <div class="muted" id="goalCaption"></div>
+    </div>
+    <div class="summary">
+      <div class="muted">ยอดเฉลี่ยที่ต้องขายต่อวัน</div>
+      <div class="value" id="neededPerDay">— บาท/วัน</div>
+      <div class="note" id="daysLeftText"></div>
+    </div>
+  </section>
+  <section class="card">
+    <h2>บันทึกยอดขายรายวัน</h2>
+    <form id="saleForm">
+      <div class="field"><label for="saleDate">วันที่ขาย</label><input id="saleDate" type="date" required></div>
+      <div class="field"><label for="saleAmount">ยอดขาย (บาท)</label><input id="saleAmount" type="number" min="0" step="0.01" placeholder="เช่น 15000" required></div>
+      <div class="field"><label for="saleNote">รายละเอียด (ไม่บังคับ)</label><input id="saleNote" type="text" maxlength="150" placeholder="เช่น ยอดขายหน้าร้าน"></div>
+      <button class="btn" type="submit" style="width:100%">＋ บันทึกยอดขาย</button>
+    </form>
+    <p class="note">บันทึกได้หลายรายการต่อวัน ระบบจะรวมยอดให้อัตโนมัติ</p>
+  </section>
+  <section class="card">
+    <h2>สรุปยอดขายวันที่เลือก</h2>
+    <div class="field"><label for="summaryDate">เลือกวันที่</label><input id="summaryDate" type="date"></div>
+    <div class="grid">
+      <div class="metric"><div class="label">ยอดขายวันนี้</div><div class="value" id="dayTotal">0 บาท</div></div>
+      <div class="metric"><div class="label">ทำได้จากเป้ารายวัน</div><div class="value green" id="dayPct">0%</div></div>
+      <div class="metric"><div class="label">ยังขาด (บาท)</div><div class="value orange" id="dayRemaining">20,000 บาท</div></div>
+      <div class="metric"><div class="label">ยังขาด (%)</div><div class="value orange" id="dayGapPct">100%</div></div>
+    </div>
+    <div class="progress"><div id="dayProgressBar"></div></div>
+  </section>
+  <section class="card">
+    <div class="section-head"><h2>ประวัติยอดขาย</h2><span class="muted" id="recordCount"></span></div>
+    <div class="field"><label for="historyDate">กรองรายการตามวันที่</label><input id="historyDate" type="date"></div>
+    <div class="summary" style="margin-top:0"><div class="muted">ยอดรวมของวันที่เลือก</div><div class="value" id="historyTotal">0 บาท</div></div>
+    <div id="records" class="records"></div>
+    <div class="btnrow" style="margin-top:12px">
+      <button id="exportBtn" class="btn secondary" type="button">ส่งออกข้อมูล CSV</button>
+      <button id="clearBtn" class="btn danger" type="button">ลบประวัติทั้งหมด</button>
+    </div>
+    <p class="note">ข้อมูลบันทึกไว้ในเบราว์เซอร์ของอุปกรณ์นี้ หากล้างข้อมูลเบราว์เซอร์หรือเปลี่ยนอุปกรณ์ ข้อมูลอาจไม่ตามไปด้วย ควรส่งออก CSV สำรองเป็นระยะ</p>
+  </section>
+</main>
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const today = new Date();
+  const localDate = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const money = n => Number(n||0).toLocaleString('th-TH',{maximumFractionDigits:2}) + ' บาท';
+  const pct = n => Number(n||0).toLocaleString('th-TH',{maximumFractionDigits:2}) + '%';
+  const safeNumber = id => Math.max(0, Number($(id).value) || 0);
+  let records = [];
+  try { records = JSON.parse(localStorage.getItem('salesTrackerRecordsV1') || '[]'); if(!Array.isArray(records)) records=[]; } catch(e){ records=[]; }
+  const persist = () => { try { localStorage.setItem('salesTrackerRecordsV1', JSON.stringify(records)); } catch(e){ alert('บันทึกข้อมูลในอุปกรณ์ไม่สำเร็จ กรุณาส่งออก CSV เพื่อสำรองข้อมูล'); } };
+  const sum = list => list.reduce((s,r)=>s+Number(r.amount||0),0);
+  const monthRecords = () => records.filter(r => r.date && r.date.slice(0,7)===currentMonth());
+  const dayRecords = date => records.filter(r=>r.date===date);
+  const currentMonth = () => ($('summaryDate').value || $('saleDate').value || localDate(today)).slice(0,7);
+  function update(){
+    const mg=safeNumber('monthGoal'), dg=safeNumber('dayGoal'), m=currentMonth();
+    const total=sum(monthRecords()), done=mg>0?total/mg*100:0, remain=Math.max(0,mg-total);
+    const selectedDate=$('summaryDate').value || localDate(today);
+    const dtotal=sum(dayRecords(selectedDate)), dp=dg>0?dtotal/dg*100:0;
+    const [year,month]=m.split('-').map(Number), daysInMonth=new Date(year,month,0).getDate();
+    const selectedDay=Number(selectedDate.slice(8,10)) || today.getDate();
+    const daysLeft=Math.max(1,daysInMonth-selectedDay+1);
+    $('monthHeading').textContent=new Date(year,month-1,1).toLocaleDateString('th-TH',{month:'long',year:'numeric'});
+    const overviewDate=$('overviewDate').value || selectedDate;
+    const overviewTotal=sum(dayRecords(overviewDate)), overviewPct=dg>0?overviewTotal/dg*100:0;
+    $('overviewDayTotal').textContent=money(overviewTotal);
+    $('overviewDayPct').textContent=pct(overviewPct);
+    $('overviewDayRemaining').textContent=money(Math.max(0,dg-overviewTotal));
+    $('overviewDayGapPct').textContent=pct(dg>0?Math.max(0,100-overviewPct):0);
+    $('overviewDayProgressBar').style.width=Math.min(100,overviewPct)+'%';
+    $('monthTotal').textContent=money(total); $('monthPct').textContent=pct(done);
+    $('monthRemaining').textContent=money(remain); $('monthGapPct').textContent=pct(mg>0?Math.max(0,100-done):0);
+    $('progressText').textContent=pct(done); $('progressBar').style.width=Math.min(100,done)+'%';
+    $('goalCaption').textContent=mg>0?(done>=100?'ถึงเป้าหมายรายเดือนแล้ว 🎉':`เป้าหมาย ${money(mg)} · ยังขาด ${money(remain)}`):'กรอกเป้าหมายรายเดือนเพื่อคำนวณเปอร์เซ็นต์';
+    $('neededPerDay').textContent=money(remain/daysLeft).replace(' บาท','')+' บาท/วัน';
+    $('daysLeftText').textContent=`คำนวณจากยอดที่ขาด ÷ ${daysLeft} วัน (นับวันที่เลือกถึงสิ้นเดือน รวมวันที่เลือก)`;
+    $('dayTotal').textContent=money(dtotal); $('dayPct').textContent=pct(dp);
+    $('dayRemaining').textContent=money(Math.max(0,dg-dtotal)); $('dayGapPct').textContent=pct(dg>0?Math.max(0,100-dp):0);
+    $('dayProgressBar').style.width=Math.min(100,dp)+'%';
+    $('recordCount').textContent=`${monthRecords().length} รายการในเดือนนี้`;
+    const hd=$('historyDate').value || selectedDate;
+    $('historyTotal').textContent=money(sum(dayRecords(hd)));
+    renderRecords(hd);
+  }
+  function renderRecords(date){
+    const root=$('records'); root.replaceChildren();
+    const list=records.filter(r=>r.date===date).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    if(!list.length){const p=document.createElement('div');p.className='empty';p.textContent='ยังไม่มีรายการขายในวันที่เลือก';root.appendChild(p);return;}
+    for(const r of list){
+      const item=document.createElement('div');item.className='record';
+      const info=document.createElement('div');info.className='record-info';
+      const strong=document.createElement('strong');strong.textContent=money(r.amount);info.appendChild(strong);
+      const small=document.createElement('small');small.textContent=r.note || 'ไม่มีรายละเอียด';info.appendChild(small);
+      const actions=document.createElement('div');actions.className='record-actions';
+      const edit=document.createElement('button');edit.className='btn secondary';edit.type='button';edit.textContent='แก้ไข';edit.addEventListener('click',()=>editRecord(r.id));
+      const del=document.createElement('button');del.className='btn danger';del.type='button';del.textContent='ลบ';del.addEventListener('click',()=>deleteRecord(r.id));
+      actions.append(edit,del);item.append(info,actions);root.appendChild(item);
+    }
+  }
+  function editRecord(id){
+    const r=records.find(x=>x.id===id); if(!r)return;
+    const date=prompt('วันที่ขาย (YYYY-MM-DD)',r.date); if(date===null)return;
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){alert('รูปแบบวันที่ไม่ถูกต้อง');return;}
+    const amount=prompt('ยอดขาย (บาท)',String(r.amount)); if(amount===null)return;
+    if(amount.trim()===''||!Number.isFinite(Number(amount))||Number(amount)<0){alert('กรุณากรอกยอดขายเป็นตัวเลขตั้งแต่ 0 ขึ้นไป');return;}
+    const note=prompt('รายละเอียด',r.note||''); if(note===null)return;
+    records=records.map(x=>x.id===id?{...x,date,amount:Number(amount),note:note.trim()}:x);
+    persist(); $('historyDate').value=date; $('summaryDate').value=date; update();
+  }
+  function deleteRecord(id){
+    if(!confirm('ต้องการลบรายการขายนี้หรือไม่?'))return;
+    records=records.filter(r=>r.id!==id);persist();update();
+  }
+  $('saleDate').value=localDate(today); $('summaryDate').value=localDate(today); $('historyDate').value=localDate(today); $('overviewDate').value=localDate(today);
+  $('saleForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const date=$('saleDate').value, amount=$('saleAmount').value.trim(), note=$('saleNote').value.trim();
+    if(!date||amount===''||!Number.isFinite(Number(amount))||Number(amount)<0){alert('กรุณากรอกวันที่และยอดขายให้ถูกต้อง');return;}
+    records.push({id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8),createdAt:Date.now(),date,amount:Number(amount),note});
+    persist(); $('summaryDate').value=date; $('historyDate').value=date; $('saleAmount').value=''; $('saleNote').value=''; update();
+  });
+  ['monthGoal','dayGoal','saleDate','overviewDate'].forEach(id=>$(id).addEventListener('input',update));
+  $('summaryDate').addEventListener('change',()=>{if($('summaryDate').value){$('historyDate').value=$('summaryDate').value;}update();});
+  $('historyDate').addEventListener('change',update);
+  $('clearBtn').addEventListener('click',()=>{
+    if(!records.length){alert('ยังไม่มีประวัติให้ลบ');return;}
+    if(confirm('ยืนยันลบประวัติยอดขายทั้งหมด? การลบนี้ย้อนกลับไม่ได้')){records=[];persist();update();}
+  });
+  $('exportBtn').addEventListener('click',()=>{
+    const rows=[['วันที่','ยอดขาย (บาท)','รายละเอียด'],...records.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(r=>[r.date,r.amount,r.note||''])];
+    const csv='\uFEFF'+rows.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+    const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='ยอดขายรายวัน.csv';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+  });
+  update();
+})();
+</script>
+</body>
+</html>
