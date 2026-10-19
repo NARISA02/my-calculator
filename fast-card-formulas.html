@@ -272,6 +272,18 @@ th,td{font-size:19px!important;line-height:1.5!important;padding-top:12px!import
 </table>
 </div>
 </section>
+
+<section class="card wide" id="playStatsCard">
+<div class="head"><h2>5. สถิติการเล่นจริง — แยกตามสูตร</h2><button class="toggle">ซ่อน</button></div>
+<div class="body">
+<div class="note">บันทึกอัตโนมัติเมื่อเพิ่มผลใหม่ครบ 5 หลัก โดยเก็บสูตรและหลักที่เลือกในขณะนั้น ข้อมูลอยู่ในเบราว์เซอร์เครื่องนี้</div>
+<div id="playStatsSummary" class="moneygrid" style="margin-top:10px"></div>
+<div class="scroll" style="margin-top:10px"><table style="min-width:520px"><thead><tr><th>สูตร</th><th>จำนวนไม้</th><th>เข้า</th><th>อัตราเข้า</th><th>หลักที่เล่นบ่อย</th></tr></thead><tbody id="playStatsBody"></tbody></table></div>
+<h3 style="margin-top:14px">ประวัติไม้ที่บันทึก</h3>
+<div class="scroll"><table style="min-width:620px"><thead><tr><th>วันเวลา</th><th>สูตร</th><th>หลัก</th><th>ผลก่อน</th><th>เลขเว้น</th><th>ผลจริง</th><th>ผล</th></tr></thead><tbody id="playLogBody"></tbody></table></div>
+<div class="actions"><button id="clearPlayStats" class="danger">ล้างสถิติการเล่น</button><button id="exportPlayStats" class="silver">ส่งออกประวัติ CSV</button></div>
+</div>
+</section>
 </div>
 </main>
 <script>const formulas=[['สูตรเลขมงคล',['278','348','459','560','167','278','348','459','056','167']],['สูตร 2',['084','980','896','805','713','620','528','436','352','260']],['สูตรแมวกวัก',['349','045','015','126','378','348','459','056','167','278']],['สูตร KU หวยไทย 30 วิ',['139','236','139','145','356','034','016','267','056','028']],['สูตรโต้ดทันใจ V.2',['19','02','13','24','35','46','57','68','79','08']],['สูตรเงิน',['456','567','678','789','069','019','012','129','234','345']],['สูตรเขียว',['157','489','179','579','359','238','019','238','359','012']],['สูตรทอง',['148','589','089','048','026','346','359','356','024','678']],['สูตรถัดมา',['459','056','167','278','389','049','015','126','237','459']],['สูตรลักษมีประทานพร',['39','05','15','57','85','02','26','39','40','16']],['สูตรกวักเงิน 30 วิ',['239','034','145','256','367','478','589','069','017','128']],['สูตรไหลเช้านี้',['045','015','126','378','348','459','056','167','278','346']],['สูตรหน้า3หลัง4',['056','167','278','389','049','015','126','237','348','459']],['สูตร หน้า 3 หลัง 3 พี่อลิน',['456','567','678','789','890','901','012','123','234','345']],['สูตรไหลรับโชค',['146','257','368','479','058','169','027','138','249','035']],['สูตรเอไองง',['278','238','059','156','267','238','389','059','156','267']],['สูตรไกล',['189','029','013','124','235','346','457','568','379','078']],['สูตรล้อม',['078','189','259','356','467','235','346','047','018','129']],['สูตร พระพิฆเนศ VIP',['236','294','486','168','475','289','318','754','137','946']],['สูตร หน้า 2 หลัง 4 พี่อลิน',['567','678','789','890','901','013','123','234','345','456']],['สูตร หน้า 4 หลัง 2 พี่อลิน',['345','456','567','678','789','890','901','012','123','234']],['สูตรกุมารกระซิบ (ปรางค์แนะนำ)',['136','356','145','248','579','037','147','056','145','256']],['สูตรตรงข้าม 3-3',['901','012','123','234','345','456','567','678','789','890']],['สูตร ที่ยังมีลมหายใจ',['679','078','189','029','013','124','235','346','457','568']]].map((x,i)=>({id:'f'+i,name:x[0],map:Object.fromEntries(x[1].map((v,n)=>[n,v]))}));
@@ -279,6 +291,7 @@ formulas.push(...[{"id":"hour_5","name":"สูตรตี 5","map":{"0":"367",
 const $=id=>document.getElementById(id),formula=$('formula'),position=$('position'),historyField=$('history'),keypad=$('keypad'),preview=$('preview'),omit=$('omit'),stake=$('stake'),payout=$('payout'),roundBody=$('roundBody'),recommendGood=$('recommendGood'),recommendLow=$('recommendLow'),positionsBody=$('positionsBody');
 const names=['หลักหมื่น','หลักพัน','หลักร้อย','หลักสิบ','หลักหน่วย'];const VIEW_MODE_KEY='fast-formula:view-mode';function setViewMode(mode){const selected=['mobile','tablet'].includes(mode)?mode:'auto';document.body.dataset.view=selected;document.querySelectorAll('.view-mode-button').forEach(button=>button.classList.toggle('selected',button.dataset.view===selected));localStorage.setItem(VIEW_MODE_KEY,selected)}
 let buffer='';
+const PLAY_LOG_KEY='fast-formula:play-log-v1';let playLog=[];try{playLog=JSON.parse(localStorage.getItem(PLAY_LOG_KEY)||'[]');if(!Array.isArray(playLog))playLog=[]}catch(e){playLog=[]}let knownRows=[];
 formulas.forEach(f=>formula.add(new Option(f.name,f.id)));
 for(let i=0;
 i<10;
@@ -295,7 +308,11 @@ i++){let prev=rs[i-1],next=rs[i],src=prev[p],o=f.map[src]||'',actual=next[p],hit
 win+=hit?1:0;
 cost+=c;
 net+=profit;
-d.push({i,prev,next,src,o,actual,hit,c,profit,net})}return{win,n:d.length,rate:d.length?win/d.length:0,net,cost,d}}function baht(n){return (+n||0).toFixed(2)}function render(){let rs=rows(),f=formulas.find(x=>x.id===formula.value)||formulas[0],p=+position.value,last=rs.at(-1);
+d.push({i,prev,next,src,o,actual,hit,c,profit,net})}return{win,n:d.length,rate:d.length?win/d.length:0,net,cost,d}}
+function savePlayLog(){localStorage.setItem(PLAY_LOG_KEY,JSON.stringify(playLog))}
+function recordPlayRound(prev,next){if(!prev||!next||prev.length!==5||next.length!==5)return;const f=formulas.find(x=>x.id===formula.value)||formulas[0],p=+position.value,src=prev[p],o=f.map[src]||'',actual=next[p];playLog.push({time:new Date().toISOString(),formulaId:f.id,formulaName:f.name,position:p,prev,next,src,omit:o,actual,hit:!o.includes(actual)});if(playLog.length>5000)playLog=playLog.slice(-5000);savePlayLog()}
+function renderPlayStats(){const formulasBy={};for(const x of playLog){if(!formulasBy[x.formulaId])formulasBy[x.formulaId]={name:x.formulaName,n:0,w:0,positions:{}};const z=formulasBy[x.formulaId];z.n++;if(x.hit)z.w++;z.positions[x.position]=(z.positions[x.position]||0)+1}const list=Object.values(formulasBy).sort((a,b)=>b.n-a.n||(b.w/b.n)-(a.w/a.n));$('playStatsSummary').innerHTML='<div class="omitbox"><div class="note">บันทึกทั้งหมด</div><div class="omit">'+playLog.length+'</div><div class="note">ไม้</div></div><div class="omitbox"><div class="note">อัตราเข้ารวม</div><div class="omit">'+(playLog.length?(playLog.filter(x=>x.hit).length/playLog.length*100).toFixed(1):'0.0')+'%</div><div class="note">จากข้อมูลที่บันทึก</div></div>';$('playStatsBody').innerHTML=list.map(z=>{const top=Object.entries(z.positions).sort((a,b)=>b[1]-a[1])[0];return '<tr><td>'+z.name+'</td><td>'+z.n+'</td><td>'+z.w+'</td><td>'+(z.w/z.n*100).toFixed(1)+'%</td><td>'+(top?names[+top[0]]+' ('+top[1]+')':'-')+'</td></tr>'}).join('')||'<tr><td colspan="5">ยังไม่มีประวัติการเล่นที่บันทึก</td></tr>';$('playLogBody').innerHTML=playLog.slice().reverse().slice(0,100).map(x=>'<tr><td>'+new Date(x.time).toLocaleString('th-TH')+'</td><td>'+x.formulaName+'</td><td>'+names[x.position]+'</td><td>'+x.prev+'</td><td>'+x.omit+'</td><td>'+x.next+'</td><td class="'+(x.hit?'good':'bad')+'">'+(x.hit?'เข้า':'ไม่เข้า')+'</td></tr>').join('')||'<tr><td colspan="7">ยังไม่มีประวัติ</td></tr>'}
+function baht(n){return (+n||0).toFixed(2)}function render(){let rs=rows(),f=formulas.find(x=>x.id===formula.value)||formulas[0],p=+position.value,last=rs.at(-1);
 omit.textContent=last?(f.map[last[p]]||'').split('').join(' '):'-';
 let r=stats(rs,f,p),limit=+$('roundLimit').value,shown=limit?r.d.slice(-limit):r.d;
 roundBody.innerHTML=shown.map(x=>`<tr class="${x.hit?'round-win':'round-loss'}">
@@ -332,13 +349,10 @@ return `<tr>
 <td>${z.n?baht(z.net):'-'}</td>
 <td>${z.n?(z.rate>=.75?'น่าเล่น':'ต่ำกว่า 75%'):'ข้อมูลไม่พอ'}</td>
 </tr>`}).join('');
-localStorage.setItem('fast-formula:history',historyField.value)}function paint(){preview.textContent=buffer?buffer.padEnd(5,'—').split('').join(' '):'— — — — —'}keypad.addEventListener('click',e=>{let b=e.target.closest('[data-n]');
+localStorage.setItem('fast-formula:history',historyField.value);renderPlayStats()}function paint(){preview.textContent=buffer?buffer.padEnd(5,'—').split('').join(' '):'— — — — —'}keypad.addEventListener('click',e=>{let b=e.target.closest('[data-n]');
 if(!b)return;
 buffer+=b.dataset.n;
-if(buffer.length===5){let v=historyField.value.trim();
-historyField.value=v?v+'\n'+buffer:buffer;
-buffer='';
-render()}paint()});
+if(buffer.length===5){let before=rows();let v=historyField.value.trim();historyField.value=v?v+'\n'+buffer:buffer;let after=rows();if(after.length>before.length)recordPlayRound(before.at(-1),after.at(-1));knownRows=after;buffer='';render()}paint()});
 $('backspace').onclick=()=>{buffer=buffer.slice(0,-1);
 paint()};
 $('clearAll').onclick=()=>{if(!confirm('ยืนยันล้างผลย้อนหลังทั้งหมดใช่หรือไม่?'))return;buffer='';
@@ -349,8 +363,7 @@ $('clearHistory').onclick=()=>{if(buffer){buffer='';paint();return}let a=rows();
 $('calculate').onclick=render;
 $('roundLimit').value=localStorage.getItem('fast-formula:roundLimit')||'10';
 $('roundLimit').onchange=()=>{localStorage.setItem('fast-formula:roundLimit',$('roundLimit').value);render()};
-historyField.addEventListener('input',()=>{clearTimeout(window.t);
-window.t=setTimeout(render,100)});
+historyField.addEventListener('input',()=>{clearTimeout(window.t);const now=rows();if(now.length===knownRows.length+1&&knownRows.every((x,i)=>x===now[i]))recordPlayRound(knownRows.at(-1),now.at(-1));knownRows=now;window.t=setTimeout(render,100)});
 formula.onchange=position.onchange=render;
 stake.oninput=payout.oninput=render;
 document.querySelectorAll('[data-money]').forEach(b=>b.onclick=()=>$('bankroll').value=b.dataset.money);
@@ -360,7 +373,9 @@ render()});
 document.querySelectorAll('.toggle').forEach((b,i)=>b.onclick=()=>{let body=b.closest('.card').querySelector('.body');
 body.classList.toggle('hidden');
 b.textContent=body.classList.contains('hidden')?'แสดง':'ซ่อน'});
-document.querySelectorAll('.view-mode-button').forEach(button=>button.onclick=()=>setViewMode(button.dataset.view));setViewMode(localStorage.getItem(VIEW_MODE_KEY)||'auto');historyField.value=localStorage.getItem('fast-formula:history')||'';
+document.querySelectorAll('.view-mode-button').forEach(button=>button.onclick=()=>setViewMode(button.dataset.view));setViewMode(localStorage.getItem(VIEW_MODE_KEY)||'auto');historyField.value=localStorage.getItem('fast-formula:history')||'';knownRows=rows();
+$('clearPlayStats').onclick=()=>{if(!confirm('ยืนยันล้างประวัติและสถิติการเล่นทั้งหมดใช่หรือไม่?'))return;playLog=[];savePlayLog();renderPlayStats()};
+$('exportPlayStats').onclick=()=>{const esc=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const lines=[['วันเวลา','สูตร','หลัก','ผลก่อน','เลขเว้น','ผลจริง','สถานะ'],...playLog.map(x=>[new Date(x.time).toLocaleString('th-TH'),x.formulaName,names[x.position],x.prev,x.omit,x.next,x.hit?'เข้า':'ไม่เข้า'])];const blob=new Blob(['\ufeff'+lines.map(row=>row.map(esc).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='fast-card-play-history.csv';a.click();URL.revokeObjectURL(url)};
 paint();
 render();
 </script>
