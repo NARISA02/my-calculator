@@ -239,16 +239,16 @@ th,td{font-size:19px!important;line-height:1.5!important;padding-top:12px!import
 <div class="body">
 <div class="recs">
 <div class="rec goodbox">
-<h3>✅ 80% ขึ้นไป • น่าเล่น</h3>
-<div id="recommendGood"></div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><h3>✅ 80% ขึ้นไป • น่าเล่น</h3><button type="button" class="rec-toggle silver">ซ่อน</button></div>
+<div class="rec-content" id="recommendGood"></div>
 </div>
 <div class="rec" style="background:#fff9e8">
-<h3>🟡 75% ถึงต่ำกว่า 80% • ระดับกลาง</h3>
-<div id="recommendMedium"></div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><h3>🟡 75% ถึงต่ำกว่า 80% • ระดับกลาง</h3><button type="button" class="rec-toggle silver">ซ่อน</button></div>
+<div class="rec-content" id="recommendMedium"></div>
 </div>
 <div class="rec lowbox">
-<div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><h3>⬇️ ต่ำกว่า 75% • ควรระวัง</h3><button type="button" id="toggleLowRates" class="silver">ซ่อนรายการ</button></div>
-<div id="recommendLow"></div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><h3>⬇️ ต่ำกว่า 75% • ควรระวัง</h3><button type="button" id="toggleLowRates" class="rec-toggle silver">ซ่อน</button></div>
+<div class="rec-content" id="recommendLow"></div>
 </div>
 </div>
 </div>
@@ -379,7 +379,7 @@ b.textContent=body.classList.contains('hidden')?'แสดง':'ซ่อน'});
 document.querySelectorAll('.view-mode-button').forEach(button=>button.onclick=()=>setViewMode(button.dataset.view));setViewMode(localStorage.getItem(VIEW_MODE_KEY)||'auto');historyField.value=localStorage.getItem('fast-formula:history')||'';knownRows=rows();
 $('clearPlayStats').onclick=()=>{if(!confirm('ยืนยันล้างประวัติและสถิติการเล่นทั้งหมดใช่หรือไม่?'))return;playLog=[];savePlayLog();renderPlayStats()};
 $('exportPlayStats').onclick=()=>{const esc=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const lines=[['วันเวลา','สูตร','หลัก','ผลก่อน','เลขเว้น','ผลจริง','สถานะ'],...playLog.map(x=>[new Date(x.time).toLocaleString('th-TH'),x.formulaName,names[x.position],x.prev,x.omit,x.next,x.hit?'เข้า':'ไม่เข้า'])];const blob=new Blob(['\ufeff'+lines.map(row=>row.map(esc).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='fast-card-play-history.csv';a.click();URL.revokeObjectURL(url)};
-$('toggleLowRates').onclick=()=>{const hidden=recommendLow.classList.toggle('hidden');$('toggleLowRates').textContent=hidden?'แสดงรายการ':'ซ่อนรายการ'};
+document.querySelectorAll('.rec-toggle').forEach(b=>b.onclick=()=>{const content=b.closest('.rec').querySelector('.rec-content');const hidden=content.classList.toggle('hidden');b.textContent=hidden?'แสดง':'ซ่อน'});
 paint();
 render();
 </script>
