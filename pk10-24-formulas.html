@@ -1,4 +1,4 @@
-<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>กำลังเปิด PK10 รวม 27 สูตร...</title><style id="global-readable-font">
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>กำลังเปิด PK10 รวม 33 สูตร...</title><style id="global-readable-font">
 body{font-family:"Noto Sans Thai","Leelawadee UI",Tahoma,sans-serif!important}
 @media(max-width:900px){
 body{font-size:20px!important;line-height:1.55!important}
@@ -13,10 +13,10 @@ th,td{font-size:19px!important;line-height:1.5!important;padding-top:12px!import
 .recommend-name{font-size:19px!important}.recommend-meta,.badge{font-size:16px!important}
 .number-key,.pad button,#keypad button{font-size:22px!important;min-height:50px!important}
 }
-</style></head><body><div style="font-family:system-ui;padding:24px;text-align:center">กำลังโหลด PK10 รวม 27 สูตร...</div><script>
+</style></head><body><div style="font-family:system-ui;padding:24px;text-align:center">กำลังโหลด PK10 รวม 33 สูตร...</div><script>
 (async()=>{
   const response=await fetch('thai-30sec-8-formulas.html?base=pk10-26');let html=await response.text();
-  html=html.replaceAll('ห้องรวม 21 สูตร','PK10 รวม 27 สูตร').replaceAll('รวม 21 สูตร','PK10 รวม 27 สูตร').replaceAll('ทั้ง 21 สูตร','ทั้ง 27 สูตร').replaceAll('และทั้งสองหลัก','และทั้ง 10 อันดับ').replaceAll('ทั้งสองหลัก','ทั้ง 10 อันดับ').replaceAll('ผล 2 หลัก','ผล PK10 จำนวน 10 ตัว').replaceAll('thai30-real','pk10-24-real').replaceAll('thai30:','pk10-24:');
+  html=html.replaceAll('ห้องรวม 21 สูตร','PK10 รวม 33 สูตร').replaceAll('รวม 21 สูตร','PK10 รวม 33 สูตร').replaceAll('ทั้ง 21 สูตร','ทั้ง 33 สูตร').replaceAll('และทั้งสองหลัก','และทั้ง 10 อันดับ').replaceAll('ทั้งสองหลัก','ทั้ง 10 อันดับ').replaceAll('ผล 2 หลัก','ผล PK10 จำนวน 10 ตัว').replaceAll('thai30-real','pk10-24-real').replaceAll('thai30:','pk10-24:');
   const positionOptions=Array.from({length:10},(_,index)=>`<option value="rank${index+1}">อันดับ ${index+1}</option>`).join('');
   html=html.replace('<div><label for="positionSelect">ปักหลัก</label><select id="positionSelect"><option value="unit">หลักหน่วย</option><option value="tens">หลักสิบ</option></select></div>',`<div><label for="positionSelect">ปักอันดับ</label><select id="positionSelect">${positionOptions}</select></div>`);
   html=html.replace('placeholder="04&#10;79&#10;32&#10;47&#10;81"','placeholder="3810629475&#10;7452106839&#10;0297184563"').replace('เลขที่กำลังกรอก • ครบ 2 ตัวบันทึกอัตโนมัติ','เลขที่กำลังกรอก • ครบ 10 ตัวบันทึกอัตโนมัติ • 0 คือไพ่ 10').replace('<div id="padPreviewNumber" class="pad-preview-number">__</div>','<div id="padPreviewNumber" class="pad-preview-number">__________</div>').replace('แตะครบ 2 ตัว ระบบบันทึกและคำนวณอัตโนมัติ','แตะครบ 10 ตัว ระบบบันทึกและคำนวณอัตโนมัติ โดยใช้ 0 แทนไพ่หมายเลข 10');
