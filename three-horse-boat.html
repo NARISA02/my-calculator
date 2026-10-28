@@ -184,6 +184,7 @@ th,td{font-size:19px!important;line-height:1.5!important;padding-top:12px!import
 <div class="omitbox">
 <div class="note" style="text-align:center">เลขเว้นของสูตรที่เลือก</div>
 <div class="omit" id="omit">-</div>
+<div class="note" id="omitCaption" style="text-align:center;font-size:11px;margin-top:4px;line-height:1.35">เลือกสูตรและอันดับเพื่อดูเลขเว้น</div>
 </div>
 <div class="money">
 <h3>💰 ตั้งค่าคำนวณกำไร–ขาดทุน</h3>
@@ -313,7 +314,7 @@ function savePlayLog(){localStorage.setItem(PLAY_LOG_KEY,JSON.stringify(playLog)
 function recordPlayRound(prev,next){if(!prev||!next||prev.length!==3||next.length!==3)return;const f=formulas.find(x=>x.id===formula.value)||formulas[0],p=+position.value,src=prev[p],o=f.map[src]||'',actual=next[p];playLog.push({time:new Date().toISOString(),formulaId:f.id,formulaName:f.name,position:p,prev,next,src,omit:o,actual,hit:!o.includes(actual)});if(playLog.length>5000)playLog=playLog.slice(-5000);savePlayLog()}
 function renderPlayStats(){const formulasBy={};for(const x of playLog){if(!formulasBy[x.formulaId])formulasBy[x.formulaId]={name:x.formulaName,n:0,w:0,positions:{}};const z=formulasBy[x.formulaId];z.n++;if(x.hit)z.w++;z.positions[x.position]=(z.positions[x.position]||0)+1}const list=Object.values(formulasBy).sort((a,b)=>b.n-a.n||(b.w/b.n)-(a.w/a.n));$('playStatsSummary').innerHTML='<div class="omitbox"><div class="note">บันทึกทั้งหมด</div><div class="omit">'+playLog.length+'</div><div class="note">ไม้</div></div><div class="omitbox"><div class="note">อัตราเข้ารวม</div><div class="omit">'+(playLog.length?(playLog.filter(x=>x.hit).length/playLog.length*100).toFixed(1):'0.0')+'%</div><div class="note">จากข้อมูลที่บันทึก</div></div>';$('playStatsBody').innerHTML=list.map(z=>{const top=Object.entries(z.positions).sort((a,b)=>b[1]-a[1])[0];return '<tr><td>'+z.name+'</td><td>'+z.n+'</td><td>'+z.w+'</td><td>'+(z.w/z.n*100).toFixed(1)+'%</td><td>'+(top?names[+top[0]]+' ('+top[1]+')':'-')+'</td></tr>'}).join('')||'<tr><td colspan="5">ยังไม่มีประวัติการเล่นที่บันทึก</td></tr>';$('playLogBody').innerHTML=playLog.slice().reverse().slice(0,100).map(x=>'<tr><td>'+new Date(x.time).toLocaleString('th-TH')+'</td><td>'+x.formulaName+'</td><td>'+names[x.position]+'</td><td>'+x.prev+'</td><td>'+x.omit+'</td><td>'+x.next+'</td><td class="'+(x.hit?'good':'bad')+'">'+(x.hit?'เข้า':'ไม่เข้า')+'</td></tr>').join('')||'<tr><td colspan="7">ยังไม่มีประวัติ</td></tr>'}
 function baht(n){return (+n||0).toFixed(2)}function render(){let rs=rows(),f=formulas.find(x=>x.id===formula.value)||formulas[0],p=+position.value,last=rs.at(-1);
-omit.textContent=last?(f.map[last[p]]||'').split('').join(' '):'-';
+omit.textContent=last?(f.map[last[p]]||'').split('').join(' '):'-';$('omitCaption').textContent='สูตร '+f.name+' • '+names[p]+' • เลขที่เว้น';
 let r=stats(rs,f,p),limit=+$('roundLimit').value,shown=limit?r.d.slice(-limit):r.d;
 roundBody.innerHTML=shown.map(x=>`<tr class="${x.hit?'round-win':'round-loss'}">
 <td>${x.i}</td>
