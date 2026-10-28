@@ -208,12 +208,12 @@ th,td{font-size:19px!important;line-height:1.5!important;padding-top:12px!import
 </div>
 </section>
 <section class="card wide" id="backupRankCard">
-<div class="head"><h2>สำรองเดิมพัน • สูตรเด่นอันดับ 2 และ 3</h2><button class="toggle">ซ่อน</button></div>
+<div class="head"><h2>เลขเว้นสำรองจากสูตรแนะนำ • อันดับ 2 และ 3</h2><button class="toggle">ซ่อน</button></div>
 <div class="body">
-<div class="note" style="margin-bottom:10px">ระบบเลือกสูตรที่มีอัตราเข้าดีที่สุดของแต่ละอันดับจากผลย้อนหลังที่กรอกไว้ กดปุ่มเพื่อเลือกสูตรและอันดับนั้นทันที</div>
+<div class="note" style="margin-bottom:10px">แสดงเลขเว้น 3 ตัวของสูตรที่มีผลงานย้อนหลังดีที่สุดในแต่ละอันดับ โดยอ้างอิงผลล่าสุด</div>
 <div class="row2" id="backupRankChoices">
-<div class="rec"><h3>อันดับ 2</h3><div id="backupRank2">กำลังคำนวณ…</div><button type="button" class="gold" id="betBackup2" style="width:100%;margin-top:10px">เลือกเดิมพันอันดับ 2</button></div>
-<div class="rec"><h3>อันดับ 3</h3><div id="backupRank3">กำลังคำนวณ…</div><button type="button" class="gold" id="betBackup3" style="width:100%;margin-top:10px">เลือกเดิมพันอันดับ 3</button></div>
+<div class="rec"><h3>อันดับ 2</h3><div id="backupRank2">กำลังคำนวณ…</div></div>
+<div class="rec"><h3>อันดับ 3</h3><div id="backupRank3">กำลังคำนวณ…</div></div>
 </div>
 </div>
 </section>
@@ -344,16 +344,19 @@ for(let fx of formulas)for(let q=0;
 q<3;
 q++)all.push({f:fx,p:q,...stats(rs,fx,q)});
 all.sort((a,b)=>b.rate-a.rate||b.net-a.net);
-function renderBackupRank(q, targetId, buttonId){
- const candidates=formulas.map(fx=>({f:fx,p:q,...stats(rs,fx,q)})).filter(x=>x.n>0).sort((a,b)=>b.rate-a.rate||b.net-a.net||b.n-a.n);
- const best=candidates[0],target=$(targetId),btn=$(buttonId);
- if(!best){target.innerHTML='<div class="note">กรอกผลย้อนหลังอย่างน้อย 2 งวด เพื่อจัดอันดับสูตร</div>';btn.disabled=true;return;}
- const lastResult=rs.at(-1),omitDigits=lastResult?((best.f.map[lastResult[q]]||'').split('').join(' ')||'-'):'-';
- target.innerHTML='<div style="font-weight:700;margin:6px 0">'+best.f.name+'</div><div class="note">อัตราเข้า: '+(best.rate*100).toFixed(1)+'% ('+best.win+'/'+best.n+')</div><div class="note">กำไร/ขาดทุนย้อนหลัง: '+baht(best.net)+'</div><div style="margin-top:7px;font-size:12px;color:#6b7280">เลขเว้นล่าสุด: <b style="font-size:15px;color:#b4234a;letter-spacing:1px">'+omitDigits+'</b></div>';
- btn.disabled=false;btn.dataset.formulaId=best.f.id;btn.dataset.position=q;
+function renderBackupRank(q, targetId){
+ const lastResult=rs.at(-1),target=$(targetId);
+ if(!lastResult){target.innerHTML='<div class="note">กรอกผลเลขก่อน เพื่อแสดงเลขเว้น</div>';return;}
+ const candidates=formulas.map(fx=>({f:fx,p:q,...stats(rs,fx,q),omit:String(fx.map[lastResult[q]]||'')}))
+   .filter(x=>x.n>0 && /^\\d{3}$/.test(x.omit))
+   .sort((a,b)=>b.rate-a.rate||b.net-a.net||b.n-a.n);
+ const best=candidates[0];
+ if(!best){target.innerHTML='<div class="note">ยังไม่มีสูตรที่มีข้อมูลย้อนหลังและเลขเว้นครบ 3 ตัวสำหรับอันดับนี้</div>';return;}
+ const omitDigits=best.omit.split('').join(' ');
+ target.innerHTML='<div style="font-weight:700;margin:6px 0">'+best.f.name+'</div><div class="note">อัตราเข้า: '+(best.rate*100).toFixed(1)+'% ('+best.win+'/'+best.n+')</div><div style="margin-top:8px;font-size:12px;color:#6b7280">เลขเว้น 3 ตัว</div><div style="font-size:27px;font-weight:800;color:#b4234a;letter-spacing:5px;margin:3px 0 2px">'+omitDigits+'</div>';
 }
-renderBackupRank(1,'backupRank2','betBackup2');
-renderBackupRank(2,'backupRank3','betBackup3');
+renderBackupRank(1,'backupRank2');
+renderBackupRank(2,'backupRank3');
 let item=x=>`<div class="item">
 <b>${x.f.name}<br>
 <span class="note">${names[x.p]}</span>
@@ -389,7 +392,6 @@ $('roundLimit').value=localStorage.getItem('fast-formula:roundLimit')||'10';
 $('roundLimit').onchange=()=>{localStorage.setItem('fast-formula:roundLimit',$('roundLimit').value);render()};
 historyField.addEventListener('input',()=>{clearTimeout(window.t);const now=rows();if(now.length===knownRows.length+1&&knownRows.every((x,i)=>x===now[i]))recordPlayRound(knownRows.at(-1),now.at(-1));knownRows=now;window.t=setTimeout(render,100)});
 formula.onchange=position.onchange=render;
-['betBackup2','betBackup3'].forEach(id=>$(id).onclick=()=>{const b=$(id);if(!b.dataset.formulaId)return;formula.value=b.dataset.formulaId;position.value=b.dataset.position;render();window.scrollTo({top:0,behavior:'smooth'});});
 stake.oninput=payout.oninput=render;
 document.querySelectorAll('[data-money]').forEach(b=>b.onclick=()=>$('bankroll').value=b.dataset.money);
 document.querySelectorAll('[data-next]').forEach(b=>b.onclick=()=>{$('nextStake').value=b.dataset.next;
