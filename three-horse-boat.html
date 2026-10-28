@@ -211,7 +211,7 @@ th,td{font-size:19px!important;line-height:1.5!important;padding-top:12px!import
 <section class="card wide" id="backupRankCard">
 <div class="head"><h2>เลขเว้นสำรองจากสูตรแนะนำ • อันดับ 1–3</h2><button class="toggle">ซ่อน</button></div>
 <div class="body">
-<div class="note" style="margin-bottom:8px">เลขเว้น 3 ตัวจากสูตรที่อัตราเข้าดีที่สุดของแต่ละอันดับ โดยอ้างอิงผลล่าสุด</div>
+<div class="note" style="margin-bottom:8px">เลขเว้นจากสูตรที่อัตราเข้าดีที่สุดของแต่ละอันดับ โดยอ้างอิงผลล่าสุด</div>
 <div id="backupRankChoices" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
 <div class="rec" style="padding:9px;min-width:0"><h3 style="font-size:16px;margin:0 0 5px">อันดับ 1</h3><div id="backupRank1">กำลังคำนวณ…</div></div>
 <div class="rec" style="padding:9px;min-width:0"><h3 style="font-size:16px;margin:0 0 5px">อันดับ 2</h3><div id="backupRank2">กำลังคำนวณ…</div></div>
@@ -350,7 +350,7 @@ function renderBackupRank(q, targetId){
  const lastResult=rs.at(-1),target=$(targetId);
  if(!lastResult){target.innerHTML='<div class="note" style="font-size:11px">กรอกผลก่อน</div>';return;}
  const candidates=formulas.map(fx=>({f:fx,p:q,...stats(rs,fx,q),omit:String(fx.map[lastResult[q]]||'')}))
-   .filter(x=>x.n>0 && /^\d{3}$/.test(x.omit))
+   .filter(x=>x.n>0 && /^\d+$/.test(x.omit))
    .sort((a,b)=>b.rate-a.rate||b.net-a.net||b.n-a.n);
  const best=candidates[0];
  if(!best){target.innerHTML='<div class="note" style="font-size:11px">ข้อมูลไม่พอ</div>';return;}
