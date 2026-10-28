@@ -13,7 +13,11 @@ th,td{font-size:19px!important;line-height:1.5!important;padding-top:12px!import
 .recommend-name{font-size:19px!important}.recommend-meta,.badge{font-size:16px!important}
 .number-key,.pad button,#keypad button{font-size:22px!important;min-height:50px!important}
 }
-</style></head><body><div style="font-family:system-ui;padding:24px;text-align:center">กำลังโหลดห้องรวม 33 สูตร 4 หลัก...</div><script>
+</style><style id="cdk-choojai-font">
+/* Prefer the user's installed CDK Choojai Thai font; fall back if unavailable. */
+body, body * { font-family: "CDK Choojai Thai", "Choojai Thai", sans-serif !important; }
+</style>
+</head><body><div style="font-family:system-ui;padding:24px;text-align:center">กำลังโหลดห้องรวม 33 สูตร 4 หลัก...</div><script>
 (async()=>{
   const response=await fetch('thai-30sec-8-formulas.html?base=thai4d');
   let html=await response.text();
