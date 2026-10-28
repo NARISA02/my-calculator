@@ -350,7 +350,7 @@ function renderBackupRank(q, targetId){
  const lastResult=rs.at(-1),target=$(targetId);
  if(!lastResult){target.innerHTML='<div class="note" style="font-size:11px">กรอกผลก่อน</div>';return;}
  const candidates=formulas.map(fx=>({f:fx,p:q,...stats(rs,fx,q),omit:String(fx.map[lastResult[q]]||'')}))
-   .filter(x=>x.n>0 && /^\\d{3}$/.test(x.omit))
+   .filter(x=>x.n>0 && /^\d{3}$/.test(x.omit))
    .sort((a,b)=>b.rate-a.rate||b.net-a.net||b.n-a.n);
  const best=candidates[0];
  if(!best){target.innerHTML='<div class="note" style="font-size:11px">ข้อมูลไม่พอ</div>';return;}
