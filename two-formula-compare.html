@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ห้องเทียบสูตรโต้ดทันใจ & ลักษมีประทานพร</title>
+<style>
+:root{font-family:"CDK Choojai Thai","Choojai Thai","Noto Sans Thai",Tahoma,sans-serif;color:#20252b;background:#f4f7f2}
+*{box-sizing:border-box}body{margin:0;padding:14px}.wrap{max-width:900px;margin:auto}.hero,.card{background:#fff;border:1px solid #e4e9e1;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 3px 14px #2030200a}
+.back{color:#557b59;text-decoration:none;font-size:14px}.hero h1{font-size:25px;margin:10px 0 4px}.muted,.note{color:#707a72;font-size:13px;line-height:1.5}
+h2{font-size:19px;margin:0 0 12px}h3{font-size:16px;margin:0 0 8px}
+.entry{display:grid;grid-template-columns:1fr 1fr;gap:14px}.display{background:#f5f8f3;border:1px solid #dfe8dc;border-radius:12px;padding:12px;text-align:center}.digits{font-size:34px;font-weight:800;letter-spacing:9px;min-height:46px;color:#315e3a}
+.pad{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:10px}.pad button,button{border:0;border-radius:10px;padding:11px 8px;font:inherit;font-size:16px;background:#e9f0e6;color:#253b28;cursor:pointer}.pad button{font-size:20px;font-weight:700}.pad button:active{transform:scale(.97)}button.primary{background:#557f55;color:white}button.secondary{background:#eef0ee}button.danger{background:#fae9e9;color:#a32e38}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.actions button{flex:1}
+textarea{width:100%;min-height:130px;border:1px solid #d9e0d7;border-radius:12px;padding:10px;font:inherit;font-size:15px;line-height:1.7}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}.formula{border:1px solid #e2e8df;border-radius:13px;padding:12px;min-width:0}.formula .name{font-weight:800;font-size:17px}.rate{font-size:24px;font-weight:800;color:#397447;margin:4px 0}.omit{font-size:24px;letter-spacing:5px;color:#b33a55;font-weight:800}
+.tablewrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px;min-width:540px}th,td{text-align:center;padding:9px 6px;border-bottom:1px solid #edf0ec}th{background:#f5f8f3}
+.best{background:#eef7ed}.tag{font-size:11px;border-radius:20px;padding:3px 7px;background:#e6f2e4;color:#426d42}
+@media(max-width:650px){body{padding:9px}.entry{grid-template-columns:1fr}.hero h1{font-size:22px}.metrics{gap:7px}.formula{padding:9px}.rate{font-size:21px}.omit{font-size:21px}}
+</style></head><body><main class="wrap">
+<section class="hero"><a class="back" href="index.html">← กลับหน้าหลัก</a><h1>🎯 ห้องเทียบ 2 สูตร</h1><div class="muted">สูตรโต้ดทันใจ V.2 เทียบกับสูตรลักษมีประทานพร • กรอกผลย้อนหลัง 3 หลัก แล้วดูอัตราเข้าแยกหลักร้อย สิบ หน่วย</div></section>
+<section class="card"><h2>1. บันทึกผลย้อนหลัง 3 หลัก</h2><div class="entry">
+<div><div class="display"><div class="muted">เลขที่กำลังกรอก</div><div id="current" class="digits">_ _ _</div><div class="note">แตะตัวเลขให้ครบ 3 หลัก ระบบจะเพิ่มลงประวัติให้อัตโนมัติ</div></div><div class="pad" id="pad"></div><div class="actions"><button class="secondary" id="del">⌫ ลบตัวท้าย</button><button class="secondary" id="clear">ล้างช่อง</button><button class="primary" id="add">เพิ่มผล</button></div></div>
+<div><h3>ประวัติผล (เก่าสุดอยู่บน ใหม่สุดอยู่ล่าง)</h3><textarea id="history" placeholder="เช่น&#10;123&#10;405&#10;789"></textarea><div class="actions"><button class="primary" id="analyze">วิเคราะห์เปรียบเทียบ</button><button class="danger" id="clearHistory">ล้างประวัติ</button></div><div class="note" id="count">มีผลย้อนหลัง 0 งวด</div></div>
+</div></section>
+<section class="card"><h2>2. เปรียบเทียบความแม่นยำของ 2 สูตร</h2><div class="note">นับว่าเข้าเมื่อเลขผลถัดไปในหลักเดียวกัน ไม่อยู่ในเลขเว้น 2 ตัวของสูตรที่คำนวณจากผลก่อนหน้า</div><div class="metrics" id="summary"></div></section>
+<section class="card"><h2>3. อัตราเข้ารายหลัก</h2><div class="tablewrap"><table><thead><tr><th>สูตร</th><th>หลักร้อย</th><th>หลักสิบ</th><th>หลักหน่วย</th><th>รวม</th></tr></thead><tbody id="stats"></tbody></table></div></section>
+<section class="card"><h2>4. เลขเว้นล่าสุดของแต่ละสูตร</h2><div class="note">ใช้ผลล่าสุดที่กรอกเป็นตัวตั้ง เพื่อแสดงเลขเว้น 2 ตัวสำหรับงวดถัดไป</div><div class="metrics" id="latest"></div></section>
+<div class="note" style="text-align:center;padding:8px">ผลการเปรียบเทียบเป็นสถิติย้อนหลัง ไม่ได้รับประกันผลครั้งถัดไป</div>
+</main>
+<script>
+const FORMULAS=[{"id":"f0","name":"สูตรโต้ดทันใจ V.2","map":{"0":"19","1":"02","2":"13","3":"24","4":"35","5":"46","6":"57","7":"68","8":"79","9":"08"}},{"id":"f1","name":"สูตรลักษมีประทานพร","map":{"0":"39","1":"05","2":"15","3":"57","4":"85","5":"02","6":"26","7":"39","8":"40","9":"16"}}];
+const $=id=>document.getElementById(id),KEY='two-formula-compare-history-v1';
+let buffer='';
+let history=[];
+try{history=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(history))history=[]}catch(e){history=[]}
+function normalize(text){return text.split(/[\\s,;]+/).map(x=>x.trim()).filter(Boolean).map(x=>x.match(/^\\d{3}$/)?.[0]).filter(Boolean)}
+function save(){localStorage.setItem(KEY,JSON.stringify(history));$('history').value=history.join('\\n');$('count').textContent='มีผลย้อนหลัง '+history.length+' งวด';}
+function showBuffer(){$('current').textContent=buffer.padEnd(3,'_').split('').join(' ')}
+function addBuffer(){if(buffer.length!==3)return;history.push(buffer);buffer='';save();showBuffer();analyze()}
+for(let n=0;n<10;n++){const b=document.createElement('button');b.textContent=n;b.onclick=()=>{if(buffer.length<3){buffer+=n;showBuffer();if(buffer.length===3)addBuffer()}};$('pad').appendChild(b)}
+$('del').onclick=()=>{buffer=buffer.slice(0,-1);showBuffer()};
+$('clear').onclick=()=>{buffer='';showBuffer()};
+$('add').onclick=()=>{if(buffer.length===3)addBuffer();else alert('กรุณากรอกเลขให้ครบ 3 หลัก')};
+$('history').addEventListener('change',()=>{history=normalize($('history').value);save();analyze()});
+$('analyze').onclick=()=>{history=normalize($('history').value);save();analyze()};
+$('clearHistory').onclick=()=>{if(confirm('ล้างประวัติผลทั้งหมดหรือไม่?')){history=[];buffer='';save();showBuffer();analyze()}};
+function calc(f,p){let win=0,n=0;for(let i=1;i<history.length;i++){const prev=history[i-1],next=history[i],source=+prev[p],omit=f.map[source]||'',actual=next[p];if(!/^\\d{2}$/.test(omit))continue;n++;if(!omit.includes(actual))win++}return{win,n,rate:n?win/n:0}}
+function pct(x){return x.n?(x.rate*100).toFixed(1)+'%':'—'}
+function analyze(){
+ $('count').textContent='มีผลย้อนหลัง '+history.length+' งวด';
+ const rows=FORMULAS.map(f=>{const parts=[0,1,2].map(p=>calc(f,p));const n=parts.reduce((a,x)=>a+x.n,0),win=parts.reduce((a,x)=>a+x.win,0);return{f,parts,n,win,rate:n?win/n:0}});
+ $('summary').innerHTML=rows.map(x=>'<div class="formula"><div class="name">'+x.f.name+'</div><div class="rate">'+(x.n?(x.rate*100).toFixed(1)+'%':'—')+'</div><div class="muted">เข้า '+x.win+' จาก '+x.n+' ครั้ง รวมทั้ง 3 หลัก</div></div>').join('');
+ const bestRate=Math.max(...rows.map(x=>x.rate));
+ $('stats').innerHTML=rows.map(x=>'<tr><td style="text-align:left;font-weight:700">'+x.f.name+(x.n&&x.rate===bestRate?' <span class="tag">นำอยู่</span>':'')+'</td>'+x.parts.map(p=>'<td>'+pct(p)+'<div class="muted">'+p.win+'/'+p.n+'</div></td>').join('')+'<td><b>'+pct({n:x.n,rate:x.rate})+'</b><div class="muted">'+x.win+'/'+x.n+'</div></td></tr>').join('');
+ const last=history.at(-1);
+ $('latest').innerHTML=last?FORMULAS.map(f=>'<div class="formula"><div class="name">'+f.name+'</div><div class="muted">ผลล่าสุด '+last+'</div><div class="muted">ร้อย</div><div class="omit">'+(f.map[last[0]]||'').split('').join(' ')+'</div><div class="muted">สิบ</div><div class="omit">'+(f.map[last[1]]||'').split('').join(' ')+'</div><div class="muted">หน่วย</div><div class="omit">'+(f.map[last[2]]||'').split('').join(' ')+'</div></div>').join(''):'<div class="muted">กรอกผลย้อนหลังอย่างน้อย 1 งวด เพื่อแสดงเลขเว้นล่าสุด</div>';
+}
+$('history').value=history.join('\\n');showBuffer();analyze();
+</script></body></html>
