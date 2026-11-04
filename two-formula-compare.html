@@ -31,17 +31,34 @@ const $=id=>document.getElementById(id),KEY='two-formula-compare-history-v1';
 let buffer='';
 let history=[];
 try{history=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(history))history=[]}catch(e){history=[]}
-function normalize(text){return text.split(/[\s,;]+/).map(x=>x.trim()).filter(Boolean).map(x=>x.match(/^\d{3}$/)?.[0]).filter(Boolean)}
-function save(){localStorage.setItem(KEY,JSON.stringify(history));$('history').value=history.join('\n');$('count').textContent='มีผลย้อนหลัง '+history.length+' งวด';}
+function normalize(text){
+ const tokens=text.trim().split(/[\s,;，；]+/).filter(Boolean);
+ const valid=tokens.filter(x=>/^\d{3}$/.test(x));
+ return {values:valid,invalid:tokens.length-valid.length};
+}
+function save(){
+ try{localStorage.setItem(KEY,JSON.stringify(history));}catch(e){}
+ $('history').value=history.join('\n');
+ $('count').textContent='มีผลย้อนหลัง '+history.length+' งวด';
+}
 function showBuffer(){$('current').textContent=buffer.padEnd(3,'_').split('').join(' ')}
 function addBuffer(){if(buffer.length!==3)return;history.push(buffer);buffer='';save();showBuffer();analyze()}
 for(let n=0;n<10;n++){const b=document.createElement('button');b.textContent=n;b.onclick=()=>{if(buffer.length<3){buffer+=n;showBuffer();if(buffer.length===3)addBuffer()}};$('pad').appendChild(b)}
 $('del').onclick=()=>{buffer=buffer.slice(0,-1);showBuffer()};
 $('clear').onclick=()=>{buffer='';showBuffer()};
 $('add').onclick=()=>{if(buffer.length===3)addBuffer();else alert('กรุณากรอกเลขให้ครบ 3 หลัก')};
-$('history').addEventListener('change',()=>{history=normalize($('history').value);save();analyze()});
-$('analyze').onclick=()=>{history=normalize($('history').value);save();analyze()};
-$('clearHistory').onclick=()=>{if(confirm('ล้างประวัติผลทั้งหมดหรือไม่?')){history=[];buffer='';save();showBuffer();analyze()}};
+$('history').addEventListener('change',()=>{
+ const parsed=normalize($('history').value);
+ if(parsed.invalid){$('count').textContent='มีรูปแบบไม่ถูกต้อง '+parsed.invalid+' รายการ (ต้องเป็นเลข 3 หลักต่อบรรทัด)';return;}
+ history=parsed.values;save();analyze();
+});
+$('analyze').onclick=()=>{
+ const parsed=normalize($('history').value);
+ if(parsed.invalid){$('count').textContent='วิเคราะห์ไม่ได้: พบ '+parsed.invalid+' รายการที่ไม่ใช่เลข 3 หลัก กรุณาแก้ไขก่อน';return;}
+ if(!parsed.values.length){$('count').textContent='ยังไม่มีผลย้อนหลัง กรุณากรอกเลข 3 หลัก';return;}
+ history=parsed.values;save();analyze();
+};
+$('clearHistory').onclick=()=>{if(confirm('ล้างประวัติผลทั้งหมดหรือไม่?')){history=[];buffer='';try{localStorage.removeItem(KEY)}catch(e){}save();showBuffer();analyze()}};
 function calc(f,p){let win=0,n=0;for(let i=1;i<history.length;i++){const prev=history[i-1],next=history[i],source=+prev[p],omit=f.map[source]||'',actual=next[p];if(!/^\d{2}$/.test(omit))continue;n++;if(!omit.includes(actual))win++}return{win,n,rate:n?win/n:0}}
 function pct(x){return x.n?(x.rate*100).toFixed(1)+'%':'—'}
 function analyze(){
