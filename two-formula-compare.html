@@ -31,8 +31,8 @@ const $=id=>document.getElementById(id),KEY='two-formula-compare-history-v1';
 let buffer='';
 let history=[];
 try{history=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(history))history=[]}catch(e){history=[]}
-function normalize(text){return text.split(/[\\s,;]+/).map(x=>x.trim()).filter(Boolean).map(x=>x.match(/^\\d{3}$/)?.[0]).filter(Boolean)}
-function save(){localStorage.setItem(KEY,JSON.stringify(history));$('history').value=history.join('\\n');$('count').textContent='มีผลย้อนหลัง '+history.length+' งวด';}
+function normalize(text){return text.split(/[\s,;]+/).map(x=>x.trim()).filter(Boolean).map(x=>x.match(/^\d{3}$/)?.[0]).filter(Boolean)}
+function save(){localStorage.setItem(KEY,JSON.stringify(history));$('history').value=history.join('\n');$('count').textContent='มีผลย้อนหลัง '+history.length+' งวด';}
 function showBuffer(){$('current').textContent=buffer.padEnd(3,'_').split('').join(' ')}
 function addBuffer(){if(buffer.length!==3)return;history.push(buffer);buffer='';save();showBuffer();analyze()}
 for(let n=0;n<10;n++){const b=document.createElement('button');b.textContent=n;b.onclick=()=>{if(buffer.length<3){buffer+=n;showBuffer();if(buffer.length===3)addBuffer()}};$('pad').appendChild(b)}
@@ -42,7 +42,7 @@ $('add').onclick=()=>{if(buffer.length===3)addBuffer();else alert('กรุณ�
 $('history').addEventListener('change',()=>{history=normalize($('history').value);save();analyze()});
 $('analyze').onclick=()=>{history=normalize($('history').value);save();analyze()};
 $('clearHistory').onclick=()=>{if(confirm('ล้างประวัติผลทั้งหมดหรือไม่?')){history=[];buffer='';save();showBuffer();analyze()}};
-function calc(f,p){let win=0,n=0;for(let i=1;i<history.length;i++){const prev=history[i-1],next=history[i],source=+prev[p],omit=f.map[source]||'',actual=next[p];if(!/^\\d{2}$/.test(omit))continue;n++;if(!omit.includes(actual))win++}return{win,n,rate:n?win/n:0}}
+function calc(f,p){let win=0,n=0;for(let i=1;i<history.length;i++){const prev=history[i-1],next=history[i],source=+prev[p],omit=f.map[source]||'',actual=next[p];if(!/^\d{2}$/.test(omit))continue;n++;if(!omit.includes(actual))win++}return{win,n,rate:n?win/n:0}}
 function pct(x){return x.n?(x.rate*100).toFixed(1)+'%':'—'}
 function analyze(){
  $('count').textContent='มีผลย้อนหลัง '+history.length+' งวด';
@@ -53,5 +53,5 @@ function analyze(){
  const last=history.at(-1);
  $('latest').innerHTML=last?FORMULAS.map(f=>'<div class="formula"><div class="name">'+f.name+'</div><div class="muted">ผลล่าสุด '+last+'</div><div class="muted">ร้อย</div><div class="omit">'+(f.map[last[0]]||'').split('').join(' ')+'</div><div class="muted">สิบ</div><div class="omit">'+(f.map[last[1]]||'').split('').join(' ')+'</div><div class="muted">หน่วย</div><div class="omit">'+(f.map[last[2]]||'').split('').join(' ')+'</div></div>').join(''):'<div class="muted">กรอกผลย้อนหลังอย่างน้อย 1 งวด เพื่อแสดงเลขเว้นล่าสุด</div>';
 }
-$('history').value=history.join('\\n');showBuffer();analyze();
+$('history').value=history.join('\n');showBuffer();analyze();
 </script></body></html>
