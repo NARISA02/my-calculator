@@ -71,4 +71,4 @@ function analyze(){
  $('latest').innerHTML=last?FORMULAS.map(f=>'<div class="formula"><div class="name">'+f.name+'</div><div class="muted">ผลล่าสุด '+last+'</div><div class="muted">ร้อย</div><div class="omit">'+(f.map[last[0]]||'').split('').join(' ')+'</div><div class="muted">สิบ</div><div class="omit">'+(f.map[last[1]]||'').split('').join(' ')+'</div><div class="muted">หน่วย</div><div class="omit">'+(f.map[last[2]]||'').split('').join(' ')+'</div></div>').join(''):'<div class="muted">กรอกผลย้อนหลังอย่างน้อย 1 งวด เพื่อแสดงเลขเว้นล่าสุด</div>';
 }
 $('history').value=history.join('\n');showBuffer();analyze();
-</script></body></html>
+</script><script>(function(){var fields=document.querySelectorAll('textarea#history,textarea#data,textarea#combinedData');function bottom(el){el.scrollTop=el.scrollHeight;}fields.forEach(function(el){el.addEventListener('input',function(){bottom(el)});el.addEventListener('change',function(){bottom(el)});bottom(el)});document.addEventListener('click',function(){requestAnimationFrame(function(){fields.forEach(bottom)})});})();</script></body></html>
