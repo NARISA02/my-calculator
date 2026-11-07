@@ -66,4 +66,4 @@ $('toggleInput').onclick=()=>{const el=$('inputBody');el.classList.toggle('hidde
 document.querySelectorAll('.toggle').forEach(b=>b.onclick=()=>{const el=$(b.dataset.target);el.classList.toggle('hidden');b.textContent=el.classList.contains('hidden')?'แสดง':'ซ่อน'});
 renderDigitEntry();
 render();
-</script></body></html>
+</script><script>(function(){var fields=document.querySelectorAll('textarea#history,textarea#data,textarea#combinedData');function bottom(el){el.scrollTop=el.scrollHeight;}fields.forEach(function(el){el.addEventListener('input',function(){bottom(el)});el.addEventListener('change',function(){bottom(el)});bottom(el)});document.addEventListener('click',function(){requestAnimationFrame(function(){fields.forEach(bottom)})});})();</script></body></html>
