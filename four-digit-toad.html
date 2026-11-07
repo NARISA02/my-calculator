@@ -50,4 +50,4 @@ $('saveLedger').onclick=()=>{const x=ledgerCalc();if(!x.stake){alert('กรุ�
 $('resetLedger').onclick=()=>{[2,3,4].forEach(k=>{$('coins'+k).value=0;$('win'+k).checked=false});ledgerCalc()};
 $('clearLedger').onclick=()=>{if(confirm('ยืนยันล้างบัญชีเงินลงทุนทั้งหมด?')){ledger=[];try{localStorage.removeItem(LEDGER_KEY)}catch(e){}renderLedger();ledgerCalc()}};
 renderLedger();ledgerCalc();
-</script></body></html>
+</script><script>(function(){var fields=document.querySelectorAll('textarea#history,textarea#data,textarea#combinedData');function bottom(el){el.scrollTop=el.scrollHeight;}fields.forEach(function(el){el.addEventListener('input',function(){bottom(el)});el.addEventListener('change',function(){bottom(el)});bottom(el)});document.addEventListener('click',function(){requestAnimationFrame(function(){fields.forEach(bottom)})});})();</script></body></html>
