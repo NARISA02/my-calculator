@@ -150,5 +150,5 @@ go.onclick=run;saveActual.onclick=appendActualStake;clearActual.onclick=clearAct
   });
 })();
 </script>
-</body>
+<script>(function(){var fields=document.querySelectorAll('textarea#history,textarea#data,textarea#combinedData');function bottom(el){el.scrollTop=el.scrollHeight;}fields.forEach(function(el){el.addEventListener('input',function(){bottom(el)});el.addEventListener('change',function(){bottom(el)});bottom(el)});document.addEventListener('click',function(){requestAnimationFrame(function(){fields.forEach(bottom)})});})();</script></body>
 </html>
