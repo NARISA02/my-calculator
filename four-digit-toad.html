@@ -58,6 +58,7 @@ function renderAddedFormulas(){
  const last=history.length?history[history.length-1].slice(-3):'';
  $('addedFormulaLatest').innerHTML=last?ADDED_FORMULAS.map(f=>'<div class="formula-card"><div class="formula-title">'+f.name+'</div><div class="muted">อ้างอิงผล 3 ตัวท้าย '+last+'</div>'+positions.map(pos=>'<div class="muted" style="margin-top:6px">'+pos.label+'</div><div class="formula-omit">'+(f.map[last[pos.idx]]||'').split('').join(' ')+'</div>').join('')+'</div>').join(''):'<div class="muted">ยังไม่มีประวัติผลสำหรับคำนวณ</div>';
 }
+const originalAnalyze=analyze;analyze=function(){originalAnalyze();renderAddedFormulas()};
 $('history').value=history.join('\n');show();analyze();
 const rates={2:{cost:28,profit:21},3:{cost:56,profit:105.67},4:{cost:168,profit:640.33}};
 const money=n=>Number(n||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})+' ฿';
