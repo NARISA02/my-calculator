@@ -15,13 +15,38 @@ body, body * { font-family: "CDK Choojai Thai", "Choojai Thai", sans-serif !impo
 (async()=>{
   const res=await fetch('fast-card-formulas.html?base=27');
   let html=await res.text();
-  html=html
-    .replace("['สูตรโต้ดทันใจ V.2',['19','02','13','24','35','46','57','68','79','08']],",'')
-    .replace("['สูตรลักษมีประทานพร',['39','05','15','57','85','02','26','39','40','16']],",'')
-    .replace("['สูตร ที่ยังมีลมหายใจ',['679','078','189','029','013','124','235','346','457','568']]].map((x,i)=>", "['สูตร ที่ยังมีลมหายใจ',['679','078','189','029','013','124','235','346','457','568']],['สูตรงบน้อย มะปรางค์',['278','348','459','560','167','278','348','459','056','278']],['สูตรไหลตอนนี้',['139','340','135','246','573','684','579','068','197','802']],['สูตรไหลเรียงสาม',['123','234','345','456','567','678','789','890','901','012']],['สูตรทดลองใหม่ A',['127','014','369','158','012','012','045','013','156','145']]].map((x,i)=>")
-    .replace('30 สูตร • 5 หลัก','32 สูตร • 5 หลัก');
-
-  const keypadStyle=`<style>
+  html=html.replace("['สูตรโต้ดทันใจ V.2',['19','02','13','24','35','46','57','68','79','08']],",'').replace("['สูตรลักษมีประทานพร',['39','05','15','57','85','02','26','39','40','16']],",'').replace("['สูตร ที่ยังมีลมหายใจ',['679','078','189','029','013','124','235','346','457','568']]].map((x,i)=>", "['สูตร ที่ยังมีลมหายใจ',['679','078','189','029','013','124','235','346','457','568']],['สูตรงบน้อย มะปรางค์',['278','348','459','560','167','278','348','459','056','278']],['สูตรไหลตอนนี้',['139','340','135','246','573','684','579','068','197','802']],['สูตรไหลเรียงสาม',['123','234','345','456','567','678','789','890','901','012']],['สูตรทดลองใหม่ A',['127','014','369','158','012','012','045','013','156','145']]].map((x,i)=>").replace('30 สูตร • 5 หลัก','32 สูตร • แยกผลบน 4 ตัว / ผลล่าง 2 ตัว');
+  const ui=`<main class="wrap" style="max-width:1100px;margin:auto;padding:16px">
+  <section class="hero"><a class="back" href="index.html">← กลับหน้าหลัก</a><h1>🔢 2 ตัวเฉพาะสูตร</h1><div>แยกคำนวณผลบน 4 ตัว และผลล่าง 2 ตัว ไม่ใช้ผล 5 หลัก</div></section>
+  <div class="grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px">
+   <section class="card wide calc-card"><div class="head"><h2>ผลบน — คำนวณ 4 ตัว</h2></div><div class="body">
+    <label for="upper-formula">เลือกสูตร</label><select id="upper-formula"></select>
+    <label for="upper-position">เลือกหลักที่ต้องการคำนวณ</label><select id="upper-position"><option value="0">หลักพัน</option><option value="1">หลักร้อย</option><option value="2">หลักสิบ</option><option value="3">หลักหน่วย</option></select>
+    <label for="upper-history">กรอกผลบน 4 ตัว (เก่าไปใหม่ บรรทัดละ 1 ผล)</label><textarea id="upper-history" rows="6" inputmode="numeric" placeholder="เช่น 1234&#10;5678&#10;9012"></textarea>
+    <div class="omitbox"><div class="note">เลขเว้นจากผลล่าสุด</div><div class="omit" id="upper-omit">—</div><div class="note" id="upper-allowed"></div></div>
+    <div class="actions"><button type="button" class="gold" id="upper-calc">คำนวณผลบน 4 ตัว</button><button type="button" class="silver" id="upper-clear">ล้างข้อมูล</button></div>
+    <div class="scroll"><table><thead><tr><th>ไม้</th><th>ผลก่อน</th><th>ตัวตั้ง</th><th>เลขเว้น</th><th>ผลถัดไป</th><th>ผล</th></tr></thead><tbody id="upper-rows"></tbody></table></div>
+   </div></section>
+   <section class="card wide calc-card"><div class="head"><h2>ผลล่าง — คำนวณ 2 ตัว</h2></div><div class="body">
+    <label for="lower-formula">เลือกสูตร</label><select id="lower-formula"></select>
+    <label for="lower-position">เลือกหลักที่ต้องการคำนวณ</label><select id="lower-position"><option value="0">หลักสิบ</option><option value="1">หลักหน่วย</option></select>
+    <label for="lower-history">กรอกผลล่าง 2 ตัว (เก่าไปใหม่ บรรทัดละ 1 ผล)</label><textarea id="lower-history" rows="6" inputmode="numeric" placeholder="เช่น 12&#10;56&#10;90"></textarea>
+    <div class="omitbox"><div class="note">เลขเว้นจากผลล่าสุด</div><div class="omit" id="lower-omit">—</div><div class="note" id="lower-allowed"></div></div>
+    <div class="actions"><button type="button" class="gold" id="lower-calc">คำนวณผลล่าง 2 ตัว</button><button type="button" class="silver" id="lower-clear">ล้างข้อมูล</button></div>
+    <div class="scroll"><table><thead><tr><th>ไม้</th><th>ผลก่อน</th><th>ตัวตั้ง</th><th>เลขเว้น</th><th>ผลถัดไป</th><th>ผล</th></tr></thead><tbody id="lower-rows"></tbody></table></div>
+   </div></section></div><p class="note" style="margin:12px 0">ทั้งสองการ์ดทำงานแยกกัน เลือกสูตรและหลักได้อิสระ ผลบนกรอก 4 หลัก ผลล่างกรอก 2 หลัก</p></main>
+  <style>body{font-family:system-ui,-apple-system,sans-serif!important}.calc-card label{display:block;font-weight:700;margin:12px 0 5px}.calc-card select,.calc-card textarea{width:100%;box-sizing:border-box;padding:10px;border:1px solid #cbd5e1;border-radius:9px;font:inherit;font-size:16px;background:#fff;color:#172033}.calc-card textarea{line-height:1.7;resize:vertical}.calc-card .omitbox{margin:12px 0;padding:12px;background:#fff8e8;border-radius:10px;text-align:center}.calc-card .omit{font-size:24px;font-weight:900;letter-spacing:5px}.calc-card .actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.calc-card .actions button{padding:10px 14px;border:0;border-radius:8px;font:inherit}.calc-card table{width:100%;border-collapse:collapse;min-width:460px}.calc-card th,.calc-card td{padding:8px 6px;border-bottom:1px solid #e5e7eb;text-align:center;font-size:14px}.calc-card .good{color:#087443;font-weight:800}.calc-card .bad{color:#b42318;font-weight:800}@media(max-width:760px){.grid{grid-template-columns:1fr!important}.calc-card .body{padding:12px}}</style>`;
+  const a=html.indexOf('<main class="wrap">'),b=html.indexOf('<script>const formulas=',a);if(a<0||b<0)throw new Error('ไม่พบโครงสร้างห้องต้นแบบ');html=html.slice(0,a)+ui+html.slice(b);
+  const logicStart=html.indexOf('const $=id=>document.getElementById(id)'),logicEnd=html.indexOf('</script>',logicStart);if(logicStart<0||logicEnd<0)throw new Error('ไม่พบส่วนคำนวณต้นแบบ');
+  const logic=`const $=id=>document.getElementById(id);
+  function initCard(prefix,length){const formula=$(prefix+'-formula'),position=$(prefix+'-position'),history=$(prefix+'-history'),omit=$(prefix+'-omit'),allowed=$(prefix+'-allowed'),tbody=$(prefix+'-rows');
+   formulas.forEach(f=>formula.add(new Option(f.name,f.id)));
+   function render(){const rs=history.value.split(/\\n+/).map(x=>x.replace(/\\D/g,'')).filter(x=>x.length===length),f=formulas.find(x=>x.id===formula.value)||formulas[0],p=+position.value,last=rs[rs.length-1],digits='0123456789',omitted=last?(f.map[last[p]]||''):'';
+    omit.textContent=last?omitted.split('').join(' • '):'—';allowed.textContent=last?'เลขที่เหลือ: '+Array.from(digits).filter(x=>!omitted.includes(x)).join(' • '):'';
+    tbody.innerHTML=rs.slice(1).map((next,i)=>{const prev=rs[i],src=prev[p],o=f.map[src]||'',actual=next[p],hit=!o.includes(actual);return '<tr><td>'+(i+1)+'</td><td>'+prev+'</td><td>'+src+'</td><td>'+o+'</td><td>'+next+'</td><td class="'+(hit?'good':'bad')+'">'+(hit?'เข้า':'ไม่เข้า')+'</td></tr>'}).join('')||'<tr><td colspan="6">กรอกผลอย่างน้อย 2 งวดเพื่อดูผลเปรียบเทียบ</td></tr>';}
+   $(prefix+'-calc').addEventListener('click',render);$(prefix+'-clear').addEventListener('click',()=>{history.value='';render()});formula.addEventListener('change',render);position.addEventListener('change',render);history.addEventListener('input',render);render();}
+  initCard('upper',4);initCard('lower',2);`;
+  html=html.slice(0,logicStart)+logic+html.slice(logicEnd);html=html.replace(/<title>[^<]*<\\/title>/,'<title>2 ตัวเฉพาะสูตร</title>');document.open();document.write(html);document.close();  const keypadStyle=`<style>
   #keypad{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:7px!important}
   #keypad button{font-size:21px!important;font-weight:1000!important;min-height:50px!important;touch-action:manipulation!important;-webkit-tap-highlight-color:transparent}
   #history{font-size:18px!important;line-height:1.55!important}
