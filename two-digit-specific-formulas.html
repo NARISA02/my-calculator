@@ -30,9 +30,9 @@ button{cursor:pointer;touch-action:manipulation}.gold{background:#b38728;color:#
 <div class="grid">
 <section class="card" id="upper-card"><div class="card-head"><h2>🔺 ผลบน — คำนวณ 4 ตัว</h2><button class="toggle" data-toggle="upper-body">ซ่อน</button></div><div class="card-body" id="upper-body">
 <div class="field"><label for="upper-formula">เลือกสูตร</label><select id="upper-formula"></select></div>
-<div class="field"><label for="upper-position">เลือกหลักที่ต้องการคำนวณ</label><select id="upper-position"><option value="0">หลักพัน</option><option value="1">หลักร้อย</option><option value="2">หลักสิบ</option><option value="3">หลักหน่วย</option></select></div>
+<div class="field"><label for="upper-position">เลือกหลักที่ต้องการคำนวณ</label><select id="upper-position"><option value="0">หลักพัน</option><option value="1">หลักร้อย</option><option value="2">หลักสิบ</option><option value="3">หลักหน่วย</option></select></div><div class="field"><label for="upper-digit">เลือกเลขตั้งต้น 0–9</label><select id="upper-digit"></select></div>
 <div class="field"><label for="upper-history">ผลย้อนหลัง 4 ตัว (เก่าไปใหม่ บรรทัดละ 1 งวด)</label><textarea id="upper-history" inputmode="numeric" placeholder="เช่น 1234&#10;5678&#10;9012"></textarea></div>
-<div class="keypad-wrap"><div class="note">แป้นตัวเลขสำหรับกรอกผลบน — กดครบ 4 ตัวจะบันทึกเป็น 1 งวด</div><div class="pad-preview" id="upper-preview">_ _ _ _</div><div class="pad" id="upper-pad"></div><div class="pad-actions"><button class="silver" id="upper-backspace">⌫ ลบตัวล่าสุด</button><button class="silver" id="upper-enter">↵ ขึ้นงวดใหม่</button></div></div>
+<div class="keypad-wrap"><div class="note">แป้นตัวเลขสำหรับกรอกผลบน — กดครบ 4 ตัวจะบันทึกเป็น 1 งวด</div><div class="pad-preview" id="upper-preview">_ _ _ _</div><div class="pad" id="upper-pad"></div><div class="pad-actions"><button class="silver" id="upper-backspace">⌫ ลบตัวล่าสุด</button><button class="silver" id="upper-enter">ล้างตัวที่กำลังกรอก</button></div></div>
 <div class="omitbox"><div class="note">เลขเว้น 3 ตัวจากผลล่าสุด</div><div class="omit" id="upper-omit">—</div><div class="note" id="upper-allowed"></div></div>
 <div class="metrics"><div class="metric"><b id="upper-rounds">0</b><span>จำนวนไม้</span></div><div class="metric"><b id="upper-wins">0</b><span>เข้า</span></div><div class="metric"><b id="upper-rate">0.0%</b><span>อัตราเข้า</span></div></div>
 <div class="actions"><button class="gold" id="upper-calc">คำนวณผลบน</button><button class="silver" id="upper-clear">ล้างผลย้อนหลัง</button></div>
@@ -40,7 +40,7 @@ button{cursor:pointer;touch-action:manipulation}.gold{background:#b38728;color:#
 </div></section>
 <section class="card" id="lower-card"><div class="card-head"><h2>🔻 ผลล่าง — คำนวณ 2 ตัว</h2><button class="toggle" data-toggle="lower-body">ซ่อน</button></div><div class="card-body" id="lower-body">
 <div class="field"><label for="lower-formula">เลือกสูตร</label><select id="lower-formula"></select></div>
-<div class="field"><label for="lower-position">เลือกหลักที่ต้องการคำนวณ</label><select id="lower-position"><option value="0">หลักสิบ</option><option value="1">หลักหน่วย</option></select></div>
+<div class="field"><label for="lower-position">เลือกหลักที่ต้องการคำนวณ</label><select id="lower-position"><option value="0">หลักสิบ</option><option value="1">หลักหน่วย</option></select></div><div class="field"><label for="lower-digit">เลือกเลขตั้งต้น 0–9</label><select id="lower-digit"></select></div>
 <div class="field"><label for="lower-history">ผลย้อนหลัง 2 ตัว (เก่าไปใหม่ บรรทัดละ 1 งวด)</label><textarea id="lower-history" inputmode="numeric" placeholder="เช่น 12&#10;56&#10;90"></textarea></div>
 <div class="keypad-wrap"><div class="note">แป้นตัวเลขสำหรับกรอกผลล่าง — กดครบ 2 ตัวจะบันทึกเป็น 1 งวด</div><div class="pad-preview" id="lower-preview">_ _</div><div class="pad" id="lower-pad"></div><div class="pad-actions"><button class="silver" id="lower-backspace">⌫ ลบตัวล่าสุด</button><button class="silver" id="lower-enter">↵ ขึ้นงวดใหม่</button></div></div>
 <div class="omitbox"><div class="note">เลขเว้น 3 ตัวจากผลล่าสุด</div><div class="omit" id="lower-omit">—</div><div class="note" id="lower-allowed"></div></div>
@@ -72,11 +72,13 @@ const states={upper:{buffer:""},lower:{buffer:""}};
 function parse(prefix,len){return $(prefix+"-history").value.split(/\n+/).map(s=>s.trim()).filter(Boolean).map(s=>s.replace(/\D/g,"")).filter(s=>s.length===len)}
 function allowed(omit){return "0123456789".split("").filter(d=>!omit.includes(d))}
 function stat(rows,f,p){let wins=0,items=[];for(let i=1;i<rows.length;i++){const prev=rows[i-1],next=rows[i],digit=prev[p],omit=f.map[digit]||"",actual=next[p],hit=!omit.includes(actual);if(hit)wins++;items.push({i,prev,next,digit,omit,actual,hit})}return{wins,n:items.length,rate:items.length?wins/items.length:0,items}}
-function formulasFor(prefix){const sel=$(prefix+"-formula");formulas.forEach(f=>sel.add(new Option(f.name,f.id)))}
+function formulasFor(prefix){const sel=$(prefix+"-formula"),digit=$(prefix+"-digit");formulas.forEach(f=>sel.add(new Option(f.name,f.id)));for(let n=0;n<10;n++)digit.add(new Option(String(n),String(n)));digit.value="0"}
 function renderCard(prefix,len){
- const rows=parse(prefix,len),f=formulas.find(x=>x.id===$(prefix+"-formula").value)||formulas[0],p=Number($(prefix+"-position").value),last=rows.at(-1),omitted=last?(f.map[last[p]]||""):"",s=stat(rows,f,p);
- $(prefix+"-omit").textContent=last?omitted.split("").join(" • "):"—";
- $(prefix+"-allowed").textContent=last?"เลขที่เหลือ 7 ตัว: "+allowed(omitted).join(" • "):"";
+ const rows=parse(prefix,len),f=formulas.find(x=>x.id===$(prefix+"-formula").value)||formulas[0],p=Number($(prefix+"-position").value),last=rows.at(-1),digitSelect=$(prefix+"-digit");
+ if(digitSelect.dataset.manual!=="1"&&last)digitSelect.value=last[p];
+ const chosen=digitSelect.value||"0",omitted=f.map[chosen]||"",s=stat(rows,f,p);
+ $(prefix+"-omit").textContent=omitted?omitted.split("").join(" • "):"—";
+ $(prefix+"-allowed").textContent="เลขตั้งต้น "+chosen+" • เลขที่เหลือ 7 ตัว: "+allowed(omitted).join(" • ");
  $(prefix+"-rounds").textContent=s.n;$(prefix+"-wins").textContent=s.wins;$(prefix+"-rate").textContent=(s.rate*100).toFixed(1)+"%";
  $(prefix+"-rows").innerHTML=s.items.slice().reverse().map(x=>'<tr><td>'+x.i+'</td><td>'+x.prev+'</td><td>'+x.digit+'</td><td>'+x.omit+'</td><td>'+x.next+'</td><td class="'+(x.hit?"good":"bad")+'">'+(x.hit?"เข้า":"ไม่เข้า")+'</td></tr>').join("")||'<tr><td colspan="6">กรอกผลอย่างน้อย 2 งวดเพื่อดูสถิติ</td></tr>';
  renderRecommendations(prefix,len);
@@ -90,11 +92,11 @@ function updatePreview(prefix,len){$(prefix+"-preview").textContent=(states[pref
 function addDigit(prefix,digit,len){const st=states[prefix];if(st.buffer.length>=len)return;st.buffer+=digit;updatePreview(prefix,len);if(st.buffer.length===len){const area=$(prefix+"-history"),old=area.value.trim();area.value=old?old+"\n"+st.buffer:st.buffer;st.buffer="";updatePreview(prefix,len);renderCard(prefix,len);area.scrollTop=area.scrollHeight}}
 function initPad(prefix,len){const pad=$(prefix+"-pad");for(let i=1;i<=9;i++){const b=document.createElement("button");b.type="button";b.textContent=String(i);b.addEventListener("click",()=>addDigit(prefix,String(i),len));pad.appendChild(b)}const zero=document.createElement("button");zero.type="button";zero.textContent="0";zero.addEventListener("click",()=>addDigit(prefix,"0",len));pad.appendChild(zero);
  $(prefix+"-backspace").addEventListener("click",()=>{states[prefix].buffer=states[prefix].buffer.slice(0,-1);updatePreview(prefix,len)});
- $(prefix+"-enter").addEventListener("click",()=>{if(states[prefix].buffer.length===len)addDigit(prefix,"",len);else if(states[prefix].buffer.length)alert("กรุณากรอกให้ครบ "+len+" ตัวก่อนขึ้นงวดใหม่")});
+ $(prefix+"-enter").addEventListener("click",()=>{states[prefix].buffer="";updatePreview(prefix,len)});
  $(prefix+"-calc").addEventListener("click",()=>renderCard(prefix,len));
  $(prefix+"-clear").addEventListener("click",()=>{if(!confirm("ยืนยันล้างผลย้อนหลังของ"+(prefix==="upper"?"ผลบน":"ผลล่าง")+"ใช่หรือไม่?"))return;$(prefix+"-history").value="";states[prefix].buffer="";updatePreview(prefix,len);renderCard(prefix,len)});
- $(prefix+"-history").addEventListener("input",()=>renderCard(prefix,len));
- $(prefix+"-formula").addEventListener("change",()=>renderCard(prefix,len));$(prefix+"-position").addEventListener("change",()=>renderCard(prefix,len));
+ $(prefix+"-history").addEventListener("input",()=>{ $(prefix+"-digit").dataset.manual="";renderCard(prefix,len)});
+ $(prefix+"-formula").addEventListener("change",()=>{digitSelect.dataset.manual="";renderCard(prefix,len)});$(prefix+"-position").addEventListener("change",()=>{digitSelect.dataset.manual="";renderCard(prefix,len)});digitSelect.addEventListener("change",()=>{digitSelect.dataset.manual="1";renderCard(prefix,len)});
 }
 function restore(prefix,len){try{const x=JSON.parse(localStorage.getItem("two-specific:"+prefix)||"null");if(x){$(prefix+"-history").value=x.history||"";if(formulas.some(f=>f.id===x.formula))$(prefix+"-formula").value=x.formula;if(POS[prefix].length>Number(x.position))$(prefix+"-position").value=x.position}}catch(e){}}
 ["upper","lower"].forEach(prefix=>{formulasFor(prefix);restore(prefix,prefix==="upper"?4:2);initPad(prefix,prefix==="upper"?4:2)});
