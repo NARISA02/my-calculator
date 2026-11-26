@@ -46,7 +46,7 @@ body, body * { font-family: "CDK Choojai Thai", "Choojai Thai", sans-serif !impo
     tbody.innerHTML=rs.slice(1).map((next,i)=>{const prev=rs[i],src=prev[p],o=f.map[src]||'',actual=next[p],hit=!o.includes(actual);return '<tr><td>'+(i+1)+'</td><td>'+prev+'</td><td>'+src+'</td><td>'+o+'</td><td>'+next+'</td><td class="'+(hit?'good':'bad')+'">'+(hit?'เข้า':'ไม่เข้า')+'</td></tr>'}).join('')||'<tr><td colspan="6">กรอกผลอย่างน้อย 2 งวดเพื่อดูผลเปรียบเทียบ</td></tr>';}
    $(prefix+'-calc').addEventListener('click',render);$(prefix+'-clear').addEventListener('click',()=>{history.value='';render()});formula.addEventListener('change',render);position.addEventListener('change',render);history.addEventListener('input',render);render();}
   initCard('upper',4);initCard('lower',2);`;
-  html=html.slice(0,logicStart)+logic+html.slice(logicEnd);html=html.replace(/<title>[^<]*<\\/title>/,'<title>2 ตัวเฉพาะสูตร</title>');document.open();document.write(html);document.close();  html=html.replaceAll('ไพ่เร็ว สูตรคำนวน','2 ตัวเฉพาะสูตร');
+  html=html.slice(0,logicStart)+logic+html.slice(logicEnd);html=html.replace(/<title>[^<]*<\\/title>/,'<title>2 ตัวเฉพาะสูตร</title>');  html=html.replaceAll('ไพ่เร็ว สูตรคำนวน','2 ตัวเฉพาะสูตร');
   document.open();
   document.write(html);
   document.close();
