@@ -48,9 +48,8 @@ formulas.push(
 const $=id=>document.getElementById(id);
 const POS={upper:["หลักพัน","หลักร้อย","หลักสิบ","หลักหน่วย"],lower:["หลักสิบ","หลักหน่วย"]};
 const buffers={upper:"",lower:""};
-function cleanHistoryText(value,side){const len=side==="upper"?4:2;let raw=String(value??"").trim();if(raw.startsWith("{")){try{const obj=JSON.parse(raw);if(obj&&typeof obj==="object"&&typeof obj.history==="string"){if(obj.formula&&$(side+"-formula"))$(side+"-formula").value=obj.formula;if(obj.position!==undefined&&$(side+"-position"))$(side+"-position").value=String(obj.position);raw=obj.history;}}catch(e){}}return raw.split(/[\\n,;\\s]+/).map(x=>x.trim()).filter(x=>new RegExp("^\\\\d{"+len+"}$").test(x)).join("\\n");}
-function getRows(side){const raw=cleanHistoryText($(side+"-history").value,side);return raw.split(/[\\n,;\\s]+/).map(x=>x.trim()).filter(x=>new RegExp("^\\\\d{"+(side==="upper"?4:2)+"}$").test(x));}
-function mapDigits(f,d){return String(f.map[d]??"");}
+function cleanHistoryText(value,side){const len=side==="upper"?4:2;let raw=String(value??"").trim();if(raw.startsWith("{")){try{const obj=JSON.parse(raw);if(obj&&typeof obj==="object"&&typeof obj.history==="string"){if(obj.formula&&$(side+"-formula"))$(side+"-formula").value=obj.formula;if(obj.position!==undefined&&$(side+"-position"))$(side+"-position").value=String(obj.position);raw=obj.history;}}catch(e){}}return raw.split(/[\s,;]+/).map(x=>x.trim()).filter(x=>x.length===len&&/^[0-9]+$/.test(x)).join("\n");}
+function getRows(side){return cleanHistoryText($(side+"-history").value,side).split("\n").filter(Boolean);}function mapDigits(f,d){return String(f.map[d]??"");}
 function evaluate(side,f){const rows=getRows(side),len=side==="upper"?4:2,positions=POS[side].length,per=Array.from({length:positions},()=>({wins:0,n:0}));let wins=0,n=0,details=[];
  for(let i=1;i<rows.length;i++){const prev=rows[i-1],next=rows[i];for(let p=0;p<positions;p++){const omitted=mapDigits(f,prev[p]);if(!omitted)continue;const hit=!omitted.includes(next[p]);n++;per[p].n++;if(hit){wins++;per[p].wins++}details.push({round:i+1,prev,next,p,omitted,hit});}}
  return{rows,wins,n,rate:n?wins/n:0,per,details};
